@@ -1,9 +1,11 @@
 
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="">
-      
+    <main>
+      <div className="section-view">
+        <h1>Home Page</h1>
+      </div>
     </main>
   );
 }

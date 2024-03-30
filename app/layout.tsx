@@ -7,7 +7,7 @@ import { lato, monserrat } from "@/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ingeniero de Software| Andres Saumet",
+  title: "Ingeniero de Software | Andres Saumet",
   description: "Desarrollador Fullstack Web y Móvil. Descubre soluciones que impulsaran el éxito de tu negocio",
 };
 

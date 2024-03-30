@@ -35,7 +35,7 @@ h4 {
 
 .section-background {
   background: rgb(2,0,36);
-  background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(29,26,57,1) 50%, rgba(69,25,82,1) 100%);
+  background: linear-gradient(0deg, #9249b0 0%, #663177 50%, #451952 100%);
 }
 
 .section-view {

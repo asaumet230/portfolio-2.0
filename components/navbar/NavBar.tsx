@@ -3,6 +3,8 @@ import { PersonFillIcon } from "@primer/octicons-react";
 import { NavbarLink } from "..";
 
 import { InavbarLink } from "@/interfaces";
+import { NightModeSwitch } from "../generals";
+
 
 interface Props {
   navbarLinks: InavbarLink[]
@@ -18,11 +20,7 @@ export const NavBar = ({navbarLinks}: Props) => {
             )
           )
         }
-        <li>
-          <a href="https://www.chilo.com.co/">
-            <PersonFillIcon size={20} className="text-white ml-4" />
-          </a>
-        </li>
+        <NightModeSwitch />
       </ul>
      
     </nav>

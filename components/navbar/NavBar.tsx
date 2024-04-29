@@ -1,9 +1,9 @@
 import { PersonFillIcon } from "@primer/octicons-react";
 
-import { NavbarLink } from "..";
+import { NavbarLink, NightModeSwitch } from "..";
 
 import { InavbarLink } from "@/interfaces";
-import { NightModeSwitch } from "../generals";
+
 
 
 interface Props {

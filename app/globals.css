@@ -32,8 +32,3 @@ h4 {
   width: 80%;
   margin: 0 auto;
 }
-
-.section-background {
-  background: rgb(26,24,51);
-  background: linear-gradient(180deg, #1a1833 0%, rgba(59,56,119,1) 90%, rgba(68,62,149,1) 100%);
-}

@@ -1,4 +1,4 @@
-import { Lato, Montserrat } from "next/font/google";
+import { Lato, League_Spartan } from "next/font/google";
 
 export const lato = Lato({
     weight: ['100', '300', '400', '700', '900'],
@@ -8,10 +8,10 @@ export const lato = Lato({
 });
   
 
-export const monserrat = Montserrat({
+export const leagueOfSpartan = League_Spartan({
     weight: ['100', '300', '400', '700', '900'],
-    style:['normal', 'italic'],
+    style:['normal'],
     subsets: ['latin'],
-    variable: '--font-monserrat',
+    variable: '--font-league-spartan',
 });
   

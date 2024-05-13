@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Navbar } from "@/components/menus";
 import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="es">
       <body className={`${ lato.variable } ${ leagueOfSpartan.variable }`}>
         <div>
+          <Navbar />
           {children}
         </div>
       </body>

@@ -1,0 +1,38 @@
+.display-desktop-menu {
+    display: block;
+}
+
+.display-mobile-menu {
+    display: none;
+}
+
+.display-search-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.active-link {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: all 300ms ease-in-out;
+}
+
+
+@media( max-width:920px ) {
+
+    .display-desktop-menu {
+        display: none;
+    }
+
+    .display-mobile-menu {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .display-search-link {
+        display: none;
+    }
+    
+}

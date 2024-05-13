@@ -33,6 +33,13 @@ h4 {
 
 .container { 
   max-width: 1400px;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
+}
+
+.links {
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-league-spartan);
 }

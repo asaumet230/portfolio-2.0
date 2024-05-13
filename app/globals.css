@@ -43,3 +43,11 @@ h4 {
   font-weight: 700;
   font-family: var(--font-league-spartan);
 }
+
+.btn {
+  @apply bg-neutral-900 w-40 rounded-md text-white font-bold text-center p-4;
+}
+
+.btn:hover {
+  @apply bg-white text-black underline underline-offset-8 decoration-secondary-color ease-in-out duration-100;
+}

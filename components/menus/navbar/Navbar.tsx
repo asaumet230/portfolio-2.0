@@ -11,7 +11,7 @@ import styles from './navbar.module.css';
 export const Navbar = () => {
 
   return (
-    <header className="container p-2 flex justify-between items-center">
+    <header className="container p-3 flex justify-between items-center">
       <Logo />
       <div className="flex">
         <nav className={styles['display-desktop-menu']}>

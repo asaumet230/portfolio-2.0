@@ -19,7 +19,7 @@ export const HomeBannerTitle = () => {
     });
 
     return (
-        <h1 className="text-5xl capitalize mb-4 max-[920px]:text-3xl">
+        <h1 className="text-5xl capitalize mb-4 max-[920px]:text-3xl max-[920px]:mb-2">
             { text }
             { loop && <Cursor /> }
         </h1>

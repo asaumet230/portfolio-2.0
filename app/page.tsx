@@ -1,12 +1,11 @@
-import { HomeBanner, TechnicalSkills } from '@/components';
+import { HomeBanner, ToolsSection } from '@/components';
 
 
 export default function HomePage() {
   return (
     <main>
       <HomeBanner />
-      <TechnicalSkills />
-     
+      <ToolsSection />
     </main>
   );
 }

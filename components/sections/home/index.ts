@@ -1,1 +1,1 @@
-export * from './TechnicalSkills';
+export * from './ToolsSection';

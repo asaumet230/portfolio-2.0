@@ -15,7 +15,7 @@ export const ProgressBar: FC<Props> = ({ progress = 0 }) => {
 
 
   const setProgress = () => {
-    if(window.scrollY >= 320) {
+    if(window.scrollY >= 480) {
       setInitProgress(true);
     } else {
       setInitProgress(false);
@@ -27,7 +27,6 @@ export const ProgressBar: FC<Props> = ({ progress = 0 }) => {
     window.addEventListener('scroll', setProgress);
 
     return () => {
-      console.log('removido');
       window.removeEventListener('scroll', setProgress);
     }
   });
@@ -66,8 +65,6 @@ export const ProgressBar: FC<Props> = ({ progress = 0 }) => {
       </div>
 
     </div>
-
-
   );
 };
 

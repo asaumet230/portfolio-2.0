@@ -10,7 +10,7 @@ export const HomeBannerTitle = () => {
     const [ text ] = useTypewriter({
         words: ['desarrollador web | móvil'],
         loop: 1,
-        typeSpeed: 100,
+        typeSpeed: 80,
         onLoopDone: () => {
             setTimeout(()=> {
                 setLoop(false);

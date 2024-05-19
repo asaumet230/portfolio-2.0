@@ -1,4 +1,4 @@
-import { HomeBanner, ToolsSection } from '@/components';
+import { HomeBanner, SkillsSection, ToolsSection } from '@/components';
 
 
 export default function HomePage() {
@@ -6,6 +6,7 @@ export default function HomePage() {
     <main>
       <HomeBanner />
       <ToolsSection />
+      <SkillsSection />
     </main>
   );
 }

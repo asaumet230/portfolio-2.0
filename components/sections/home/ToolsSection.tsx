@@ -13,10 +13,10 @@ export const ToolsSection = () => {
           <Separator />
         </div>
 
-        <p className="max-[920px]:text-center">Explora los lenguajes de programación y herramientas que impulsan mi trabajo. Descubre potentes frameworks y plataformas que convierten mis ideas en realidad. Estas tecnologías no solo son herramientas, son fuentes de inspiración para mi crecimiento profesional.</p>
+        <p className="w-10/12 text-center mx-auto max-[920px]:w-full">Explora los lenguajes de programación y herramientas que impulsan mi trabajo. Descubre potentes frameworks que convierten mis ideas en realidad. Estas tecnologías no solo son herramientas, son fuentes de inspiración para mi crecimiento profesional.</p>
 
 
-        <div className="grid grid-cols-3 my-10 gap-4 mx-auto max-[920px]:grid-cols-2 ">
+        <div className="grid grid-cols-3 my-10 gap-4 mx-auto max-[920px]:grid-cols-2">
           {
             toolsData.map(({ imageUrl, title, progressPercent }) => (
               <div className="pt-4 pb-5 flex flex-col justify-center items-center" key={imageUrl}>

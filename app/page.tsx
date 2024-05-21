@@ -1,4 +1,5 @@
 import { HomeBanner, SkillsSection, ToolsSection } from '@/components';
+import ExperienceSection from '@/components/sections/home/ExperienceSection';
 
 
 export default function HomePage() {
@@ -7,6 +8,7 @@ export default function HomePage() {
       <HomeBanner />
       <ToolsSection />
       <SkillsSection />
+      <ExperienceSection />
     </main>
   );
 }

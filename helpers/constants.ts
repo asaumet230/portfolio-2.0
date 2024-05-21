@@ -1,5 +1,5 @@
-import { IMenuLink, ISkills, ITool } from "@/interfaces";
-import { FaBrain } from "react-icons/fa";
+import { IExperienceItem, IMenuLink, ISkills, ITool } from "@/interfaces";
+
 
 export const menuData: IMenuLink[] = [
     {
@@ -86,5 +86,37 @@ export const skillsData: ISkills[] = [
   {
     title: 'aprendizaje continuo',
     content: 'Compromiso con el desarrollo personal y profesional, buscando constantemente ampliar conocimientos y habilidades.'
+  },
+];
+
+
+export const experienceItemSectionData: IExperienceItem[] = [
+  {
+    city: 'santa marta',
+    company: 'freelance',
+    position: 'web & mobil developer',
+    url: '/',
+    year: '2024',
+  },
+  {
+    city: 'santa marta',
+    company: 'chilo',
+    position: 'project manager',
+    url: 'https://www.chilo.com.co/',
+    year: '2023',
+  },
+  {
+    city: 'bogota D.C',
+    company: 'eferta',
+    position: 'junior developer',
+    url: 'https://www.eferta.com/',
+    year: '2022',
+  },
+  {
+    city: 'santa marta',
+    company: 'partyAf',
+    position: 'frontend developer',
+    url: 'https://www.partiaf.com/',
+    year: '2021',
   },
 ];

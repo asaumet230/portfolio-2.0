@@ -35,7 +35,7 @@ export const SkillsSection = () => {
                 <div className="grid grid-cols-3 mt-9 mb-10 gap-4 mx-auto max-[920px]:grid-cols-2">
                     {
                         skillsData.map((skill, i)=> (
-                            <div className={`flex flex-col justify-center items-center px-5 py-8 h-80 max-[920px]:px-2 ${ styles['skill-action'] }`} key={i}>
+                            <div className={`flex flex-col justify-center items-center px-5 py-8 h-80 max-[920px]:px-2 ${ styles['skill-action'] } ${ styles['skill-cursor'] }`} key={i}>
                             <div style={{
                                 backgroundImage: "url('/images/background-title-skills.webp')",
                                 backgroundSize: "cover",

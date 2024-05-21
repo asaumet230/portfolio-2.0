@@ -57,3 +57,25 @@ h4 {
 .btn:hover {
   @apply bg-white text-black underline underline-offset-8 decoration-secondary-color ease-in-out duration-100;
 }
+
+@keyframes heartbeat {
+  0%, 100% {
+    stroke-width: 1;
+    transform: scale(1);
+  }
+  50% {
+    stroke-width: 1.2;
+    transform: scale(1.1);
+  }
+}
+
+#custom-cusor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#custom-cursor svg circle:first-child {
+  animation: heartbeat 2s infinite;
+}
+

@@ -4,3 +4,7 @@
     transition: all 300ms ease-in-out;
     border-radius: 15px;
 }
+
+.skill-cursor:hover {
+    cursor:zoom-in;
+}

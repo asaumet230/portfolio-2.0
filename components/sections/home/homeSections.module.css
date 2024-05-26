@@ -8,3 +8,13 @@
 .skill-cursor:hover {
     cursor:zoom-in;
 }
+
+
+.profile-image {
+    border-top-right-radius:  50%;
+    border-top-left-radius: 50%;
+}
+
+.parragraph-first-letter::first-letter {
+    font-size: 42px;
+}

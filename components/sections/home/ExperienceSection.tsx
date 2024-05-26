@@ -2,9 +2,9 @@ import { ExperienceItemSection, Separator } from "@/components";
 import { experienceItemSectionData } from "@/helpers";
 
 
-const ExperienceSection = () => {
+export const ExperienceSection = () => {
     return (
-        <section className="mt-14">
+        <section className="mt-20">
             <div className="section">
                 <h2 className="text-4xl text-center mb-1 max-[920px]:text-3xl max-[920px]:mb-0">Experiencia</h2>
                 <div className="flex justify-center">

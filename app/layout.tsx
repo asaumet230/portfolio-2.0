@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Navbar } from "@/components";
+import { Navbar, SocialShareSidebar } from "@/components";
 import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
@@ -18,6 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${ lato.variable } ${ leagueOfSpartan.variable }`}>
         <div>
           <Navbar />
+          <SocialShareSidebar />
           {/* <Cursor /> */}
           {children}
         </div>

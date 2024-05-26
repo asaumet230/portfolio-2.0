@@ -1,5 +1,11 @@
-import { HomeBanner, SkillsSection, ToolsSection } from '@/components';
-import ExperienceSection from '@/components/sections/home/ExperienceSection';
+import { 
+  AboutMeSection,
+  ExperienceSection,
+  HomeBanner, 
+  SkillsSection, 
+  ToolsSection 
+} from '@/components';
+
 
 
 export default function HomePage() {
@@ -9,6 +15,7 @@ export default function HomePage() {
       <ToolsSection />
       <SkillsSection />
       <ExperienceSection />
+      <AboutMeSection />
     </main>
   );
 }

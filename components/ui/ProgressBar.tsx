@@ -57,7 +57,7 @@ export const ProgressBar: FC<Props> = ({ progress = 0 }) => {
   return (
 
     <div>
-      <p className='text-2xl text-center font-bold mb-1'>{progressBar} %</p>
+      <p className='text-xl text-center font-bold mb-1'>{progressBar} %</p>
       <div className={`${styles.progressBar} w-36`}>
         <div
           className={styles.progress}

@@ -14,9 +14,9 @@ export const ExperienceSection = () => {
                 <table className="table-auto w-10/12 mx-auto mt-14 mb-10 max-[640px]:w-full ">
                     <thead>
                         <tr className="border-b border-b-gray-200">
-                            <th className="pb-4 text-left uppercase font-semibold tracking-widest pl-2">compañia</th>
-                            <th className="pb-4 text-left uppercase font-semibold tracking-widest">cargo</th>
-                            <th className="pb-4 text-left uppercase font-semibold tracking-widest">año</th>
+                            <th className="pb-4 text-left uppercase font-semibold tracking-widest pl-2 max-[620px]:text-sm">compañia</th>
+                            <th className="pb-4 text-left uppercase font-semibold tracking-widest max-[620px]:text-sm">cargo</th>
+                            <th className="pb-4 text-left uppercase font-semibold tracking-widest max-[620px]:text-sm">año</th>
                            
                         </tr>
                     </thead>

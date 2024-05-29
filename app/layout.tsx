@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Navbar, SocialShareSidebar } from "@/components";
+import { Footer, Navbar, SocialShareSidebar } from "@/components";
 import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
@@ -20,6 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Navbar />
           <SocialShareSidebar />
           {children}
+          <Footer />
         </div>
       </body>
     </html>

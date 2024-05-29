@@ -4,7 +4,9 @@ import { Footer, Navbar, SocialShareSidebar } from "@/components";
 import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
-import "swiper/swiper-bundle.min.css"
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
 
 
 export const metadata: Metadata = {

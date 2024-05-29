@@ -41,8 +41,12 @@ export const TestimonialsSection = () => {
                     }}
                     pagination={{ clickable: true }}
                     breakpoints={{
-                            1020: {
+                            1025: {
                                 slidesPerView: 3,
+                                spaceBetween: 50 
+                              },
+                            1020: {
+                                slidesPerView: 2,
                                 spaceBetween: 50 
                               },
                         }}

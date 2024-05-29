@@ -1,4 +1,10 @@
-import { IExperienceItem, IMenuLink, ISkills, ITool } from "@/interfaces";
+import { 
+  IExperienceItem, 
+  IMenuLink, 
+  ISkills, 
+  ITestimonial, 
+  ITool 
+} from "@/interfaces";
 
 
 export const menuData: IMenuLink[] = [
@@ -120,3 +126,33 @@ export const experienceItemSectionData: IExperienceItem[] = [
     year: '2021',
   },
 ];
+
+
+
+
+export const testimonialsData: ITestimonial[] = [
+  {
+    name: 'angelica galvis',
+    content: 'Su persistencia, ingenio y profesionalismo lo destacan en el campo. Con una habilidad excepcional para interpretar conceptos de diseño, demuestra proactividad y una capacidad innata para convertir ideas en soluciones efectivas. Es sin duda un colaborador invaluable y un verdadero impulsor de proyectos exitosos.',
+    major: 'Diseñador UI | UX',
+    instagram: 'https://www.instagram.com/angelica_galvis_morales/',
+    image: '/images/testimonials/angelica-galvis.webp'
+  },
+  {
+    name: 'gustavo charris',
+    content: 'Es un profesional excepcional y una gran persona, siempre cumpliendo con los plazos establecidos. Demuestra habilidad tanto en entornos colaborativos como trabajando de manera independiente, adaptándose a cualquier escenario con eficacia y dedicación.',
+    major: 'Consultor SEO',
+    instagram: 'https://www.instagram.com/tavocharris/',
+    linkedin: 'https://www.linkedin.com/in/gustavo-charris-castaneda/',
+    image: '/images/testimonials/gustavo-charris.webp',
+  },
+  {
+    name: 'jorge romero',
+    content: 'Es un individuo admirable y un profesional sobresaliente, dotado de un amplio conocimiento en programación. Posee una excepcional habilidad para resolver problemas algorítmicos complejos y destaca por su capacidad de trabajar eficazmente bajo presión. Sin duda, su aporte es fundamental en cualquier equipo.',
+    major: 'Ingeniero de Sistemas',
+    instagram: 'https://www.instagram.com/jorgea_romero_saumeth/',
+    linkedin: 'https://www.linkedin.com/in/jorge-armando-romero-saumeth-b48b0b34/',
+    image: '/images/testimonials/jorge-romero.webp',
+
+  },
+]; 

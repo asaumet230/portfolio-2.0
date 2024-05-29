@@ -58,7 +58,7 @@ export const ProgressBar: FC<Props> = ({ progress = 0 }) => {
 
     <div>
       <p className='text-xl text-center font-bold mb-1'>{progressBar} %</p>
-      <div className={`${styles.progressBar} w-36 max-[400px]:w-44`}>
+      <div className={`${styles.progressBar}`}>
         <div
           className={styles.progress}
           style={{ width: `${progressBar}%` }}></div>

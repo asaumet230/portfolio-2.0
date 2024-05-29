@@ -79,3 +79,16 @@ h4 {
   animation: heartbeat 2s infinite;
 }
 
+.swiper-slide-active {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 5px; 
+  border-radius: 12px;
+}
+
+.swiper-pagination-bullet {
+  background: #7b7db0;
+}
+
+.swiper-pagination-bullet-active {
+  background: black;
+}

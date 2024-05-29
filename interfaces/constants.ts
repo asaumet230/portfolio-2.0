@@ -21,3 +21,13 @@ export interface IExperienceItem {
     year     : string;
     url      : string;
 }
+
+export interface ITestimonial {
+    name        : string;
+    content     : string;
+    major       : string;
+    image       : string;
+    linkedin?   : string;
+    instagram?  : string;
+    twitter?    : string;
+  }

@@ -4,7 +4,6 @@ import { Navbar, SocialShareSidebar } from "@/components";
 import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
-// import Cursor from "@/components/ui/Cursor";
 
 
 export const metadata: Metadata = {
@@ -19,7 +18,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <div>
           <Navbar />
           <SocialShareSidebar />
-          {/* <Cursor /> */}
           {children}
         </div>
       </body>

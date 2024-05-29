@@ -5,6 +5,7 @@
 
 .progressBar {
     width: 100%;
+    min-width: 120px;
     height: 20px;
     background-color: #ddd;
     border-radius: 10px;
@@ -20,14 +21,14 @@
   
 .social-share-sidebar {
   position: fixed;
-  top: 50%;
+  top: 45%;
   right: 20px;
   z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(1px);
   padding-top: 20px;
   padding-bottom: 20px;
   border-radius: 20px;
@@ -66,14 +67,7 @@
 
 @media( max-width: 720px ) {
   .social-share-sidebar {
-    position: fixed;
-    top: 50%;
-    right: 0px;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 50px;
+    right: 5px;
   }
 }

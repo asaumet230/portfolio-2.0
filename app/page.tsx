@@ -3,7 +3,8 @@ import {
   ExperienceSection,
   HomeBanner, 
   SkillsSection, 
-  ToolsSection 
+  ToolsSection,
+  TestimonialsSection, 
 } from '@/components';
 
 
@@ -16,6 +17,7 @@ export default function HomePage() {
       <SkillsSection />
       <ExperienceSection />
       <AboutMeSection />
+      <TestimonialsSection />
     </main>
   );
 }

@@ -4,6 +4,7 @@ import { Navbar, SocialShareSidebar } from "@/components";
 import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
+import "swiper/swiper-bundle.min.css"
 
 
 export const metadata: Metadata = {

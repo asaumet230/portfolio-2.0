@@ -9,7 +9,7 @@ import { FaLinkedin, FaSquareInstagram, FaSquareXTwitter } from 'react-icons/fa6
 import { Separator } from '@/components';
 import { testimonialsData } from '@/helpers';
 
-import 'swiper/swiper-bundle.min.css';
+
 import styles from './homeSections.module.css';
 
 

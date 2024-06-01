@@ -50,17 +50,27 @@ export const SocialShareSidebar = () => {
       {
         socialSidebar && (
           <div className={`${styles['social-share-sidebar']} animate__animated animate__fadeIn`}>
-            <p className={`rotate-90 text-xl my-10 font-semibold uppercase ${styles['social-share-message']}`}>Sigueme</p>
+            <p className={`rotate-90 my-10 font-semibold uppercase ${styles['social-share-message']}`}>Sigueme</p>
             <div>
               <ul>
                 <li className='my-3 cursor-pointer'>
-                  <FaSquareInstagram size={24} />
+                  <a 
+                    href="https://www.instagram.com/pipesaumet/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"><FaSquareInstagram size={22} /></a>
+                  
                 </li>
                 <li className='my-3 cursor-pointer'>
-                  <FaSquareXTwitter size={24} />
+                  <a 
+                    href="https://twitter.com/SaumetAndres" 
+                    target="_blank" 
+                    rel="noopener noreferrer"><FaSquareXTwitter size={22} /></a>
                 </li>
                 <li className='my-3 cursor-pointer'>
-                  <FaLinkedin size={24} />
+                  <a 
+                    href="https://www.linkedin.com/in/andresfelipesaumet/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"><FaLinkedin size={22} /></a>
                 </li>
               </ul>
             </div>

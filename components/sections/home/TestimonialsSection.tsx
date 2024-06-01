@@ -39,6 +39,7 @@ export const TestimonialsSection = () => {
                     slideShadows: false,
 
                     }}
+                    spaceBetween={0}
                     pagination={{ clickable: true }}
                     breakpoints={{
                             1025: {
@@ -54,7 +55,7 @@ export const TestimonialsSection = () => {
                         {
                             testimonialsData.map( ({ name, major, content, image, instagram, linkedin, twitter }) => (
                                 <SwiperSlide key={name}>
-                                    <div className={`bg-gray-100 w-auto mx-auto rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard}`}>
+                                    <div className={`bg-gray-100 w-auto mx-auto rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:h-6/6 max-[400px]:py-4`}>
                                             <Image 
                                                 className='rounded-full mx-auto'
                                                 width={90}
@@ -73,7 +74,7 @@ export const TestimonialsSection = () => {
                                                     linkedin && ( <a href={linkedin}><FaLinkedin size={24} className='mx-1'/></a>)
                                                 }
                                             </div>
-                                            <p className='text-center mt-6 leading-relaxed font-light'>{content}</p>
+                                            <p className='text-center mt-6 leading-relaxed font-light max-[400px]:mt-3'>{content}</p>
                                     </div>
                                 </SwiperSlide>    
                             ))

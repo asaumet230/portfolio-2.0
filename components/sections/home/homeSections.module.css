@@ -21,3 +21,18 @@
 .testimonialCard {
     min-height: 490px ;
 }
+
+.cv-icon {
+    font-family: var(--font-league-spartan);
+    font-style: bold;
+    height: 30px;
+    width: 30px;
+    background-color: black;
+    border-radius: 100%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
+    font-weight: bold;
+}

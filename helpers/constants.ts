@@ -140,7 +140,7 @@ export const testimonialsData: ITestimonial[] = [
   },
   {
     name: 'gustavo charris',
-    content: 'Es un profesional excepcional y una gran persona, siempre cumpliendo con los plazos establecidos. Demuestra habilidad tanto en entornos colaborativos como trabajando de manera independiente, adaptándose a cualquier escenario con eficacia y dedicación.',
+    content: 'Es un profesional excepcional y una gran persona, siempre cumpliendo con los plazos establecidos. Demuestra habilidad tanto en entornos colaborativos como trabajando de manera independiente, adaptándose a cualquier escenario con eficacia y dedicación. Además sabe usar metodologías agiles como SCRUM',
     major: 'Consultor SEO',
     instagram: 'https://www.instagram.com/tavocharris/',
     linkedin: 'https://www.linkedin.com/in/gustavo-charris-castaneda/',

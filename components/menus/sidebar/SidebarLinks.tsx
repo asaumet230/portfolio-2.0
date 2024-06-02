@@ -6,18 +6,15 @@ import { usePathname } from 'next/navigation';
 
 import { IMenuLink } from '@/interfaces';
 
-import styles from './navbar.module.css';
-
-
-export const NavbarMenuLink:FC<IMenuLink> = ({ name, url }) => {
+export const SidebarLinks: FC<IMenuLink> = ({ name, url }) => {
 
     const pathname = usePathname();
 
     return (
-        <li className={`links px-4 py-2 ${ (pathname === url) && styles['active-link'] }`}>
+        <li className={`links py-5 px-3 cursor-pointer ${(pathname === url) && 'text-secondary-color'}`} key={url}>
             <Link href={url}>{name}</Link>
         </li>
     )
 }
 
-export default NavbarMenuLink;
+export default SidebarLinks

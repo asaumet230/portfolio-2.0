@@ -9,8 +9,8 @@ export const Logo = () => {
             <Image 
                 height={100}
                 width={170}
-                src={"/images/logo-andres-saumet.png"} 
-                alt={"logo-andres-saumet"} />
+                src={"/images/logo-andres-saumet.webp"} 
+                alt={"logo-andres-saumet"} className='images'/>
         </Link>
     </div>
   )

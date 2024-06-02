@@ -65,13 +65,13 @@ export const TestimonialsSection = () => {
                                             <h4 className='text-center mt-3'>{major}</h4>
                                             <div className='flex justify-center mt-2'>
                                                 {
-                                                    instagram &&  (<a href={instagram}><FaSquareInstagram size={24} className='mx-1'/></a>)
+                                                    instagram &&  (<a href={instagram} className='transition-all ease-in-out hover:scale-125'><FaSquareInstagram size={24} className='mx-1'/></a>)
                                                 }
                                                 {
-                                                    twitter && (<a href={twitter}> <FaSquareXTwitter size={24} className='mx-1'/></a>)
+                                                    twitter && (<a href={twitter} className='transition-all ease-in-out hover:scale-125'> <FaSquareXTwitter size={24} className='mx-1'/></a>)
                                                 }
                                                 {
-                                                    linkedin && ( <a href={linkedin}><FaLinkedin size={24} className='mx-1'/></a>)
+                                                    linkedin && ( <a href={linkedin} className='transition-all ease-in-out hover:scale-125'><FaLinkedin size={24} className='mx-1'/></a>)
                                                 }
                                             </div>
                                             <p className='text-center mt-6 leading-relaxed font-light max-[400px]:mt-3'>{content}</p>

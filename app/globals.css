@@ -50,6 +50,11 @@ h4 {
   font-family: var(--font-league-spartan);
 }
 
+.images {
+  width: auto;
+  height: auto;
+}
+
 .btn {
   @apply bg-neutral-900 w-40 rounded-md text-white font-bold text-center p-4;
 }

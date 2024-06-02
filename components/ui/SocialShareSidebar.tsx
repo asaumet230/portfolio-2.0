@@ -53,20 +53,20 @@ export const SocialShareSidebar = () => {
             <p className={`rotate-90 my-10 font-semibold uppercase ${styles['social-share-message']}`}>Sigueme</p>
             <div>
               <ul>
-                <li className='my-3 cursor-pointer'>
+                <li className='my-3 cursor-pointer transition-all ease-in-out hover:scale-125'>
                   <a 
                     href="https://www.instagram.com/pipesaumet/" 
                     target="_blank" 
                     rel="noopener noreferrer"><FaSquareInstagram size={22} /></a>
                   
                 </li>
-                <li className='my-3 cursor-pointer'>
+                <li className='my-3 cursor-pointer transition-all ease-in-out hover:scale-125'>
                   <a 
                     href="https://twitter.com/SaumetAndres" 
                     target="_blank" 
                     rel="noopener noreferrer"><FaSquareXTwitter size={22} /></a>
                 </li>
-                <li className='my-3 cursor-pointer'>
+                <li className='my-3 cursor-pointer transition-all ease-in-out hover:scale-125'>
                   <a 
                     href="https://www.linkedin.com/in/andresfelipesaumet/" 
                     target="_blank" 

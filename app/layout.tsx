@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Footer, Navbar, SocialShareSidebar } from "@/components";
+import { Footer, Navbar, SearchModal, Sidebar, SocialShareSidebar } from "@/components";
 import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
@@ -19,6 +19,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="es">
       <body className={`${ lato.variable } ${ leagueOfSpartan.variable }`}>
         <div>
+          {/* <SearchModal /> */}
+          {/* <Sidebar /> */}
           <Navbar />
           <SocialShareSidebar />
           {children}

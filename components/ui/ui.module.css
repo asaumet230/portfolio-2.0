@@ -66,9 +66,41 @@
   background-color: white;
 }
 
+.search-modal {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-color: rgba(1, 1, 1, 0.9);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10%;
+}
+ 
+.search-modal-button:hover{
+  background-color: rgba(250, 250, 250, 0.4) !important;
+  color: white !important;
+} 
+
 @media( max-width: 720px ) {
   .social-share-sidebar {
     width: 50px;
     right: 5px;
   }
+
+  .search-modal {
+    padding-top: 20%;
+  }
 }
+
+@media( max-width: 640px ) {
+
+  .search-modal-button {
+    background-color: rgba(250, 250, 250, 0.2) !important;
+    transition: all 300ms ease-in-out;
+  }  
+  
+}
+
+

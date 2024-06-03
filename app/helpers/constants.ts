@@ -1,16 +1,6 @@
 import { 
-    FaBrain, 
-    FaClock, 
-    FaComments, 
-    FaGraduationCap, 
-    FaLightbulb, 
-    FaUsers,
- } from 'react-icons/fa';
-
-import { 
   IExperienceItem, 
   IMenuLink, 
-  ISkills, 
   ITestimonial, 
   ITool 
 } from "@/app/interfaces";

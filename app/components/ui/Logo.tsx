@@ -7,6 +7,7 @@ export const Logo = () => {
     <div>
         <Link href={"/"}>
             <Image 
+                priority
                 height={100}
                 width={170}
                 src={"/images/logo-andres-saumet.webp"} 

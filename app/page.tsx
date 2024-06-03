@@ -5,7 +5,7 @@ import {
   SkillsSection, 
   ToolsSection,
   TestimonialsSection, 
-} from '@/components';
+} from '@/app/components';
 
 
 

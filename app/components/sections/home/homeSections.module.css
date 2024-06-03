@@ -22,6 +22,10 @@
     min-height: 490px ;
 }
 
+.testimonials-major-title {
+    font-family: var(--font-league-spartan);
+}
+
 .cv-icon {
     font-family: var(--font-league-spartan);
     font-style: bold;

@@ -2,16 +2,16 @@ import { FaSearch } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
 
 import { NavbarMenuLink } from './';
-import { DarkMode, Logo } from '@/components/ui';
+import { DarkMode, Logo } from '@/app/components/ui';
 
-import { menuData } from '@/helpers';
+import { menuData } from '@/app/helpers';
 
 import styles from './navbar.module.css';
 
 export const Navbar = () => {
 
   return (
-    <header className="container p-3 flex justify-between items-center">
+    <header className="container p-3 flex justify-between items-center max-[500px]:px-0">
       <Logo />
       <div className="flex">
         <nav className={styles['display-desktop-menu']}>

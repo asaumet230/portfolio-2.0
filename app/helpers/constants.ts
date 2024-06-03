@@ -1,10 +1,19 @@
 import { 
+    FaBrain, 
+    FaClock, 
+    FaComments, 
+    FaGraduationCap, 
+    FaLightbulb, 
+    FaUsers,
+ } from 'react-icons/fa';
+
+import { 
   IExperienceItem, 
   IMenuLink, 
   ISkills, 
   ITestimonial, 
   ITool 
-} from "@/interfaces";
+} from "@/app/interfaces";
 
 
 export const menuData: IMenuLink[] = [
@@ -66,34 +75,6 @@ export const toolsData: ITool[] = [
   },
 ];
 
-
-export const skillsData: ISkills[] = [
-
-  {
-    title: 'pensamiento crítico',
-    content: 'Aptitud para analizar situaciones o problemas, identificar patrones y explorar soluciones basadas en una evaluación lógica y detallada.',
-  },
-  {
-    title: 'trabajo en equipo',
-    content: 'Experiencia trabajando en equipos multidisciplinarios y habilidad para colaborar y apoyar a los compañeros en la consecución de metas comunes.'
-  },
-  {
-    title: 'comunicación efectiva',
-    content: 'Capacidad para explicar conceptos técnicos de manera clara a audiencias no técnicas y colaborar efectivamente con colegas y clientes.'
-  },
-  {
-    title: 'gestión del tiempo',
-    content: 'Competencia para manejar múltiples tareas y proyectos al mismo tiempo, priorizando eficazmente para cumplir con los plazos establecidos.'
-  },
-  {
-    title: 'creatividad',
-    content: 'Capacidad para pensar fuera de lo establecido y generar ideas innovadoras que pueden traducirse en mejoras de productos.'
-  },
-  {
-    title: 'aprendizaje continuo',
-    content: 'Compromiso con el desarrollo personal y profesional, buscando constantemente ampliar conocimientos y habilidades.'
-  },
-];
 
 
 export const experienceItemSectionData: IExperienceItem[] = [

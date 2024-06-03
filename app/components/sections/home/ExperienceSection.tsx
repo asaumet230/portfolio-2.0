@@ -1,5 +1,5 @@
-import { ExperienceItemSection, Separator } from "@/components";
-import { experienceItemSectionData } from "@/helpers";
+import { ExperienceItemSection, Separator } from "@/app/components";
+import { experienceItemSectionData } from "@/app/helpers";
 
 
 export const ExperienceSection = () => {

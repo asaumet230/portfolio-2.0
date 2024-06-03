@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { FaGithub, FaLinkedin } from 'react-icons/fa6';
 
-import { Separator } from '@/components';
+import { Separator } from '@/app/components';
 
 import styles from './homeSections.module.css';
 
@@ -16,11 +16,12 @@ export const AboutMeSection = () => {
         <div className='grid grid-cols-2 gap-8 mt-8 max-[920px]:flex flex-col mx-2'>
           <div className='flex-coljustify-center items-center'>
             <Image
-              className={styles['profile-image']}
+              priority
               src='/images/perfil-1.webp'
               alt='Perfil-1'
               width='520'
-              height='520' />
+              height='520' 
+              className={`${styles['profile-image']} images`}/>
             <div className='mt-3'>
               <ul className='flex justify-center'>
                 <li className='mr-3 hover:scale-110 transition-all ease-in-out'>

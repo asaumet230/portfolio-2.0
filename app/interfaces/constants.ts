@@ -12,6 +12,7 @@ export interface ITool {
 export interface ISkills {
     title: string;
     content: string;
+    icon: JSX.Element
 }
 
 export interface IExperienceItem {

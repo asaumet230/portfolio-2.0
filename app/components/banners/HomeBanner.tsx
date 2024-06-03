@@ -8,7 +8,7 @@ export const HomeBanner = () => {
     <header className="pt-4">
       <div className="container grid grid-cols-2 max-[920px]:flex flex-col-reverse">
 
-        <div className="flex flex-col justify-center text-left p-6 max-[920px]:text-center">
+        <div className="flex flex-col justify-center text-left p-3 max-[920px]:text-center">
           <p className="font-semibold text-2xl capitalize mb-4 max-[920px]:text-xl">Hola soy Andres Felipe,</p>
           <HomeBannerTitle />
 
@@ -29,6 +29,8 @@ export const HomeBanner = () => {
 
         <div className="bg-slate-200 flex justify-center animate__animated animate__fadeIn">
           <Image
+            priority
+            className='images'
             width={600}
             height={600}
             src="/images/andres-felipe-saumet-desarrollador-web-movil.webp"

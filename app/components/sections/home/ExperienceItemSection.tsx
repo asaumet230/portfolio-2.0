@@ -3,7 +3,7 @@
 import { FC } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { IExperienceItem } from '@/interfaces';
+import { IExperienceItem } from '@/app/interfaces';
 
 
 export const ExperienceItemSection: FC<IExperienceItem> = ({ company, city, position, year, url }) => {

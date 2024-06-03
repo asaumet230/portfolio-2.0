@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
 import { FaLinkedin, FaSquareInstagram, FaSquareXTwitter } from 'react-icons/fa6';
 
-import { Separator } from '@/components';
-import { testimonialsData } from '@/helpers';
+import { Separator } from '@/app/components';
+import { testimonialsData } from '@/app/helpers';
 
 
 import styles from './homeSections.module.css';
@@ -57,12 +57,12 @@ export const TestimonialsSection = () => {
                                 <SwiperSlide key={name}>
                                     <div className={`bg-gray-100 w-auto mx-auto rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:h-6/6 max-[400px]:py-4`}>
                                             <Image 
-                                                className='rounded-full mx-auto'
+                                                className='rounded-full mx-auto images'
                                                 width={90}
                                                 height={90}
                                                 src={image}
                                                 alt={name} />
-                                            <h4 className='text-center mt-3'>{major}</h4>
+                                            <p className={`text-center text-xl font-bold mt-3 ${styles['testimonials-major-title']}`}>{major}</p>
                                             <div className='flex justify-center mt-2'>
                                                 {
                                                     instagram &&  (<a href={instagram} className='transition-all ease-in-out hover:scale-125'><FaSquareInstagram size={24} className='mx-1'/></a>)

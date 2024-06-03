@@ -4,7 +4,7 @@ import { FC } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { IMenuLink } from '@/interfaces';
+import { IMenuLink } from '@/app/interfaces';
 
 import styles from './navbar.module.css';
 

@@ -61,7 +61,8 @@ export const TestimonialsSection = () => {
                                                 width={90}
                                                 height={90}
                                                 src={image}
-                                                alt={name} />
+                                                alt={name}
+                                                priority={false}/>
                                             <p className={`text-center text-xl font-bold mt-3 ${styles['testimonials-major-title']}`}>{major}</p>
                                             <div className='flex justify-center mt-2'>
                                                 {

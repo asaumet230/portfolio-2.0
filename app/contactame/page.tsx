@@ -1,7 +1,11 @@
 
 
-export default function Contactame() {
+export default async function ContactPage() {
+
+
   return (
-    <div>contactame</div>
-  )
+    <div>
+      <h1>Contactame</h1>
+    </div>
+  );
 }

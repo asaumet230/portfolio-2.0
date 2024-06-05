@@ -25,7 +25,9 @@ export const ToolsSection = () => {
                   src={imageUrl}
                   alt={title}
                   width={70}
-                  height={70} />
+                  height={70} 
+                  priority={ false}
+                  />
                 <h3 className="my-3 capitalize text-xl">{title}</h3>
                 <ProgressBar progress={progressPercent} />
               </div>

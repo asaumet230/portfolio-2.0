@@ -16,7 +16,7 @@ export const AboutMeSection = () => {
         <div className='grid grid-cols-2 gap-8 mt-8 max-[920px]:flex flex-col mx-2'>
           <div className='flex-coljustify-center items-center'>
             <Image
-              priority
+              priority={false}
               src='/images/perfil-1.webp'
               alt='Perfil-1'
               width='520'

@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { FaUser } from 'react-icons/fa6';
 
-import { menuData } from '@/app/helpers';
-import { DarkMode } from '@/app/components/ui';
+import { menuData } from '@/helpers';
+import { DarkMode } from '@/components/ui';
 
 import styles from './sidebar.module.css';
 import SidebarLinks from './SidebarLinks';

@@ -2,9 +2,9 @@ import { FaSearch } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
 
 import { NavbarMenuLink } from './';
-import { DarkMode, Logo } from '@/app/components/ui';
+import { DarkMode, Logo } from '@/components/ui';
 
-import { menuData } from '@/app/helpers';
+import { menuData } from '@/helpers';
 
 import styles from './navbar.module.css';
 

@@ -1,0 +1,13 @@
+.card-effect:hover {
+    @apply cursor-context-menu;
+}
+
+
+.card-effect:hover img {
+    @apply rounded-t-xl brightness-50 transition-all duration-150;
+}
+
+
+.card-button {
+    @apply py-2 px-4 text-sm w-28 font-semibold rounded bg-black text-white flex items-center justify-center hover:text-black transition-all ease-in-out duration-300 hover:bg-white;
+}

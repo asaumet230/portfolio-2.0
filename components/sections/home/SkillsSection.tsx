@@ -1,4 +1,4 @@
-import { Separator } from '@/app/components/ui';
+import { Separator } from '@/components/ui';
 import {
     FaBrain,
     FaClock,
@@ -8,7 +8,7 @@ import {
     FaUsers,
 } from 'react-icons/fa';
 
-import { ISkills } from '@/app/interfaces';
+import { ISkills } from '@/interfaces';
 
 import styles from './homeSections.module.css';
 

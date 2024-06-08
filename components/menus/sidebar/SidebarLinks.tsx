@@ -4,7 +4,7 @@ import { FC } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { IMenuLink } from '@/app/interfaces';
+import { IMenuLink } from '@/interfaces';
 
 export const SidebarLinks: FC<IMenuLink> = ({ name, url }) => {
 

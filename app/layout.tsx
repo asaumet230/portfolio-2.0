@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { Footer, Navbar, SearchModal, Sidebar, SocialShareSidebar } from "@/app/components";
-import { lato, leagueOfSpartan } from "@/app/fonts";
+import { Footer, Navbar, SearchModal, Sidebar, SocialShareSidebar } from "@/components";
+import { lato, leagueOfSpartan } from "@/fonts";
 
 import "./globals.css";
 import 'swiper/css';

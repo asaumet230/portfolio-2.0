@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules';
 import { FaLinkedin, FaSquareInstagram, FaSquareXTwitter } from 'react-icons/fa6';
 
-import { Separator } from '@/app/components';
-import { testimonialsData } from '@/app/helpers';
+import { Separator } from '@/components';
+import { testimonialsData } from '@/helpers';
 
 
 import styles from './homeSections.module.css';

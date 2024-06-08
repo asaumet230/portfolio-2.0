@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
-import { ProgressBar, Separator } from "@/app/components/ui";
-import { toolsData } from "@/app/helpers";
+import { ProgressBar, Separator } from "@/components/ui";
+import { toolsData } from "@/helpers";
 
 
 export const ToolsSection = () => {

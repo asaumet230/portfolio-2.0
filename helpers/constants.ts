@@ -3,7 +3,7 @@ import {
   IMenuLink, 
   ITestimonial, 
   ITool 
-} from "@/app/interfaces";
+} from "@/interfaces";
 
 
 export const menuData: IMenuLink[] = [
@@ -12,8 +12,8 @@ export const menuData: IMenuLink[] = [
       url: '/',
     },
     {
-      name: 'trabajos',
-      url: '/trabajos',
+      name: 'proyectos destacados',
+      url: '/proyectos-destacados',
     },
     {
       name: 'contactame',

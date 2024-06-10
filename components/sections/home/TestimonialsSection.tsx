@@ -8,7 +8,7 @@ import { FaLinkedin, FaSquareInstagram, FaSquareXTwitter } from 'react-icons/fa6
 
 import { Separator } from '@/components';
 import { testimonialsData } from '@/helpers';
-
+    
 
 import styles from './homeSections.module.css';
 
@@ -32,21 +32,20 @@ export const TestimonialsSection = () => {
                     slidesPerView={1}
                     initialSlide={1}
                     coverflowEffect={{
-                    rotate: 0,
-                    stretch: 10,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows: false,
-
+                        rotate: 0,
+                        stretch: 10,
+                        depth: 100,
+                        modifier: 1,
+                        slideShadows: false,
                     }}
-                    spaceBetween={0}
+                    spaceBetween={40}
                     pagination={{ clickable: true }}
                     breakpoints={{
-                            1025: {
+                            1200: {
                                 slidesPerView: 3,
                                 spaceBetween: 50 
                               },
-                            1020: {
+                            720: {
                                 slidesPerView: 2,
                                 spaceBetween: 50 
                               },
@@ -55,7 +54,7 @@ export const TestimonialsSection = () => {
                         {
                             testimonialsData.map( ({ name, major, content, image, instagram, linkedin, twitter }) => (
                                 <SwiperSlide key={name}>
-                                    <div className={`bg-gray-100 w-auto mx-auto rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:h-6/6 max-[400px]:py-4`}>
+                                    <div className={`bg-gray-100 w-auto card-shadow mx-auto cursor-grabbing rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:h-6/6 max-[400px]:py-4`}>
                                             <Image 
                                                 className='rounded-full mx-auto images'
                                                 width={90}

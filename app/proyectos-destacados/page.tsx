@@ -1,4 +1,4 @@
-import { Separator, WebProjects } from "@/components";
+import { MobilProjects, Separator, WebProjects } from "@/components";
 
 
 export default function Trabajos() {
@@ -21,6 +21,7 @@ export default function Trabajos() {
         {/* sección web */}
         <WebProjects />
         {/* sección movil */}
+        <MobilProjects />
       </main>
 
     </>

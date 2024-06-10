@@ -1,5 +1,5 @@
 .card-effect:hover {
-    @apply cursor-context-menu;
+    @apply cursor-grabbing;
 }
 
 

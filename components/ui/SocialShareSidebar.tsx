@@ -1,17 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-
-import {
-  FaLinkedin,
-  FaSquareXTwitter,
-  FaSquareInstagram,
-  FaArrowUp
-} from 'react-icons/fa6';
-
+import { FaArrowUp } from 'react-icons/fa6';
 import 'animate.css';
 
+import { SocialMediaLinks } from '.';
 import styles from './ui.module.css';
+
 
 export const SocialShareSidebar = () => {
 
@@ -33,7 +28,6 @@ export const SocialShareSidebar = () => {
     });
 }
 
-
   useEffect(() => {
 
     document.addEventListener('scroll', toggleVisibility);
@@ -44,36 +38,17 @@ export const SocialShareSidebar = () => {
   }, [socialSidebar]);
 
 
-
   return (
     <>
       {
         socialSidebar && (
           <div className={`${styles['social-share-sidebar']} animate__animated animate__fadeIn`}>
             <p className={`rotate-90 my-10 font-semibold uppercase ${styles['social-share-message']}`}>Sigueme</p>
-            <div>
-              <ul>
-                <li className='my-3 cursor-pointer transition-all ease-in-out hover:scale-125'>
-                  <a 
-                    href="https://www.instagram.com/pipesaumet/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"><FaSquareInstagram size={22} /></a>
-                  
-                </li>
-                <li className='my-3 cursor-pointer transition-all ease-in-out hover:scale-125'>
-                  <a 
-                    href="https://twitter.com/SaumetAndres" 
-                    target="_blank" 
-                    rel="noopener noreferrer"><FaSquareXTwitter size={22} /></a>
-                </li>
-                <li className='my-3 cursor-pointer transition-all ease-in-out hover:scale-125'>
-                  <a 
-                    href="https://www.linkedin.com/in/andresfelipesaumet/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"><FaLinkedin size={22} /></a>
-                </li>
-              </ul>
-            </div>
+            <nav className='rotate-90 my-8 w-full'>
+              <SocialMediaLinks 
+                size={23} 
+                marginStyle={'my-3 mx-1'} />
+            </nav>
             <div className={styles['social-back-top-button']} onClick={ScrollTop}>
               <FaArrowUp />
             </div>

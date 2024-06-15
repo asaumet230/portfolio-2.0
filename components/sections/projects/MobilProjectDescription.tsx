@@ -25,7 +25,7 @@ export const MobilProjectDescription = () => {
           alt='cinemapedia-app-2' />
       </div>
 
-      <div className='p-6'>
+      <div className='py-6 px-10'>
         <h3 className='text-xl capitalize'>Cinemapedia</h3>
         <p className='font-light text-sm  mt-1 leading-relaxed'>Desarrollé una aplicación con Flutter y Dart, utilizando el patrón de diseño Domain-Driven Design (DDD) para proporcionar una guía completa de películas que incluye descripciones detalladas, calificaciones y tráilers. Esta solución, diseñada especialmente para cinéfilos, facilita la exploración y descubrimiento de nuevos filmes a través de una interfaz intuitiva, mejorando significativamente la experiencia de selección de contenido cinematográfico.</p>
         <h4 className='text-lg text-left mt-4 capitalize'>tecnologías usadas:</h4>

@@ -22,7 +22,7 @@ export const HomeBanner = () => {
             <a
               href={'/'}
               target='#'
-              className="btn">Mas Información</a>
+              className="btn w-40">Mas Información</a>
           </div>
 
         </div>

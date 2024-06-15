@@ -33,12 +33,12 @@ export const MobilProjects = () => {
           slideShadows: false,
         }}
         autoplay={{
-          delay: 3000,
+          delay: 15000,
           disableOnInteraction: false,
         }}
         spaceBetween={40}
         pagination={{ clickable: true }}
-      
+
         className='mt-4 mx-auto w-7/12 max-[1250px]:w-8/12 max-[640px]:w-9/12'>
 
         <SwiperSlide >

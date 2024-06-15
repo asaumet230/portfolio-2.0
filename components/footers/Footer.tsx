@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { FaLinkedin, FaSquareInstagram, FaSquareXTwitter } from 'react-icons/fa6';
+
+import { SocialMediaLinks } from '../ui';
 
 export const Footer = () => {
   return (
@@ -38,17 +39,9 @@ export const Footer = () => {
         <div className='text-center max-[640px]:py-1'>
           <h3 className='text-xl max-[640px]:text-lg'>Sigueme en Redes</h3>
           <nav className='py-3'>
-            <ul className='flex justify-center'>
-              <li className='my-1 mx-2  transition-all ease-in-out hover:scale-125'>
-                <a href="https://www.instagram.com/pipesaumet/" target="_blank" rel="noopener noreferrer"><FaSquareInstagram size={24} /></a>
-              </li>
-              <li className='my-1 mx-2 transition-all ease-in-out hover:scale-125'>
-                <a href="https://twitter.com/SaumetAndres" target="_blank" rel="noopener noreferrer"><FaSquareXTwitter size={24} /></a>
-              </li>
-              <li className='my-1 mx-2 transition-all ease-in-out hover:scale-125'>
-                <a href="https://www.linkedin.com/in/andresfelipesaumet/" target="_blank" rel="noopener noreferrer"><FaLinkedin size={24} /></a>
-              </li>
-            </ul>
+            <SocialMediaLinks 
+              size={25} 
+              marginStyle='mx-2'/>
           </nav>
         </div>
       </div>

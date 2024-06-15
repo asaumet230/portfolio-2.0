@@ -60,7 +60,7 @@ h4 {
 }
 
 .btn {
-  @apply bg-neutral-900 w-40 rounded-md text-white font-bold text-center p-4;
+  @apply bg-neutral-900 rounded-md text-white font-bold text-center p-4;
 }
 
 .btn:hover {
@@ -94,9 +94,11 @@ h4 {
 }
 
 .swiper-pagination-bullet {
-  background: #7b7db0;
+  background: grey;
+  opacity: 0.6;
 }
 
 .swiper-pagination-bullet-active {
   background: black;
+  opacity: 1;
 }

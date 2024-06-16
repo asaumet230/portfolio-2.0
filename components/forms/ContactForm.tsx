@@ -140,6 +140,7 @@ export const ContactForm = () => {
                     onChange={(token: string) => {
                         console.log('paso por aquí')
                         setRecaptchaToken(token);
+                        console.log(recaptchaToken);
                     }}
                 />
             </div>

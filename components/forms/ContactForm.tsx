@@ -3,15 +3,18 @@
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react';
 
 import styles from './forms.module.css';
 
 export const ContactForm = () => {
 
+
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formErrorSubmitted, setFormErrorSubmitted] = useState(false);
+    const [recaptchaToken, setRecaptchaToken] = useState('');
 
-    const { handleSubmit, getFieldProps, errors, touched, isSubmitting, isValid, dirty } = useFormik({
+    const { handleSubmit, getFieldProps, errors, touched, isSubmitting, isValid } = useFormik({
 
         initialValues: {
             name: '',
@@ -22,42 +25,44 @@ export const ContactForm = () => {
         },
         onSubmit: async (values, { setSubmitting, resetForm }) => {
 
-            try {
+            console.log(recaptchaToken);
 
-                const res = await fetch('https://formcarry.com/s/C95VcZVVvAm', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: values.name,
-                        email: values.email,
-                        company: values.company,
-                        subject: values.subject,
-                        message: values.message,
-                    }),
-                });
+            // try {
 
-                console.log(res);
+            //     const res = await fetch('https://formcarry.com/s/C95VcZVVvAm', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Accept': 'application/json',
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify({
+            //             name: values.name,
+            //             email: values.email,
+            //             company: values.company,
+            //             subject: values.subject,
+            //             message: values.message,
+            //         }),
+            //     });
 
-                if (res.ok) {
-                    setFormSubmitted(true);
-                    resetForm();
-                    setTimeout(() => {
-                        setFormSubmitted(false);
-                    }, 8000);
-                }
+            //     console.log(res);
 
-            } catch (error) {
-                console.log(error);
-                setSubmitting(false);
-                setFormErrorSubmitted(true);
+            //     if (res.ok) {
+            //         setFormSubmitted(true);
+            //         resetForm();
+            //         setTimeout(() => {
+            //             setFormSubmitted(false);
+            //         }, 8000);
+            //     }
 
-                setTimeout(() => {
-                    setFormErrorSubmitted(false);
-                }, 8000);
-            }
+            // } catch (error) {
+            //     console.log(error);
+            //     setSubmitting(false);
+            //     setFormErrorSubmitted(true);
+
+            //     setTimeout(() => {
+            //         setFormErrorSubmitted(false);
+            //     }, 8000);
+            // }
 
         },
         validationSchema: Yup.object({
@@ -127,6 +132,17 @@ export const ContactForm = () => {
                 {...getFieldProps('message')}></textarea>
 
             {(touched.message && errors.message) && <p className={styles['error-message']}>{errors.message}</p>}
+
+            
+            <div className='flex justify-center'>
+                <GoogleReCaptchaCheckbox
+                    action='submit'
+                    onChange={(token: string) => {
+                        console.log('paso por aquí')
+                        setRecaptchaToken(token);
+                    }}
+                />
+            </div>
 
             <button
                 disabled={isSubmitting || !isValid}

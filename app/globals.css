@@ -67,6 +67,12 @@ h4 {
   @apply bg-white text-black underline underline-offset-8 decoration-secondary-color ease-in-out duration-100;
 }
 
+/* Recaptcha */
+.grecaptcha-badge {
+	display: none;
+}
+
+
 @keyframes heartbeat {
   0%, 100% {
     stroke-width: 1;

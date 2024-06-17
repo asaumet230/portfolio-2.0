@@ -3,16 +3,21 @@
 import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react';
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
+import { revalidateRecaptcha } from '@/helpers';
+
+import 'animate.css';
 import styles from './forms.module.css';
 
 export const ContactForm = () => {
 
-
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formErrorSubmitted, setFormErrorSubmitted] = useState(false);
-    const [recaptchaToken, setRecaptchaToken] = useState('');
+    const [recaptchaError, setRecaptchaError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const { executeRecaptcha } = useGoogleReCaptcha();
 
     const { handleSubmit, getFieldProps, errors, touched, isSubmitting, isValid } = useFormik({
 
@@ -25,44 +30,75 @@ export const ContactForm = () => {
         },
         onSubmit: async (values, { setSubmitting, resetForm }) => {
 
-            console.log(recaptchaToken);
+            if (!executeRecaptcha) {
+                
+                setRecaptchaError(true);
+                setErrorMessage('not available to execute recaptcha');
 
-            // try {
+                setTimeout(() => {
 
-            //     const res = await fetch('https://formcarry.com/s/C95VcZVVvAm', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Accept': 'application/json',
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify({
-            //             name: values.name,
-            //             email: values.email,
-            //             company: values.company,
-            //             subject: values.subject,
-            //             message: values.message,
-            //         }),
-            //     });
+                    setRecaptchaError(false);
+                    setErrorMessage('');
+                    
+                }, 6000 );
 
-            //     console.log(res);
+                return;
+            }
 
-            //     if (res.ok) {
-            //         setFormSubmitted(true);
-            //         resetForm();
-            //         setTimeout(() => {
-            //             setFormSubmitted(false);
-            //         }, 8000);
-            //     }
+            const recaptchaToken = await executeRecaptcha('submit');
+            const recaptchaResponse = await revalidateRecaptcha(recaptchaToken);
 
-            // } catch (error) {
-            //     console.log(error);
-            //     setSubmitting(false);
-            //     setFormErrorSubmitted(true);
+            if(!recaptchaResponse.success) {
 
-            //     setTimeout(() => {
-            //         setFormErrorSubmitted(false);
-            //     }, 8000);
-            // }
+                setRecaptchaError(true);
+                setErrorMessage(recaptchaResponse.message);
+
+                setTimeout(() => {
+
+                    setRecaptchaError(false);
+                    setErrorMessage('');
+                    
+                }, 8000 );
+
+                return;
+            }
+
+            try {
+
+                const res = await fetch('https://formcarry.com/s/C95VcZVVvAm', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: values.name,
+                        email: values.email,
+                        company: values.company,
+                        subject: values.subject,
+                        message: values.message,
+                    }),
+                });
+
+                if (res.ok) {
+                    setFormSubmitted(true);
+                    resetForm();
+                    setTimeout(() => {
+                        setFormSubmitted(false);
+                    }, 8000);
+                }
+
+            } catch (error) {
+                console.log(error);
+                setSubmitting(false);
+                setFormErrorSubmitted(true);
+                setErrorMessage('Tu mensaje no pudo ser envido');
+
+                setTimeout(() => {
+                    setFormErrorSubmitted(false);
+                    setErrorMessage('');
+                }, 8000);
+            }
 
         },
         validationSchema: Yup.object({
@@ -101,7 +137,7 @@ export const ContactForm = () => {
                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
                 {...getFieldProps('name')} />
 
-            {(touched.name && errors.name) && <p className={styles['error-message']}>{errors.name}</p>}
+            {(touched.name && errors.name) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.name}</p>}
 
             <input
                 type='text'
@@ -115,7 +151,7 @@ export const ContactForm = () => {
                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
                 {...getFieldProps('email')} />
 
-            {(touched.email && errors.email) && <p className={styles['error-message']}>{errors.email}</p>}
+            {(touched.email && errors.email) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.email}</p>}
 
             <input
                 type='text'
@@ -123,7 +159,7 @@ export const ContactForm = () => {
                 className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
                 {...getFieldProps('subject')} />
 
-            {(touched.subject && errors.subject) && <p className={styles['error-message']}>{errors.subject}</p>}
+            {(touched.subject && errors.subject) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.subject}</p>}
 
             <textarea
                 placeholder='Mensaje'
@@ -131,27 +167,15 @@ export const ContactForm = () => {
                 className="w-full rounded-md px-4 border text-sm pt-2.5 outline-[#7b7db0]"
                 {...getFieldProps('message')}></textarea>
 
-            {(touched.message && errors.message) && <p className={styles['error-message']}>{errors.message}</p>}
-
-            
-            <div className='flex justify-center'>
-                <GoogleReCaptchaCheckbox
-                    action='submit'
-                    onChange={(token: string) => {
-                        console.log('paso por aquí')
-                        setRecaptchaToken(token);
-                        console.log(recaptchaToken);
-                    }}
-                />
-            </div>
+            {(touched.message && errors.message) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.message}</p>}
 
             <button
                 disabled={isSubmitting || !isValid}
                 type='submit'
                 className='btn w-full disabled:bg-gray-400'>Enviar</button>
 
-            {formSubmitted && <p className={styles['success-message']}>Tu mensaje fue envido con éxito</p>}
-            {formErrorSubmitted && <p className={`${styles['error-message']} font-bold`}>Tu mensaje no pudo ser envido</p>}
+            {formSubmitted && <p className={`${styles['success-message']} animate__animated animate__fadeIn`}>Tu mensaje fue envido con éxito</p>}
+            {( formErrorSubmitted || recaptchaError ) && <p className={`${styles['error-message']} font-bold animate__animated animate__fadeIn`}>{errorMessage}</p>}
         </form>
     )
 }

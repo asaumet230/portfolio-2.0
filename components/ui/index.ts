@@ -1,3 +1,4 @@
+export * from './CardPost';
 export * from './Cursor';
 export * from './DarkMode';
 export * from './Logo';

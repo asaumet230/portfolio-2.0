@@ -127,7 +127,7 @@ export const ContactForm = () => {
 
     return (
         <form
-            className="ml-auo space-y-4"
+            className="ml-auto space-y-4"
             noValidate
             onSubmit={handleSubmit}>
 

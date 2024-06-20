@@ -9,8 +9,8 @@ import styles from './projects.module.css';
 export const MobilProjectDescription = () => {
 
   return (
-    <article className='grid grid-cols-2 bg-white border border-slate-300 rounded-xl justify-between max-[985px]:grid-cols-1'>
-      <div className='w-full bg-slate-300 rounded-tl-xl rounded-bl-xl flex justify-center align-middle items-center max-[985px]:p-3 max-[985px]:rounded-tr-xl max-[985px]:rounded-bl-none'>
+    <article className='grid grid-cols-2 bg-white border border-slate-300 rounded-xl justify-between max-[1305px]:grid-cols-1'>
+      <div className='w-full p-4 bg-slate-300 rounded-tl-xl rounded-bl-xl flex justify-center align-middle items-center max-[985px]:p-3 max-[985px]:rounded-tr-xl max-[985px]:rounded-bl-none'>
         <Image
           className='images'
           height="300"
@@ -18,7 +18,7 @@ export const MobilProjectDescription = () => {
           src='/images/proyects/cinemapedia-app-1.webp' 
           alt='cinemapedia-app-1' />
         <Image
-          className='images max-[500px]:hidden'
+          className='images max-[750px]:hidden'
           height="300"
           width="169"
           src='/images/proyects/cinemapedia-app-2.webp' 

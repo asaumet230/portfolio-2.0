@@ -39,7 +39,7 @@ export const MobilProjects = () => {
         spaceBetween={40}
         pagination={{ clickable: true }}
 
-        className='mt-4 mx-auto w-7/12 max-[1250px]:w-8/12 max-[640px]:w-9/12'>
+        className='mt-4 mx-auto w-9/12 max-[1250px]:w-8/12 max-[720px]:w-9/12'>
 
         <SwiperSlide >
           <MobilProjectDescription />

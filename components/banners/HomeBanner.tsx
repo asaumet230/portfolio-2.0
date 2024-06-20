@@ -5,7 +5,7 @@ import { HomeBannerTitle } from './';
 
 export const HomeBanner = () => {
   return (
-    <header className="pt-4">
+    <header className="pt-6">
       <div className="container grid grid-cols-2 max-[920px]:flex flex-col-reverse">
 
         <div className="flex flex-col justify-center text-left p-3 max-[920px]:text-center">

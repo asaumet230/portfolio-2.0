@@ -11,13 +11,15 @@ import {
 
 export default function HomePage() {
   return (
-    <main>
+    <>
       <HomeBanner />
-      <ToolsSection />
-      <SkillsSection />
-      <ExperienceSection />
-      <AboutMeSection />
-      <TestimonialsSection />
-    </main>
+      <main>
+        <ToolsSection />
+        <SkillsSection />
+        <ExperienceSection />
+        <AboutMeSection />
+        <TestimonialsSection />
+      </main>
+    </>
   );
 }

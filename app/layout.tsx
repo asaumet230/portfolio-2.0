@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 
-import { Footer, Navbar, SearchModal, Sidebar, SocialShareSidebar } from "@/components";
 import { lato, leagueOfSpartan } from "@/fonts";
 
-import "./globals.css";
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
+import "./globals.css";
 
 
 export const metadata: Metadata = {
@@ -17,15 +16,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="es">
-      <body className={`${ lato.variable } ${ leagueOfSpartan.variable }`}>
-        <div>
-          {/* <SearchModal /> */}
-          {/* <Sidebar /> */}
-          <Navbar />
-          <SocialShareSidebar />
-          {children}
-          <Footer />
-        </div>
+      <body className={`${ lato.variable } ${ leagueOfSpartan.variable }`}>  
+          { children }
       </body>
     </html>
   );

@@ -9,6 +9,7 @@ import { revalidateRecaptcha } from '@/helpers';
 
 import 'animate.css';
 import styles from './forms.module.css';
+import { Spinner } from '../ui';
 
 export const ContactForm = () => {
 
@@ -31,7 +32,7 @@ export const ContactForm = () => {
         onSubmit: async (values, { setSubmitting, resetForm }) => {
 
             if (!executeRecaptcha) {
-                
+
                 setRecaptchaError(true);
                 setErrorMessage('not available to execute recaptcha');
 
@@ -39,8 +40,8 @@ export const ContactForm = () => {
 
                     setRecaptchaError(false);
                     setErrorMessage('');
-                    
-                }, 6000 );
+
+                }, 6000);
 
                 return;
             }
@@ -48,7 +49,7 @@ export const ContactForm = () => {
             const recaptchaToken = await executeRecaptcha('submit');
             const recaptchaResponse = await revalidateRecaptcha(recaptchaToken);
 
-            if(!recaptchaResponse.success) {
+            if (!recaptchaResponse.success) {
 
                 setRecaptchaError(true);
                 setErrorMessage(recaptchaResponse.message);
@@ -57,8 +58,8 @@ export const ContactForm = () => {
 
                     setRecaptchaError(false);
                     setErrorMessage('');
-                    
-                }, 8000 );
+
+                }, 8000);
 
                 return;
             }
@@ -126,57 +127,68 @@ export const ContactForm = () => {
     );
 
     return (
-        <form
-            className="ml-auto space-y-4"
-            noValidate
-            onSubmit={handleSubmit}>
+        <main>
+            <form
+                className="ml-auto space-y-4"
+                noValidate
+                onSubmit={handleSubmit}>
 
-            <input
-                type='text'
-                placeholder='Nombre'
-                className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
-                {...getFieldProps('name')} />
+                <input
+                    type='text'
+                    placeholder='Nombre'
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    {...getFieldProps('name')} />
 
-            {(touched.name && errors.name) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.name}</p>}
+                {(touched.name && errors.name) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.name}</p>}
 
-            <input
-                type='text'
-                placeholder='Empresa (opcional)'
-                className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
-                {...getFieldProps('company')} />
+                <input
+                    type='text'
+                    placeholder='Empresa (opcional)'
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    {...getFieldProps('company')} />
 
-            <input
-                type='email'
-                placeholder='Correo'
-                className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
-                {...getFieldProps('email')} />
+                <input
+                    type='email'
+                    placeholder='Correo'
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    {...getFieldProps('email')} />
 
-            {(touched.email && errors.email) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.email}</p>}
+                {(touched.email && errors.email) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.email}</p>}
 
-            <input
-                type='text'
-                placeholder='Asunto'
-                className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
-                {...getFieldProps('subject')} />
+                <input
+                    type='text'
+                    placeholder='Asunto'
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    {...getFieldProps('subject')} />
 
-            {(touched.subject && errors.subject) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.subject}</p>}
+                {(touched.subject && errors.subject) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.subject}</p>}
 
-            <textarea
-                placeholder='Mensaje'
-                rows={6}
-                className="w-full rounded-md px-4 border text-sm pt-2.5 outline-[#7b7db0]"
-                {...getFieldProps('message')}></textarea>
+                <textarea
+                    placeholder='Mensaje'
+                    rows={6}
+                    className="w-full rounded-md px-4 border text-sm pt-2.5 outline-[#7b7db0]"
+                    {...getFieldProps('message')}></textarea>
 
-            {(touched.message && errors.message) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.message}</p>}
+                {(touched.message && errors.message) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.message}</p>}
 
-            <button
-                disabled={isSubmitting || !isValid}
-                type='submit'
-                className='btn w-full disabled:bg-gray-400'>Enviar</button>
+                <button
+                    disabled={isSubmitting || !isValid}
+                    type='submit'
+                    className='mt-10 btn w-full'>{
 
-            {formSubmitted && <p className={`${styles['success-message']} animate__animated animate__fadeIn`}>Tu mensaje fue envido con éxito</p>}
-            {( formErrorSubmitted || recaptchaError ) && <p className={`${styles['error-message']} font-bold animate__animated animate__fadeIn`}>{errorMessage}</p>}
-        </form>
+                        isSubmitting ?
+                            <div className='w-full flex items-center justify-center animate__animated animate__fadeIn'>
+                                <Spinner />
+                                <p className='ml-2'>Enviando</p>
+                            </div> : <p className='animate__animated animate__fadeIn'>Enviar</p>
+
+                    }
+                </button>
+
+                {formSubmitted && <p className={`${styles['success-message']} animate__animated animate__fadeIn`}>Tu mensaje fue envido con éxito</p>}
+                {(formErrorSubmitted || recaptchaError) && <p className={`${styles['error-message']} font-bold animate__animated animate__fadeIn`}>{errorMessage}</p>}
+            </form>
+        </main>
     )
 }
 

@@ -7,3 +7,4 @@ export * from './SearchModal';
 export * from './Separator';
 export * from './SocialMediaLinks';
 export * from './SocialShareSidebar';
+export * from './Spinner';

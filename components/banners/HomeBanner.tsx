@@ -4,6 +4,7 @@ import { Separator } from '../ui';
 import { HomeBannerTitle } from './';
 
 export const HomeBanner = () => {
+  
   return (
     <header className="pt-6">
       <div className="container grid grid-cols-2 max-[920px]:flex flex-col-reverse">

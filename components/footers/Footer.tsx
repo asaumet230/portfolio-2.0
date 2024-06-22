@@ -20,6 +20,12 @@ export const Footer = () => {
               <li className='py-1'>
                 <Link href={'/blog'}>Blog</Link>
               </li>
+              <li className='py-1'>
+                <Link href={'/login'}>Inicia Sesión</Link>
+              </li>
+              <li className='py-1'>
+                <Link href={'/registro'}>Registrate</Link>
+              </li>
             </ul>
           </nav>
         </div>

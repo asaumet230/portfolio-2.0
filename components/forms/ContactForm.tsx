@@ -1,24 +1,30 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
+import { LoadingModal, Spinner } from '../ui';
 import { revalidateRecaptcha } from '@/helpers';
 
 import 'animate.css';
 import styles from './forms.module.css';
-import { Spinner } from '../ui';
+
 
 export const ContactForm = () => {
 
+    const [isClient, setIsClient] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [formErrorSubmitted, setFormErrorSubmitted] = useState(false);
     const [recaptchaError, setRecaptchaError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const { executeRecaptcha } = useGoogleReCaptcha();
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const { handleSubmit, getFieldProps, errors, touched, isSubmitting, isValid } = useFormik({
 
@@ -126,6 +132,10 @@ export const ContactForm = () => {
     }
     );
 
+    if (!isClient) {
+        return <LoadingModal />;
+    }
+
     return (
         <main>
             <form
@@ -178,7 +188,11 @@ export const ContactForm = () => {
 
                         isSubmitting ?
                             <div className='w-full flex items-center justify-center animate__animated animate__fadeIn'>
-                                <Spinner />
+                                <Spinner 
+                                    width={'20'} 
+                                    height={'20'} 
+                                    color={'#ffffff'} />
+                                    
                                 <p className='ml-2'>Enviando</p>
                             </div> : <p className='animate__animated animate__fadeIn'>Enviar</p>
 

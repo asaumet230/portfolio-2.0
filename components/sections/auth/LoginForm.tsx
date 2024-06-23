@@ -14,7 +14,6 @@ import { revalidateRecaptcha } from '@/helpers';
 import 'animate.css';
 
 
-
 export const LoginForm = () => {
 
     const [isClient, setIsClient] = useState(false);

@@ -9,12 +9,19 @@ import { BiSolidChevronDown, BiSolidChevronRight } from "react-icons/bi";
 import { BsFileEarmarkPost, BsTools } from "react-icons/bs";
 import { FaCircleUser, FaUser, FaUsers } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import { IoMdMenu } from "react-icons/io";
-import { MdReviews } from "react-icons/md";
+import { IoMdHome, IoMdMenu } from "react-icons/io";
+import { MdReviews, MdWork } from "react-icons/md";
 
 import 'animate.css';
 
+
 const menuItemList = [
+    {
+        title: 'Dashboard',
+        icon: <IoMdHome size={20} className="mr-3" />,
+        hasSubmenu: false,
+        path: '/dashboard',
+    },
     {
         title: 'projectos',
         icon: <AiFillProject size={20} className="mr-3" />,
@@ -50,6 +57,12 @@ const menuItemList = [
         path: '/dashboard/articulos',
     },
     {
+        title: 'trabajos',
+        icon: <MdWork size={20} className="mr-3" />,
+        hasSubmenu: false,
+        path: '/dashboard/trabajos',
+    },
+    {
         title: 'usuarios',
         icon: <FaUsers size={20} className="mr-3" />,
         hasSubmenu: false,
@@ -71,7 +84,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     return (
 
-        <div className="h-screen bg-gray-100 overflow-hidden">
+        <div className="h-full bg-gray-100">
             <nav className="bg-gray-800 p-4 flex items-center justify-between">
 
                 <div>
@@ -108,9 +121,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
             </nav>
 
-            <div className="flex">
+            <div className="flex h-screen">
                 <div
-                    className={` bg-gray-200 min-h-screen overflow-y-visible p-4  ${isMenuVisible ? 'w-full fixed animate__animated animate__slideInLeft animate__faster' : 'hidden'} lg:block lg:w-60 lg:relative`}>
+                    className={`bg-gray-200 p-4 min-h-full ${isMenuVisible ? 'w-full fixed animate__animated animate__slideInLeft animate__faster' : 'hidden'} lg:block lg:w-60 lg:relative`}>
                     <aside>
                         <nav>
                             <ul className="space-y-2 tracking-wide">
@@ -164,8 +177,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </aside>
                 </div>
 
-                <div className="h-screen flex-1 mx-auto p-4 bg-red-300">
-                    <main className="bg-blue-300">
+                <div className="flex-1 mx-auto p-4 overflow-x-auto">
+                    <main>
                        {children}
                     </main>
                 </div>

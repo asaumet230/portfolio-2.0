@@ -7,7 +7,7 @@ import styles from './homeSections.module.css';
 
 export const AboutMeSection = () => {
   return (
-    <section className="mt-20">
+    <section className="mt-20" id="about-me-section">
       <div className="section">
         <h2 className="text-4xl text-center mb-1 max-[920px]:text-3xl max-[920px]:mb-0">Acerca de Mi</h2>
         <div className="flex justify-center">

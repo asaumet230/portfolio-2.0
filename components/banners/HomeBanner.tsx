@@ -21,8 +21,7 @@ export const HomeBanner = () => {
 
           <div>
             <a
-              href={'/'}
-              target='#'
+              href='#about-me-section'
               className="btn w-40">Mas Información</a>
           </div>
 

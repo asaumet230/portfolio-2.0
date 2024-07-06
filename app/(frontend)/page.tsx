@@ -1,15 +1,15 @@
 import { notFound } from 'next/navigation';
 
-import { 
+import {
   AboutMeSection,
   ExperienceSection,
-  HomeBanner, 
-  SkillsSection, 
+  HomeBanner,
+  SkillsSection,
   ToolsSection,
-  TestimonialsSection, 
+  TestimonialsSection,
 } from '@/components';
 
-import { TestimonialsResponse, ToolResponse } from '@/interfaces';
+import { ExperiencesResponse, TestimonialsResponse, ToolResponse } from '@/interfaces';
 
 const getTools = async (): Promise<ToolResponse> => {
 
@@ -18,7 +18,7 @@ const getTools = async (): Promise<ToolResponse> => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/tools`);
     const data: ToolResponse = await res.json();
     return data;
-    
+
   } catch (error) {
     console.log(error);
     notFound();
@@ -30,9 +30,9 @@ const getTestimonials = async (): Promise<TestimonialsResponse> => {
   try {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/testimonials`);
-    const data:TestimonialsResponse = await res.json()
+    const data: TestimonialsResponse = await res.json()
     return data;
-    
+
   } catch (error) {
     console.log(error);
     notFound();
@@ -40,21 +40,40 @@ const getTestimonials = async (): Promise<TestimonialsResponse> => {
 }
 
 
+const getExperiences = async (): Promise<ExperiencesResponse> => {
 
-export default async function HomePage(){
+  try {
 
-  const { tools } = await getTools();
-  const { testimonials } = await getTestimonials();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/experiences`);
+    const data: ExperiencesResponse = await res.json()
+    return data;
+
+  } catch (error) {
+    console.log(error);
+    notFound();
+  }
+
+
+}
+
+
+export default async function HomePage() {
+
+  const [toolsResponse, testimonialsResponse, experiencesResponse] = await Promise.all([
+    getTools(),
+    getTestimonials(),
+    getExperiences()
+  ]);
 
   return (
     <>
       <HomeBanner />
       <main>
-        <ToolsSection tools={tools}/>
+        <ToolsSection tools={toolsResponse.tools} />
         <SkillsSection />
-        <ExperienceSection />
+        <ExperienceSection experiencies={experiencesResponse.experiences} />
         <AboutMeSection />
-        <TestimonialsSection  testimonials={testimonials}/>
+        <TestimonialsSection testimonials={testimonialsResponse.testimonials} />
       </main>
     </>
   );

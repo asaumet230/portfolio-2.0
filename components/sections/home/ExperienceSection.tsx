@@ -1,8 +1,13 @@
 import { ExperienceItemSection, Separator } from "@/components";
 import { experienceItemSectionData } from "@/helpers";
+import { IExperience } from "@/interfaces";
 
 
-export const ExperienceSection = () => {
+interface Props {
+    experiencies: IExperience[];
+}
+
+export const ExperienceSection = ({ experiencies }:Props) => {
     return (
         <section className="mt-20">
             <div className="section">
@@ -22,8 +27,8 @@ export const ExperienceSection = () => {
                     </thead>
                     <tbody>
                         {
-                            experienceItemSectionData.map((item)=> (
-                                <ExperienceItemSection key={item.url} {...item}/>
+                        experiencies.map((experience)=> (
+                                <ExperienceItemSection key={experience.url} {...experience}/>
                             ))
                         }
                         

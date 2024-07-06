@@ -8,15 +8,6 @@ export interface ISkills {
     content: string;
     icon: JSX.Element
 }
-
-export interface IExperienceItem {
-    company  : string;
-    city     : string;
-    position : string;
-    year     : string;
-    url      : string;
-}
-
   export interface IProjectTableColumns {
     id    : string;
     title : string;

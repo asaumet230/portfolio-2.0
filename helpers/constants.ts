@@ -1,8 +1,8 @@
 import { 
-  IExperienceItem, 
   IMenuLink, 
   ITestimonial, 
 } from "@/interfaces";
+import { IExperience } from "@/interfaces/experiences";
 
 
 export const menuData: IMenuLink[] = [
@@ -24,34 +24,34 @@ export const menuData: IMenuLink[] = [
     },
  ];
 
-export const experienceItemSectionData: IExperienceItem[] = [
+export const experienceItemSectionData: IExperience[] = [
   {
     city: 'santa marta',
     company: 'freelance',
     position: 'web & mobil developer',
     url: '/',
-    year: '2024',
+    year: 2024,
   },
   {
     city: 'santa marta',
     company: 'chilo',
     position: 'project manager',
     url: 'https://www.chilo.com.co/',
-    year: '2023',
+    year: 2023,
   },
   {
     city: 'bogota D.C',
     company: 'eferta',
     position: 'junior developer',
     url: 'https://www.eferta.com/',
-    year: '2022',
+    year: 2022,
   },
   {
     city: 'santa marta',
     company: 'partyAf',
     position: 'frontend developer',
     url: 'https://www.partiaf.com/',
-    year: '2021',
+    year: 2021,
   },
 ];
 

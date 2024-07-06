@@ -3,10 +3,10 @@
 import { FC } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { IExperienceItem } from '@/interfaces';
+import { IExperience } from '@/interfaces';
 
 
-export const ExperienceItemSection: FC<IExperienceItem> = ({ company, city, position, year, url }) => {
+export const ExperienceItemSection: FC<IExperience> = ({ company, city, position, year, url }) => {
 
     const { push }= useRouter();
 

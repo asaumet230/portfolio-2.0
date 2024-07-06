@@ -13,7 +13,6 @@ import {
 } from 'react-icons/fa6';
 
 import { Separator } from '@/components';
-import { testimonialsData } from '@/helpers';
 import { ITestimonial } from '@/interfaces';
     
 import styles from './homeSections.module.css';

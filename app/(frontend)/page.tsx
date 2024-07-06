@@ -25,7 +25,7 @@ const getTools = async (): Promise<ToolResponse> => {
   }
 }
 
-const getTestimonials = async () => {
+const getTestimonials = async (): Promise<TestimonialsResponse> => {
 
   try {
 
@@ -34,7 +34,6 @@ const getTestimonials = async () => {
     return data;
     
   } catch (error) {
-
     console.log(error);
     notFound();
   }

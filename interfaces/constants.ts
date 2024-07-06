@@ -3,12 +3,6 @@ export interface IMenuLink {
     url: string;
 }
 
-export interface ITool {
-    imageUrl: string;
-    title: string;
-    progressPercent: number;
-}
-
 export interface ISkills {
     title: string;
     content: string;
@@ -22,16 +16,6 @@ export interface IExperienceItem {
     year     : string;
     url      : string;
 }
-
-export interface ITestimonial {
-    name        : string;
-    content     : string;
-    major       : string;
-    image       : string;
-    linkedin?   : string;
-    instagram?  : string;
-    twitter?    : string;
-  }
 
   export interface IProjectTableColumns {
     id    : string;

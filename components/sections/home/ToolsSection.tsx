@@ -1,10 +1,15 @@
 import Image from 'next/image';
 
 import { ProgressBar, Separator } from "@/components/ui";
-import { toolsData } from "@/helpers";
+import { ITool } from '@/interfaces';
 
 
-export const ToolsSection = () => {
+interface Props {
+  tools: ITool[];
+}
+
+export const ToolsSection = ({ tools }: Props) => {
+
   return (
 
     <section className="mt-20">
@@ -19,17 +24,17 @@ export const ToolsSection = () => {
 
         <div className="grid grid-cols-3 my-10 gap-4 mx-auto max-[920px]:grid-cols-2">
           {
-            toolsData.map(({ imageUrl, title, progressPercent }) => (
-              <div className="pt-4 pb-5 flex flex-col justify-center items-center" key={imageUrl}>
+            tools.map(({ image, title, progress }) => (
+              <div className="pt-4 pb-5 flex flex-col justify-center items-center" key={image}>
                 <Image
-                  src={imageUrl}
+                  src={image}
                   alt={title}
                   width={70}
                   height={70} 
                   priority={ false}
                   />
                 <h3 className="my-3 capitalize text-xl">{title}</h3>
-                <ProgressBar progress={progressPercent} />
+                <ProgressBar progress={progress} />
               </div>
             ))
           }

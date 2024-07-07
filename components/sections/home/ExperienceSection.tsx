@@ -1,5 +1,4 @@
 import { ExperienceItemSection, Separator } from "@/components";
-import { experienceItemSectionData } from "@/helpers";
 import { IExperience } from "@/interfaces";
 
 

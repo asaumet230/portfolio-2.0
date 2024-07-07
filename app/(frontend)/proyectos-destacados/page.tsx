@@ -1,7 +1,27 @@
+import { notFound } from "next/navigation";
+
 import { MobilProjects, Separator, WebProjects } from "@/components";
+import { ProjectsResponse } from "@/interfaces";
 
 
-export default function Trabajos() {
+const getProjects = async (category: string):Promise<ProjectsResponse> => {
+
+  try {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/search/${category}`);
+    const data = await res.json();
+    return data;
+    
+  } catch (error) {
+    console.log(error)
+    notFound();
+  }
+}
+
+
+export default async function Trabajos() {
+
+  const { projects } = await getProjects('web');
 
   return (
     <>
@@ -17,7 +37,7 @@ export default function Trabajos() {
         </div>
       </header>
       <main>
-        <WebProjects />
+        <WebProjects projects={projects} />
         <MobilProjects />
       </main>
     </>

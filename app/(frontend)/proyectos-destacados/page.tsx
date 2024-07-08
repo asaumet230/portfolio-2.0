@@ -21,7 +21,11 @@ const getProjects = async (category: string):Promise<ProjectsResponse> => {
 
 export default async function Trabajos() {
 
-  const { projects } = await getProjects('web');
+  const webProjects = await getProjects('web');
+  const mobilProjects = await getProjects('mobil');
+
+  console.log(mobilProjects);
+
 
   return (
     <>
@@ -37,8 +41,8 @@ export default async function Trabajos() {
         </div>
       </header>
       <main>
-        <WebProjects projects={projects} />
-        <MobilProjects />
+        <WebProjects projects={webProjects.projects} />
+        <MobilProjects projects={mobilProjects.projects} />
       </main>
     </>
   )

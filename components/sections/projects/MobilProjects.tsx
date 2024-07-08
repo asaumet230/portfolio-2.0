@@ -5,10 +5,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from 'swiper/modules';
 
 import { MobilProjectDescription } from "."
+import { IProject } from '@/interfaces';
 
 SwiperCore.use([Navigation, Pagination, EffectCoverflow, Autoplay]);
 
-export const MobilProjects = () => {
+interface Props {
+  projects: IProject[];
+}
+
+export const MobilProjects = ({ projects }: Props) => {
 
   return (
     <section className="py-14">
@@ -41,18 +46,13 @@ export const MobilProjects = () => {
 
         className='mt-4 mx-auto w-9/12 max-[1250px]:w-8/12 max-[720px]:w-9/12'>
 
-        <SwiperSlide >
-          <MobilProjectDescription />
-        </SwiperSlide>
-
-        <SwiperSlide >
-          <MobilProjectDescription />
-        </SwiperSlide>
-
-        <SwiperSlide >
-          <MobilProjectDescription />
-        </SwiperSlide>
-
+        {
+          projects.map((project) => (
+            <SwiperSlide key={project.name}>
+              <MobilProjectDescription project={project} />
+            </SwiperSlide>
+          ))
+        }
       </Swiper>
 
     </section>

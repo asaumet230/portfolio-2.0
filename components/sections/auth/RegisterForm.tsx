@@ -150,9 +150,9 @@ export const RegisterForm = () => {
 
 
     return (
-        <main className='h-screen overflow-y-auto lg:w-5/12 px-8 flex flex-col justify-center'>
+        <main className='h-screen overflow-y-auto lg:w-5/12 px-8 flex flex-col justify-center max-[640px]:px-6'>
 
-            <div className='bg-white px-10 pt-6 rounded-md border'>
+            <div className='bg-white px-10 pt-6 rounded-md border max-[640px]:px-6'>
                 <h1 className='text-center'>Registro</h1>
                 <p className='my-5 ml-1'>Si eres nuevo llena el siguiente formulario para registrarte.</p>
 

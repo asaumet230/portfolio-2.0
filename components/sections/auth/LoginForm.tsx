@@ -131,9 +131,9 @@ export const LoginForm = () => {
 
   
     return (
-        <main className='w-full lg:w-5/12 px-8 flex flex-col justify-center'>
+        <main className='w-full lg:w-5/12 px-8 flex flex-col justify-center max-[640px]:px-6'>
 
-            <div className='bg-white px-10 pt-6 rounded-md border'>
+            <div className='bg-white px-10 pt-6 rounded-md border max-[640px]:px-6'>
                 <h1 className='text-center'>Login</h1>
                 <p className='my-5 ml-1'>Inicia sesión con usuario y contraseña.</p>
 

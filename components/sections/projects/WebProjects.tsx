@@ -46,7 +46,7 @@ export const WebProjects = ({ projects }: Props) => {
             spaceBetween: 50,
           },
         }}
-        className='mt-6 w-9/12 max-[640px]:w-8/12'>
+        className='mt-6 w-9/12 max-[640px]:w-10/12'>
 
         {
           projects.map((project) => (

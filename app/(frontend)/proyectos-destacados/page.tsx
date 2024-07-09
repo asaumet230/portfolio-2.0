@@ -24,9 +24,6 @@ export default async function Trabajos() {
   const webProjects = await getProjects('web');
   const mobilProjects = await getProjects('mobil');
 
-  console.log(mobilProjects);
-
-
   return (
     <>
       <header className="section">

@@ -34,10 +34,10 @@ export const Footer = () => {
           <nav className='py-3'>
             <ul>
               <li className='py-1'>
-                <Link href={'/terminos-condiciones'}>Términos y condiciones</Link>
+                <Link href={'/terminos-y-condiciones'}>Términos y condiciones</Link>
               </li>
               <li className='py-1'>
-                <Link href={'/politica-privacidad'}>Política de privacidad</Link>
+                <Link href={'/politica-privacidad-y-proteccion-datos'}>Política de privacidad</Link>
               </li>
             </ul>
           </nav>

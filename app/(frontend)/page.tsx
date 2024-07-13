@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import type { Metadata } from "next";
 
 import {
   AboutMeSection,
@@ -9,60 +9,19 @@ import {
   TestimonialsSection,
 } from '@/components';
 
-import { ExperiencesResponse, TestimonialsResponse, ToolResponse } from '@/interfaces';
+import { getTools, getTestimonials, getExperiences } from "@/api";
 
-const getTools = async (): Promise<ToolResponse> => {
-
-  try {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/tools`);
-    const data: ToolResponse = await res.json();
-    return data;
-
-  } catch (error) {
-    console.log(error);
-    notFound();
-  }
-}
-
-const getTestimonials = async (): Promise<TestimonialsResponse> => {
-
-  try {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/testimonials`);
-    const data: TestimonialsResponse = await res.json()
-    return data;
-
-  } catch (error) {
-    console.log(error);
-    notFound();
-  }
-}
-
-
-const getExperiences = async (): Promise<ExperiencesResponse> => {
-
-  try {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/experiences`);
-    const data: ExperiencesResponse = await res.json()
-    return data;
-
-  } catch (error) {
-    console.log(error);
-    notFound();
-  }
-
-
-}
-
+export const metadata: Metadata = {
+  title: "Desarrollador Web & Movíl | Andres Felipe Saumet",
+  description: "Desarrollo magnificas aplicaciones",
+};
 
 export default async function HomePage() {
 
-  const [toolsResponse, testimonialsResponse, experiencesResponse] = await Promise.all([
+  const [ toolsResponse, testimonialsResponse, experiencesResponse ] = await Promise.all([
     getTools(),
     getTestimonials(),
-    getExperiences()
+    getExperiences(),
   ]);
 
   return (

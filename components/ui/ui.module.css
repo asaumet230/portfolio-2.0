@@ -1,6 +1,5 @@
 .separator {
     height: 4px;
-    background-color: #7b7db0;
 }
 
 .progressBar {
@@ -11,13 +10,6 @@
     border-radius: 10px;
     overflow: hidden;
   }
-  
-.progress {
-  height: 100%;
-  background: linear-gradient(90deg, #8183b6 0%, #abb1e4 100%);
-  transition: width 150ms ease;
-  text-align: center;
-}
   
 .social-share-sidebar {
   position: fixed;
@@ -50,7 +42,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: black;
   border-radius: 100%;
   height: 40px;
   width: 40px;
@@ -58,11 +49,6 @@
   color: white;
   transition: all 300ms ease-in-out;
   cursor: pointer;
-}
-
-.social-back-top-button:hover {
-  color: black;
-  background-color: white;
 }
 
 .search-modal {

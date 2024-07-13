@@ -146,7 +146,7 @@ export const ContactForm = () => {
                 <input
                     type='text'
                     placeholder='Nombre'
-                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                     {...getFieldProps('name')} />
 
                 {(touched.name && errors.name) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.name}</p>}
@@ -154,13 +154,13 @@ export const ContactForm = () => {
                 <input
                     type='text'
                     placeholder='Empresa (opcional)'
-                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                     {...getFieldProps('company')} />
 
                 <input
                     type='email'
                     placeholder='Correo'
-                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                     {...getFieldProps('email')} />
 
                 {(touched.email && errors.email) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.email}</p>}
@@ -168,7 +168,7 @@ export const ContactForm = () => {
                 <input
                     type='text'
                     placeholder='Asunto'
-                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                    className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                     {...getFieldProps('subject')} />
 
                 {(touched.subject && errors.subject) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.subject}</p>}
@@ -176,7 +176,7 @@ export const ContactForm = () => {
                 <textarea
                     placeholder='Mensaje'
                     rows={6}
-                    className="w-full rounded-md px-4 border text-sm pt-2.5 outline-[#7b7db0]"
+                    className="w-full rounded-md px-4 border text-sm pt-2.5 outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                     {...getFieldProps('message')}></textarea>
 
                 {(touched.message && errors.message) && <p className={`${styles['error-message']} animate__animated animate__fadeIn`}>{errors.message}</p>}

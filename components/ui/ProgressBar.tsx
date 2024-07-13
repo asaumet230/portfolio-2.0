@@ -1,8 +1,8 @@
 'use client'
 
 import { FC, useEffect, useState } from 'react';
-import styles from './ui.module.css';
 
+import styles from './ui.module.css';
 
 interface Props {
   progress: number
@@ -60,7 +60,7 @@ export const ProgressBar: FC<Props> = ({ progress = 0 }) => {
       <p className='text-xl text-center font-bold mb-1'>{progressBar} %</p>
       <div className={`${styles.progressBar}`}>
         <div
-          className={styles.progress}
+          className='h-full bg-gradient-to-r to-[#8183b6] from-[#abb1e4] transition-all ease-in-out duration-200 text-center dark:bg-gradient-to-r dark:from-indigo-500 dark:to-indigo-700'
           style={{ width: `${progressBar}%` }}></div>
       </div>
 

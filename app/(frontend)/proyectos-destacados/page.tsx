@@ -1,25 +1,7 @@
-import { notFound } from "next/navigation";
-
 import { MobilProjects, Separator, WebProjects } from "@/components";
-import { ProjectsResponse } from "@/interfaces";
+import { getProjects } from "@/api";
 
-
-const getProjects = async (category: string):Promise<ProjectsResponse> => {
-
-  try {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/search/${category}`);
-    const data = await res.json();
-    return data;
-    
-  } catch (error) {
-    console.log(error)
-    notFound();
-  }
-}
-
-
-export default async function Trabajos() {
+export default async function PageTrabajos() {
 
   const webProjects = await getProjects('web');
   const mobilProjects = await getProjects('mobil');

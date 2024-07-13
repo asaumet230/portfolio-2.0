@@ -62,7 +62,7 @@ export const TestimonialsSection = ({ testimonials }:Props) => {
                         {
                             testimonials.map( ({ name, major, content, image, instagram, linkedin, twitter, facebook }) => (
                                 <SwiperSlide key={name}>
-                                    <div className={`bg-gray-100 w-auto card-shadow mx-auto cursor-grabbing rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:h-6/6 max-[400px]:py-4`}>
+                                    <div className={`bg-gray-100 w-auto card-shadow mx-auto cursor-grabbing rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:h-6/6 max-[400px]:py-4 dark:bg-[#2e374ad1] dark:border border-[#6e7681]`}>
                                             <Image 
                                                 className='rounded-full mx-auto images'
                                                 width={90}

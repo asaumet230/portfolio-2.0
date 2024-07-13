@@ -8,7 +8,7 @@ export const CardPost = () => {
 
     return (
 
-        <article className="pb-6 px-10 border-b">
+        <article className="pb-6 px-10">
             <div>
                 <Image
                     src="/images/posts/desarrollador-estresado.webp"
@@ -40,6 +40,7 @@ export const CardPost = () => {
                     </div>
                 </div>
             </div>
+            <hr className='mt-10'/>
 
         </article>
 

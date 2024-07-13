@@ -15,7 +15,7 @@ interface Props {
 
 export const WebProjects = ({ projects }: Props) => {
   return (
-    <section className="py-12 bg-slate-100">
+    <section className="py-12 bg-slate-100 dark:bg-[#0d1117]">
 
       <div className="section pb-8">
         <h2 className="text-center">Soluciones Web Avanzadas</h2>

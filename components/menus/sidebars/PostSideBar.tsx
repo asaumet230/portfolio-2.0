@@ -6,7 +6,7 @@ export const PostSideBar = () => {
 
   
   return (
-    <div className="w-3/12 bg-slate-100 h-full py-6 px-8 max-[920px]:w-11/12 max-[920px]:mx-auto max-[920px]:mt-12">
+    <div className=" bg-slate-100 h-full py-6 px-8 max-[920px]:w-11/12 max-[920px]:mx-auto max-[920px]:mt-12 dark:bg-[#262f3a] dark:border border-slate-300">
       <div className="mt-3">
         <form noValidate>
 
@@ -14,11 +14,10 @@ export const PostSideBar = () => {
             <input
               type='text'
               placeholder='Busca Artículo'
-              className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]" />
+              className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600" />
             <IoIosSearch
               size={20}
-              color="rgb(156 163 175)"
-              className="absolute bottom-3 right-4 cursor-pointer" />
+              className="absolute bottom-3 right-4 cursor-pointer text-gray-400 dark:text-gray-600" />
           </div>
         </form>
       </div>
@@ -30,7 +29,7 @@ export const PostSideBar = () => {
           </li>
           <li className="text-sm py-1">
             <Link href={""}>Desarrollo Web</Link>
-          </li>
+          </li> 
           <li className="text-sm py-1">
             <Link href={""}>Desarrollo Movíl</Link>
           </li>

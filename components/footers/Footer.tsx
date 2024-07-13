@@ -4,7 +4,7 @@ import { SocialMediaLinks } from '../ui';
 
 export const Footer = () => {
   return (
-    <div className='bg-slate-100 pt-8'>
+    <div className='bg-slate-100 pt-8 dark:bg-[#262f3a]'>
       <div className='section grid grid-cols-3 max-[640px]:grid-cols-1'>
 
         <div className='text-center max-[640px]:py-1'>

@@ -91,7 +91,7 @@ export const WebProjectDescription = ({ project }: Props) => {
   });
 
   return (
-    <article className={`rounded-xl border border-slate-200 card-shadow bg-white ${styles['card-effect']}`}>
+    <article className={`rounded-xl border border-slate-200 card-shadow bg-white ${styles['card-effect']} dark:bg-[#262f3a]`}>
       <Image
         priority
         className='rounded-t-xl w-full'
@@ -119,13 +119,13 @@ export const WebProjectDescription = ({ project }: Props) => {
           <h4 className='text-lg text-left mt-4 capitalize font-medium'>Url App & código fuente:</h4>
 
           <div className='mt-4 flex mx-auto justify-center'>
-            <a href={project.urlApp} className={styles['card-button']}>
-              <FaDesktop />
-              <p className='capitalize ml-1'>app</p>
+            <a href={project.urlApp} className={`${styles['card-button']} card-button-dark`}>
+              <FaDesktop  className='dark:text-slate-300'/>
+              <p className='capitalize ml-1 dark:text-slate-300'>app</p>
             </a>
-            <a href={project.urlRepository} className={`${styles['card-button']} ml-2`}>
-              <FaGithub />
-              <p className='capitalize ml-1'>Codígo</p>
+            <a href={project.urlRepository} className={`${styles['card-button']} card-button-dark ml-2`}>
+              <FaGithub className='dark:text-slate-300'/>
+              <p className='capitalize ml-1 dark:text-slate-300'>Codígo</p>
             </a>
           </div>
 

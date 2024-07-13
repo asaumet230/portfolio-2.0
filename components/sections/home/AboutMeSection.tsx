@@ -41,7 +41,7 @@ export const AboutMeSection = () => {
                   </a>
                 </li>
                 <li className='hover:scale-110 transition-all ease-in-out'>
-                  <a href="" className={styles['cv-icon']}>CV</a>
+                  <a href="" className={`${styles['cv-icon']} bg-black text-white dark:bg-slate-300 dark:text-[#0d1117]`}>CV</a>
                 </li>
               </ul>
             </div>

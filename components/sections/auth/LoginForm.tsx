@@ -133,7 +133,7 @@ export const LoginForm = () => {
     return (
         <main className='w-full lg:w-5/12 px-8 flex flex-col justify-center max-[640px]:px-6'>
 
-            <div className='bg-white px-10 pt-6 rounded-md border max-[640px]:px-6'>
+            <div className='bg-white px-10 pt-6 rounded-md border max-[640px]:px-6 dark:bg-[#262f3a]'>
                 <h1 className='text-center'>Login</h1>
                 <p className='my-5 ml-1'>Inicia sesión con usuario y contraseña.</p>
 
@@ -145,7 +145,7 @@ export const LoginForm = () => {
                     <input
                         type='email'
                         placeholder='Correo'
-                        className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0]"
+                        className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                         {...getFieldProps('email')} />
 
                     {(touched.email && errors.email) && <p className='error-message animate__animated animate__fadeIn'>{errors.email}</p>}
@@ -155,7 +155,7 @@ export const LoginForm = () => {
                         <input
                             type={ isPasswordVisible ? 'text' : 'password' }
                             placeholder='Contraseña'
-                            className="w-full rounded-md py-2.5 px-4 mt-5 border text-sm outline-[#7b7db0]"
+                            className="w-full rounded-md py-2.5 px-4 mt-5 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                             {...getFieldProps('password')} />
 
                         {isPasswordVisible ?
@@ -190,7 +190,7 @@ export const LoginForm = () => {
 
                         }</button>
 
-                    <p className='ml-1 my-5 text-center'>Si no tienes cuenta, registrate <Link href={'/registro'} className='text-secondary-color'>Aquí</Link></p>
+                    <p className='ml-1 my-5 text-center'>Si no tienes cuenta, registrate <Link href={'/registro'} className='text-secondary-color dark:text-indigo-600'>Aquí</Link></p>
 
 
                     {formSubmitted && <p className='success-message animate__animated animate__fadeIn mt-6'>Login exitoso</p>}
@@ -199,7 +199,7 @@ export const LoginForm = () => {
                     <div className='mt-5 pb-6 pt-14'>
                         <Link
                             href={'/'}
-                            className='flex items-center font-ligth hover:text-secondary-color'>
+                            className='flex items-center font-ligth hover:text-secondary-color dark:hover:text-indigo-600'>
                             <IoMdArrowRoundBack className='mr-1' />Regresa a Inicio
                         </Link>
                     </div>

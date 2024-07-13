@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
 
+
 export const HomeBannerTitle = () => {
 
     const [ loop, setLoop ] = useState<boolean>(true);
@@ -19,7 +20,7 @@ export const HomeBannerTitle = () => {
     });
 
     return (
-        <h1 className="text-5xl capitalize mb-4 max-[920px]:text-3xl max-[920px]:mb-2 max-[640px]:text-2xl">
+        <h1 className="text-5xl capitalize mb-4 max-[920px]:text-3xl max-[920px]:mb-2 max-[640px]:text-2xl dark:text-indigo-600">
             { text }
             { loop && <Cursor /> }
         </h1>

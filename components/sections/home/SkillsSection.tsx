@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-
 import { Separator } from '@/components/ui';
 import {
     FaBrain,
@@ -15,6 +13,7 @@ import {
 import { ISkills } from '@/interfaces';
 
 import styles from './homeSections.module.css';
+import { useAppSelector } from '@/store';
 
 
 const skillsData: ISkills[] = [
@@ -54,23 +53,7 @@ const skillsData: ISkills[] = [
 
 export const SkillsSection = () => {
     
-    const [isDarkImage, setIsDarkImage] = useState('light');
-
-    useEffect(() => {
-      if (typeof window !== 'undefined') {
-  
-        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        setIsDarkImage(darkModeMediaQuery.matches ? 'dark' : 'light');
-  
-        const handleChange = (e: MediaQueryListEvent) => {
-          setIsDarkImage(e.matches ? 'dark' : 'light');
-        };
-  
-        darkModeMediaQuery.addEventListener('change', handleChange);
-        return () => darkModeMediaQuery.removeEventListener('change', handleChange);
-      }
-    }, []);
-
+    const darkMode = useAppSelector( state => state.theme.darkMode );
 
     return (
         <section className="mt-20">
@@ -86,7 +69,7 @@ export const SkillsSection = () => {
                         skillsData.map(({ title, content, icon, }) => (
                             <div className={`flex flex-col justify-center items-center px-8 py-8 h-80 max-[920px]:p-2 ${styles['skill-action']} ${styles['skill-cursor']} dark:hover:bg-[#2e374ad1] dark:hover:border dark: border-[#6e7681] dark:hover:rounded-xl`} key={title}>
                                 <div style={{
-                                    backgroundImage: `${ isDarkImage === 'light' ?  "url('/images/background-title-skills.webp')": "url('/images/background-title-skills-dark.webp')" }`,
+                                    backgroundImage: `${ !darkMode ?  "url('/images/background-title-skills.webp')": "url('/images/background-title-skills-dark.webp')" }`,
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                     width: '60px',

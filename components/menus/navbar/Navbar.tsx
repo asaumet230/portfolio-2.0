@@ -2,7 +2,7 @@ import { FaSearch } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
 
 import { NavbarMenuLink } from './';
-import { DarkMode, Logo } from '@/components/ui';
+import { DarkMode, Logo, SystemMode } from '@/components/ui';
 
 import { menuData } from '@/helpers';
 
@@ -35,6 +35,7 @@ export const Navbar = () => {
           <p className="links capitalize ml-2">buscar</p>
         </div>
         <DarkMode />
+        <SystemMode />
       </div>
 
     </header>

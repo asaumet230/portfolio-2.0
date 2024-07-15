@@ -1,27 +1,13 @@
 'use client'
-import { useEffect, useState } from 'react';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {  useAppSelector } from '@/store';
 
 export const Logo = () => {
 
-  const [isDarkImage, setIsDarkImage] = useState('light');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-
-      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      setIsDarkImage(darkModeMediaQuery.matches ? 'dark' : 'light');
-
-      const handleChange = (e: MediaQueryListEvent) => {
-        setIsDarkImage(e.matches ? 'dark' : 'light');
-      };
-
-      darkModeMediaQuery.addEventListener('change', handleChange);
-      return () => darkModeMediaQuery.removeEventListener('change', handleChange);
-    }
-  }, []);
+  const darkMode = useAppSelector(state => state.theme.darkMode );
 
   return (
     <div>
@@ -30,7 +16,7 @@ export const Logo = () => {
           priority
           height={100}
           width={170}
-          src={isDarkImage === 'light' ? "/images/logo-andres-saumet.webp" : "/images/logo-andres-saumet-dark-1.webp"}
+          src={ darkMode ? "/images/logo-andres-saumet-dark-1.webp" : "/images/logo-andres-saumet.webp" }
           alt={"logo-andres-saumet"} className='images' />
       </Link>
     </div>

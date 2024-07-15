@@ -1,29 +1,14 @@
 'use client'
-import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
 import { Separator } from '../ui';
 import { HomeBannerTitle } from './';
+import { useAppSelector } from '@/store';
 
 export const HomeBanner = () => {
 
-  const [isDarkImage, setIsDarkImage] = useState('light');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-
-      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      setIsDarkImage(darkModeMediaQuery.matches ? 'dark' : 'light');
-
-      const handleChange = (e: MediaQueryListEvent) => {
-        setIsDarkImage(e.matches ? 'dark' : 'light');
-      };
-
-      darkModeMediaQuery.addEventListener('change', handleChange);
-      return () => darkModeMediaQuery.removeEventListener('change', handleChange);
-    }
-  }, []);
+  const darkMode = useAppSelector( state => state.theme.darkMode );
 
   return (
     <header className="pt-6">
@@ -53,7 +38,7 @@ export const HomeBanner = () => {
             className='images'
             width={600}
             height={600}
-            src={isDarkImage === 'light' ? "/images/andres-felipe-saumet-desarrollador-web-movil.webp" : "/images/andres-felipe-saumet-desarrollador-web-movil-dark.webp"}
+            src={ !darkMode ? "/images/andres-felipe-saumet-desarrollador-web-movil.webp" : "/images/andres-felipe-saumet-desarrollador-web-movil-dark.webp"}
             alt="andres-felipe-saumet" />
         </div>
 

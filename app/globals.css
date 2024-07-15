@@ -130,7 +130,6 @@ h4 {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .swiper-pagination-bullet {
     background: rgb(255, 254, 254) !important;
     opacity: 0.7;

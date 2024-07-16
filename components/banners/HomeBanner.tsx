@@ -32,13 +32,13 @@ export const HomeBanner = () => {
 
         </div>
 
-        <div className="bg-slate-200 flex justify-center animate__animated animate__fadeIn dark:bg-transparent">
+        <div className=" flex justify-center animate__animated animate__fadeIn dark:bg-transparent">
           <Image
             priority
             className='images'
             width={600}
             height={600}
-            src={ !darkMode ? "/images/andres-felipe-saumet-desarrollador-web-movil.webp" : "/images/andres-felipe-saumet-desarrollador-web-movil-dark.webp"}
+            src={ !darkMode ? "/images/andres-saumet-light.webp" : "/images/andres-saumet-dark.webp"}
             alt="andres-felipe-saumet" />
         </div>
 

@@ -16,7 +16,7 @@ export const Logo = () => {
           priority
           height={100}
           width={170}
-          src={ darkMode ? "/images/logo-andres-saumet-dark-1.webp" : "/images/logo-andres-saumet.webp" }
+          src={ darkMode ? "/images/logo-andres-saumet-dark.webp" : "/images/logo-andres-saumet.webp" }
           alt={"logo-andres-saumet"} className='images' />
       </Link>
     </div>

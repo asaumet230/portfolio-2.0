@@ -5,39 +5,57 @@ import { MdNightsStay, MdSunny } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "@/store";
 
 import { isDarkMode, toggleDarkMode } from "@/store/themeMode/themeSlice";
+import { changeThemeMode } from "@/helpers";
 import 'animate.css';
 
 export const DarkMode = () => {
 
     const darkMode = useAppSelector(state => state.theme.darkMode);
     const dispatch = useAppDispatch();
-  
+
+
     useEffect(() => {
 
-        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        if (typeof window === 'undefined') return;
+
         const localStorageThemeMode = localStorage.getItem('darkMode');
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-        if(localStorageThemeMode !== null) {
+        if (localStorageThemeMode !== null) {
 
-            dispatch( isDarkMode( JSON.parse(localStorageThemeMode) ));
+            const themeMode: boolean = JSON.parse(localStorageThemeMode);
+            dispatch(isDarkMode(themeMode));
+            changeThemeMode(themeMode);
 
         } else {
 
-            if (typeof window === 'undefined') return;
             dispatch(isDarkMode(darkModeMediaQuery.matches));
+            changeThemeMode(darkModeMediaQuery.matches);
+        
         }
 
-        const updateTheme = (e: MediaQueryListEvent) => dispatch(isDarkMode(e.matches));
+        const updateTheme = (e: MediaQueryListEvent) => { 
+            dispatch(isDarkMode(e.matches));
+            changeThemeMode(e.matches); 
+        };
 
         darkModeMediaQuery.addEventListener('change', updateTheme);
-
         return () => darkModeMediaQuery.removeEventListener('change', updateTheme);
 
-    }, [ dispatch ]);
+    }, [dispatch]);
+
+    
+    const setDarkMode = (mode: boolean) => {
+
+        dispatch(toggleDarkMode(mode));
+        changeThemeMode(mode);
+        localStorage.setItem('darkMode', JSON.stringify(mode));
+        localStorage.setItem('systemMode', JSON.stringify(false));
+    }
 
 
     return (
-        <div className="flex items-center cursor-pointer ml-3" onClick={() => dispatch(toggleDarkMode())}>
+        <div className="flex items-center cursor-pointer ml-3" onClick={ () => setDarkMode(!darkMode) }>
             {
                 darkMode ?
                     <MdNightsStay

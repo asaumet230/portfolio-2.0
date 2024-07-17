@@ -13,7 +13,9 @@ interface Props {
   projects: IProject[];
 }
 
+
 export const WebProjects = ({ projects }: Props) => {
+
   return (
     <section className="py-12 bg-slate-100 dark:bg-[#0d1117]">
 
@@ -26,7 +28,7 @@ export const WebProjects = ({ projects }: Props) => {
         grabCursor={true}
         centeredSlides={true}
         slidesPerView={1}
-        initialSlide={1}
+        initialSlide={0}
         coverflowEffect={{
           rotate: 0,
           stretch: 10,
@@ -46,6 +48,7 @@ export const WebProjects = ({ projects }: Props) => {
             spaceBetween: 50,
           },
         }}
+        
         className='mt-6 w-9/12 max-[640px]:w-10/12'>
 
         {

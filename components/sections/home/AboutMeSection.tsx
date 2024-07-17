@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { FaGithub, FaLinkedin } from 'react-icons/fa6';
 
-import { Separator } from '@/components';
+import { Separator, SocialMediaMessage } from '@/components';
 
 import styles from './homeSections.module.css';
 
@@ -20,11 +20,12 @@ export const AboutMeSection = () => {
               src='/images/perfil-1.webp'
               alt='Perfil-1'
               width='520'
-              height='520' 
-              className={`${styles['profile-image']} images`}/>
+              height='520'
+              className={`${styles['profile-image']} images`} />
             <div className='mt-3'>
               <ul className='flex justify-center'>
-                <li className='mr-3 hover:scale-110 transition-all ease-in-out'>
+                <li className='mr-3 group relative  hover:scale-110 transition-all ease-in-out'>
+                  <SocialMediaMessage title='github' isNextTo={false} />
                   <a
                     href="https://github.com/asaumet230"
                     target="_blank"
@@ -32,7 +33,8 @@ export const AboutMeSection = () => {
                     <FaGithub size={30} />
                   </a>
                 </li>
-                <li className='mr-3 hover:scale-110 transition-all ease-in-out'>
+                <li className='mr-3 group relative  hover:scale-110 transition-all ease-in-out'>
+                  <SocialMediaMessage title='linkedin' isNextTo={false} />
                   <a
                     href="https://www.linkedin.com/in/andresfelipesaumet/"
                     target="_blank"
@@ -40,7 +42,8 @@ export const AboutMeSection = () => {
                     <FaLinkedin size={30} />
                   </a>
                 </li>
-                <li className='hover:scale-110 transition-all ease-in-out'>
+                <li className='group relative  hover:scale-110 transition-all ease-in-out'>
+                  <SocialMediaMessage title='descargar CV' isNextTo={false} />
                   <a href="" className={`${styles['cv-icon']} bg-black text-white dark:bg-slate-300 dark:text-[#0d1117]`}>CV</a>
                 </li>
               </ul>

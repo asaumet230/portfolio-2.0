@@ -45,7 +45,8 @@ export const Footer = () => {
         <div className='text-center max-[640px]:py-1'>
           <h3 className='text-xl max-[640px]:text-lg'>Sigueme en Redes</h3>
           <nav className='py-3'>
-            <SocialMediaLinks 
+            <SocialMediaLinks
+              isNextTo={false} 
               size={25} 
               marginStyle='mx-2'/>
           </nav>

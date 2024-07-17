@@ -1,10 +1,11 @@
 'use client'
 
-import { useAppDispatch, useAppSelector } from '@/store';
 import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store';
 import { TbDeviceDesktopMinus, TbDeviceDesktopOff } from 'react-icons/tb';
 
-import { isDarkMode, isSystemMode, toggleSystemMode } from '@/store/themeMode/themeSlice';
+import { isDarkMode, toggleSystemMode } from '@/store/themeMode/themeSlice';
+import { changeThemeMode } from '@/helpers';
 
 export const SystemMode = () => {
 
@@ -13,13 +14,16 @@ export const SystemMode = () => {
    
     const setSystemMode = () => {
 
+        if (typeof window === 'undefined' || !!systemMode ) return;
+
         const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-        if( systemMode ) return;
-        dispatch( toggleSystemMode() );
-
-        if (typeof window === 'undefined') return;
+        dispatch( toggleSystemMode(!systemMode) );
         dispatch(isDarkMode(darkModeMediaQuery.matches));
+
+        changeThemeMode(darkModeMediaQuery.matches);
+        localStorage.setItem('systemMode', JSON.stringify(!systemMode));
+        localStorage.removeItem('darkMode'); 
     }
 
     useEffect(() => {
@@ -27,7 +31,11 @@ export const SystemMode = () => {
         const localStorageSystemMode = localStorage.getItem('systemMode');
 
         if(localStorageSystemMode !== null ) {
-            dispatch( isSystemMode(JSON.parse(localStorageSystemMode)) );
+
+            const themeMode:boolean = JSON.parse(localStorageSystemMode);
+
+            dispatch( toggleSystemMode(themeMode) );
+            localStorage.setItem('systemMode', JSON.stringify(themeMode));
         }
      
     }, [ dispatch ]);

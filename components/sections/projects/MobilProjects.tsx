@@ -44,7 +44,7 @@ export const MobilProjects = ({ projects }: Props) => {
         spaceBetween={40}
         pagination={{ clickable: true }}
 
-        className='mt-4 mx-auto w-9/12 max-[1250px]:w-8/12 max-[720px]:w-9/12'>
+        className='mt-4 mx-auto w-9/12 max-[1250px]:w-8/12 max-[720px]:w-10/12'>
 
         {
           projects.map((project) => (

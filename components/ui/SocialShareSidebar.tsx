@@ -46,6 +46,7 @@ export const SocialShareSidebar = () => {
             <p className={`rotate-90 my-10 font-semibold uppercase ${styles['social-share-message']}`}>Sigueme</p>
             <nav className='rotate-90 my-8 w-full'>
               <SocialMediaLinks
+                isNextTo={true}
                 size={23}
                 marginStyle={'my-3 mx-1'} />
             </nav>

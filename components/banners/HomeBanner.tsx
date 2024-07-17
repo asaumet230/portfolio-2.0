@@ -15,7 +15,7 @@ export const HomeBanner = () => {
       <div className="container grid grid-cols-2 max-[920px]:flex flex-col-reverse">
 
         <div className="flex flex-col justify-center text-left p-3 max-[920px]:text-center">
-          <p className="font-semibold text-2xl capitalize mb-4 max-[920px]:text-xl">Hola soy Andres Felipe,</p>
+          <p className="font-semibold text-2xl capitalize mb-4 max-[920px]:text-xl max-[640px]:mt-6">Hola soy Andres Felipe,</p>
           <HomeBannerTitle />
 
           <div className="max-[920px]:flex justify-center">

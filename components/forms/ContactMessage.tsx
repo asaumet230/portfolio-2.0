@@ -20,7 +20,7 @@ export const ContactMessage = () => {
       <div className="mt-12">
         <h2 className="text-lg font-bold">Sigueme en redes</h2>
         <nav className='flex justify-start mt-4'>
-          <SocialMediaLinks size={25} marginStyle={'mx-2'} />
+          <SocialMediaLinks size={25} marginStyle={'mx-2'} isNextTo={false}/>
         </nav>
       </div>
     </header>

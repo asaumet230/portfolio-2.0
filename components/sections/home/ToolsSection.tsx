@@ -1,7 +1,10 @@
+'use client'
+
 import Image from 'next/image';
 
 import { ProgressBar, Separator } from "@/components/ui";
 import { ITool } from '@/interfaces';
+import { useAppSelector } from '@/store';
 
 
 interface Props {
@@ -9,6 +12,8 @@ interface Props {
 }
 
 export const ToolsSection = ({ tools }: Props) => {
+
+  const darkMode = useAppSelector( state =>  state.theme.darkMode );
 
   return (
 
@@ -24,10 +29,10 @@ export const ToolsSection = ({ tools }: Props) => {
 
         <div className="grid grid-cols-3 my-10 gap-4 mx-auto max-[920px]:grid-cols-2">
           {
-            tools.map(({ image, title, progress }) => (
-              <div className="pt-4 pb-5 flex flex-col justify-center items-center" key={image}>
+            tools.map(({ images, title, progress }) => (
+              <div className="pt-4 pb-5 flex flex-col justify-center items-center" key={images[0]}>
                 <Image
-                  src={image}
+                  src={darkMode? images[1]: images[0] }
                   alt={title}
                   width={70}
                   height={70} 

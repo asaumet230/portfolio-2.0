@@ -1,6 +1,6 @@
 
 export interface ITool {
-    image    : string;
+    images   : string[];
     progress : number;
     title    : string;
 }

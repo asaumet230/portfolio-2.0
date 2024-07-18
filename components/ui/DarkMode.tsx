@@ -5,8 +5,10 @@ import { MdNightsStay, MdSunny } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "@/store";
 
 import { isDarkMode, toggleDarkMode } from "@/store/themeMode/themeSlice";
+import { SocialMediaMessage } from ".";
 import { changeThemeMode } from "@/helpers";
 import 'animate.css';
+
 
 export const DarkMode = () => {
 
@@ -31,12 +33,12 @@ export const DarkMode = () => {
 
             dispatch(isDarkMode(darkModeMediaQuery.matches));
             changeThemeMode(darkModeMediaQuery.matches);
-        
+
         }
 
-        const updateTheme = (e: MediaQueryListEvent) => { 
+        const updateTheme = (e: MediaQueryListEvent) => {
             dispatch(isDarkMode(e.matches));
-            changeThemeMode(e.matches); 
+            changeThemeMode(e.matches);
         };
 
         darkModeMediaQuery.addEventListener('change', updateTheme);
@@ -44,7 +46,7 @@ export const DarkMode = () => {
 
     }, [dispatch]);
 
-    
+
     const setDarkMode = (mode: boolean) => {
 
         dispatch(toggleDarkMode(mode));
@@ -55,15 +57,23 @@ export const DarkMode = () => {
 
 
     return (
-        <div className="flex items-center cursor-pointer ml-3" onClick={ () => setDarkMode(!darkMode) }>
+        <div className="flex items-center cursor-pointer ml-3" onClick={() => setDarkMode(!darkMode)}>
             {
                 darkMode ?
-                    <MdNightsStay
-                        size={25}
-                        className="animate__animated animate__fadeIn" /> :
-                    <MdSunny
-                        size={25}
-                        className="animate__animated animate__fadeIn" />
+                    (<div className="group relative">
+                        <SocialMediaMessage title="Modo Noche" isNextTo={true} />
+                        <MdNightsStay
+                            size={25}
+                            className="animate__animated animate__fadeIn" />
+                    </div>)
+                    :
+                    (<div className="group relative">
+                        <SocialMediaMessage title="Modo Día" isNextTo={true} />
+                        <MdSunny
+                            size={25}
+                            className="animate__animated animate__fadeIn" />
+                    </div>)
+
             }
         </div>
     )

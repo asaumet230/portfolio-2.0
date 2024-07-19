@@ -22,12 +22,14 @@ export const MobilProjectDescription = ({ project }: Props) => {
           project.images.length > 1 ? (
             <>
               <Image
+                priority
                 className='images'
                 height="300"
                 width="169"
                 src={project.images[0]}
                 alt={project.name} />
               <Image
+                priority
                 className='images max-[750px]:hidden'
                 height="300"
                 width="169"
@@ -36,11 +38,12 @@ export const MobilProjectDescription = ({ project }: Props) => {
             </>
           ) : (
             <Image
-            className='images'
-            height="300"
-            width="169"
-            src={project.images[0]}
-            alt={project.name} />
+              priority
+              className='images'
+              height="300"
+              width="169"
+              src={project.images[0]}
+              alt={project.name} />
           )
         }
       </div>
@@ -50,17 +53,23 @@ export const MobilProjectDescription = ({ project }: Props) => {
         <p className='font-light text-sm  mt-1 leading-relaxed'>{project.description}</p>
         <h4 className='text-lg text-left mt-4 capitalize'>tecnologías usadas:</h4>
         <div className='flex justify-evenly mt-3 w-9/12 mx-auto'>
-          <SiFlutter size={35} />
-          <SiDart size={35} />
+          <div>
+            <SiFlutter size={35} />
+            <p className='font-light text-center capitalize mt-2'>Flutter</p>
+          </div>
+          <div>
+            <SiDart size={35} />
+            <p className='font-light text-center capitalize mt-2'>Dart</p>
+          </div>
         </div>
         <h4 className='text-lg text-left mt-4 capitalize'>código fuente:</h4>
         <div className='mt-4 flex mx-auto justify-center'>
           <a href={project.urlApp} className={`${styles['card-button']} card-button-dark`}>
-            <HiDevicePhoneMobile className='dark:text-slate-300'/>
+            <HiDevicePhoneMobile className='dark:text-slate-300' />
             <p className='capitalize ml-1 dark:text-slate-300'>app</p>
           </a>
           <a href={project.urlRepository} className={`${styles['card-button']} card-button-dark ml-2`}>
-            <FaGithub className='dark:text-slate-300'/>
+            <FaGithub className='dark:text-slate-300' />
             <p className='capitalize ml-1 dark:text-slate-300'>Codígo</p>
           </a>
         </div>

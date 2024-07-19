@@ -78,7 +78,7 @@ export const TestimonialsSection = ({ testimonials }: Props) => {
 
                                                 <div className='group relative'>
                                                     <SocialMediaMessage title='Instagram' isNextTo={false} />
-                                                    <a href={instagram} className='transition-all ease-in-out hover:scale-125'>
+                                                    <a href={instagram} className='transition-all ease-in-out hover:scale-125' target='_blank' rel="noopener noreferrer">
                                                         <FaSquareInstagram size={24} className='mx-1' />
                                                     </a>
                                                 </div>
@@ -88,7 +88,7 @@ export const TestimonialsSection = ({ testimonials }: Props) => {
                                             twitter && (
                                                 <div className='group relative'>
                                                     <SocialMediaMessage title='Twitter' isNextTo={false} />
-                                                    <a href={twitter} className='transition-all ease-in-out hover:scale-125'>
+                                                    <a href={twitter} className='transition-all ease-in-out hover:scale-125' target='_blank' rel="noopener noreferrer">
                                                         <FaSquareXTwitter size={24} className='mx-1' />
                                                     </a>
                                                 </div>
@@ -98,7 +98,7 @@ export const TestimonialsSection = ({ testimonials }: Props) => {
                                             linkedin && (
                                                 <div className='group relative'>
                                                     <SocialMediaMessage title='Linkedin' isNextTo={false} />
-                                                    <a href={linkedin} className='transition-all ease-in-out hover:scale-125'>
+                                                    <a href={linkedin} className='transition-all ease-in-out hover:scale-125' target='_blank' rel="noopener noreferrer">
                                                         <FaLinkedin size={24} className='mx-1' />
                                                     </a>
                                                 </div>
@@ -108,7 +108,7 @@ export const TestimonialsSection = ({ testimonials }: Props) => {
                                             facebook && (
                                                 <div className='group relative'>
                                                     <SocialMediaMessage title='Facebook' isNextTo={false} />
-                                                    <a href={facebook} className='transition-all ease-in-out hover:scale-125'>
+                                                    <a href={facebook} className='transition-all ease-in-out hover:scale-125' target='_blank' rel="noopener noreferrer">
                                                         <FaSquareFacebook size={24} className='mx-1' />
                                                     </a>
                                                 </div>

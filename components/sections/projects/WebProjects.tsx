@@ -13,7 +13,6 @@ interface Props {
   projects: IProject[];
 }
 
-
 export const WebProjects = ({ projects }: Props) => {
 
   return (

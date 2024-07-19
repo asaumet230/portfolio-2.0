@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/store';
+import Swal from 'sweetalert2';
 
 import { toggleModal } from '@/store/searchModal/searchModalSlice';
 
@@ -36,19 +37,30 @@ export const SearchModal = () => {
   }
 
 
-  const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmitForm = async (e: FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
 
     if (searchForm.term.trim().length <= 0) return;
 
     if (searchForm.term.trim().length >= 130) {
-      alert('Solo se permiten términos de no más de 100 caracteres');
+
       resetForm();
+    
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        confirmButtonColor: 'rgb(29 78 216)',
+        text: "Solo se permiten términos de no más de 100 caracteres",
+      });
+      
       return;
     }
-    resetForm();
+
+    resetForm(); 
   }
 
+  
   return (
     <>
       {
@@ -82,8 +94,6 @@ export const SearchModal = () => {
             </div>
           )
       }
-
-
     </>
   )
 }

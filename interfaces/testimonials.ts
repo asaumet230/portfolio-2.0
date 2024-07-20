@@ -2,6 +2,7 @@ export interface ITestimonial {
     name: string;
     content: string;
     major: string;
+    url?: string;
     image: string;
     instagram?: string;
     facebook?: string;

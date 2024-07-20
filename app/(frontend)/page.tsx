@@ -18,7 +18,46 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
 
-  const [ toolsResponse, testimonialsResponse, experiencesResponse ] = await Promise.all([
+  const schema = {
+    "@context": "http://schema.org",
+    "@type": "Person",
+    "name": "Andres Felipe Saumet",
+    "url": "https://www.andressaumet.com/",
+    "jobTitle": ["Desarrollador Web", "Desarrollador Móvil"],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Freelance"
+    },
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "Universidad del Norte",
+      "additionalType": "EducationalOrganization",
+      "educationalCredentialAwarded": "Especialización en Evaluación Financiera y de Proyectos"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Santa Marta, Colombia"
+    },
+    "email": "contacto@andressaumet.com",
+    "telephone": "+57-300-123-4567",
+    "skill": [
+      "HTML", "CSS", "JavaScript", "TypeScript", "React", "Angular", "Node.js", "Dart", "Flutter", "Next.js", "Docker", "Kubernetes", "Git", "PostgreSQL", "MongoDB"
+    ],
+    "hasOccupation": [
+      {
+        "@type": "Occupation",
+        "name": "Freelance Web & Mobile Developer",
+        "yearsInOccupation": 4
+      }
+    ],
+    "memberOf": {
+      "@type": "Organization",
+      "name": "Freelance Developer Community"
+    }
+  }
+
+
+  const [toolsResponse, testimonialsResponse, experiencesResponse] = await Promise.all([
     getTools(),
     getTestimonials(),
     getExperiences(),
@@ -26,6 +65,9 @@ export default async function HomePage() {
 
   return (
     <>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+
       <HomeBanner />
       <main>
         <ToolsSection tools={toolsResponse.tools} />
@@ -34,6 +76,7 @@ export default async function HomePage() {
         <AboutMeSection />
         <TestimonialsSection testimonials={testimonialsResponse.testimonials} />
       </main>
+
     </>
   );
 }

@@ -9,7 +9,7 @@ export const HomeBannerTitle = () => {
     const [ loop, setLoop ] = useState<boolean>(true);
 
     const [ text ] = useTypewriter({
-        words: ['desarrollador web | móvil'],
+        words: ['Especialista en Desarrollo Web | Aplicaciones Móviles'],
         loop: 1,
         typeSpeed: 80,
         onLoopDone: () => {

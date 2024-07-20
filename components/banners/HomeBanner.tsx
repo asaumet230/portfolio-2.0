@@ -22,7 +22,7 @@ export const HomeBanner = () => {
             <Separator />
           </div>
 
-          <p className="text-lg mb-8 pr-8 max-[920px]:pr-0">Explora el arte de la tecnología a través de mi portafolio, donde mis 4 años de experiencia en desarrollo web y móvil se traducen en soluciones creativas y robustas para cada desafío digital.</p>
+          <p className="text-lg mb-8 pr-8 max-[920px]:pr-0">Explora el arte de la tecnología a través de mi portafolio, donde mis <strong>4 años</strong> de experiencia en <strong>desarrollo web y móvil</strong> se traducen en soluciones creativas y robustas para cada desafío digital.</p>
 
           <div>
             <a

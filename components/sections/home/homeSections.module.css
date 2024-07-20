@@ -29,8 +29,9 @@
 .cv-icon {
     font-family: var(--font-league-spartan);
     font-style: bold;
-    height: 30px;
-    width: 30px;
+    font-size: 18px;
+    height: 35px;
+    width: 35px;
     border-radius: 100%;
     display: flex;
     justify-content: center;

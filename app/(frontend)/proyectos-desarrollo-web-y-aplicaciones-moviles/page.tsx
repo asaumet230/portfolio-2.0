@@ -2,6 +2,39 @@ import Link from 'next/link';
 import { MobilProjects, Separator, WebProjects } from "@/components";
 import { getProjects } from "@/api";
 
+
+export const metadata = {
+  title: 'Proyectos destacados web y móviles | Andres Felipe Saumet',
+  description: 'Descubre cómo transformo ideas en proyectos web y móviles efectivos con tecnologías de vanguardia. Explora mis trabajos exitosos, entra ya.',
+  keywords: "desarrollo web, aplicaciones móviles, desarrollo web full stack,",
+  robots: "index, follow",
+  openGraph: {
+    title: "Proyectos destacados web y móviles | Andres Felipe Saumet",
+    description: "Descubre cómo transformo ideas en proyectos web y móviles efectivos con tecnologías de vanguardia. Explora mis trabajos exitosos, entra ya.",
+    url: "https://www.andressaumet.com/proyectos-desarrollo-web-y-aplicaciones-moviles",
+    type: "website",
+    images: [
+      {
+        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+        width: 800,
+        height: 600,
+        alt: "Proyectos de Desarrollo Web y Aplicaciones Móviles",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Proyectos destacados web y móviles | Andres Felipe Saumett",
+    description: "Descubre cómo transformo ideas en proyectos web y móviles efectivos con tecnologías de vanguardia. Explora mis trabajos exitosos, entra ya.",
+    images: [
+      {
+        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+        alt: "Proyectos de Desarrollo Web y Aplicaciones Móviles",
+      },
+    ],
+  },
+};
+
 export default async function PageTrabajos() {
 
   const webProjects = await getProjects('web');

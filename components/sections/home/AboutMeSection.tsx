@@ -64,7 +64,7 @@ export const AboutMeSection = () => {
                     href="https://github.com/asaumet230"
                     target="_blank"
                     rel="noopener noreferrer">
-                    <FaGithub size={35} />
+                    <FaGithub size={30} />
                   </a>
                 </li>
                 <li className='mr-3 group relative  hover:scale-110 transition-all ease-in-out'>
@@ -73,7 +73,7 @@ export const AboutMeSection = () => {
                     href="https://www.linkedin.com/in/andresfelipesaumet/"
                     target="_blank"
                     rel="noopener noreferrer">
-                    <FaLinkedin size={35} />
+                    <FaLinkedin size={30} />
                   </a>
                 </li>
                 <li className='group relative  hover:scale-110 transition-all ease-in-out' onClick={downloadAndresCV}>

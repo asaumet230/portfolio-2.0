@@ -1,9 +1,9 @@
-import { 
-    Footer, 
-    Navbar, 
-    SearchModal, 
-    Sidebar, 
-    SocialShareSidebar 
+import {
+    Footer,
+    Navbar,
+    SearchModal,
+    Sidebar,
+    SocialShareSidebar
 } from "@/components";
 
 

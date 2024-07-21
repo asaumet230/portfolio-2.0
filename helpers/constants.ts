@@ -8,7 +8,7 @@ export const menuData: IMenuLink[] = [
     },
     {
       name: 'proyectos destacados',
-      url: '/proyectos-destacados',
+      url: '/proyectos-desarrollo-web-y-aplicaciones-moviles',
     },
     {
       name: 'contactame',

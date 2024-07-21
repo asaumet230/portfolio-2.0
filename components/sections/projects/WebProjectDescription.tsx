@@ -84,7 +84,7 @@ export const WebProjectDescription = ({ project }: Props) => {
 
     iconsGuide.forEach(icon => {
 
-      if(tecnology === icon.name) {
+      if (tecnology === icon.name) {
         iconsTecnologies.push(icon);
       }
     });
@@ -106,7 +106,7 @@ export const WebProjectDescription = ({ project }: Props) => {
           <h4 className='text-lg text-left mt-4 capitalize font-medium'>tecnologías usadas:</h4>
           <div className='flex justify-between items-center my-4 w-11/12 mx-auto'>
             {
-              iconsTecnologies.map(({name, icon}) => (
+              iconsTecnologies.map(({ name, icon }) => (
                 <div key={name} className='flex flex-col justify-center items-center align-middle'>
                   {icon}
                   <p className='font-light text-center capitalize mt-1'>{name}</p>
@@ -120,11 +120,11 @@ export const WebProjectDescription = ({ project }: Props) => {
 
           <div className='mt-4 flex mx-auto justify-center'>
             <a href={project.urlApp} className={`${styles['card-button']} card-button-dark`}>
-              <FaDesktop  className='dark:text-slate-300'/>
+              <FaDesktop className='dark:text-slate-300' />
               <p className='capitalize ml-1 dark:text-slate-300'>app</p>
             </a>
             <a href={project.urlRepository} className={`${styles['card-button']} card-button-dark ml-2`}>
-              <FaGithub className='dark:text-slate-300'/>
+              <FaGithub className='dark:text-slate-300' />
               <p className='capitalize ml-1 dark:text-slate-300'>Codígo</p>
             </a>
           </div>

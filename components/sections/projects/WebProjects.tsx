@@ -20,7 +20,7 @@ export const WebProjects = ({ projects }: Props) => {
 
       <div className="section pb-8">
         <h2 className="text-center">Soluciones Web Avanzadas</h2>
-        <p className="font-light text-center first-letter:capitalize">mis soluciones web estan diseñadas para maximizar la usabilidad y la eficacia. Cada proyecto destaca por su enfoque innovador y técnico en el desarrollo web.</p>
+        <p className="font-light text-justify first-letter:capitalize">mis soluciones web estan diseñadas para maximizar la usabilidad y la eficacia. Cada proyecto destaca por su enfoque innovador y técnico en el desarrollo web, lo cual mejora la experiencia del usuario y satisface las necesidades del negocio.</p>
       </div>
       <Swiper
         effect="coverflow"

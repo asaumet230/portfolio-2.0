@@ -12,7 +12,7 @@ export const Footer = () => {
           <nav className='py-3'>
             <ul>
               <li className='py-1'>
-                <Link href={'/proyectos-destacados'}>Proyectos Destacados</Link>
+                <Link href={'/proyectos-desarrollo-web-y-aplicaciones-moviles'}>Proyectos Destacados</Link>
               </li>
               <li className='py-1'>
                 <Link href={'/contactame'}>Contactame</Link>

@@ -14,6 +14,7 @@ import { getTools, getTestimonials, getExperiences } from "@/api";
 export const metadata: Metadata = {
   title: "Desarrollo Web y Desarrollos de Apps | Andres Felipe Saumet",
   description: "Ofrecemos servicios de desarrollo web y desarrollo de apps móviles. Especializado en tecnologías como React, Angular, Node.js, Flutter y más.",
+  robots: "index, follow",
   keywords: [
     "desarrolladoras de software",
     "empresa desarrolladora de software",

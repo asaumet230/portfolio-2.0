@@ -9,7 +9,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import "./globals.css";
 
-const googleTagManagerId = 'GTM-WP7JP549'
+const googleTagManagerId = 'GTM-WP7JP549';
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
   return (

@@ -4,8 +4,8 @@ interface Props {
     gtmId: string;
 }
 
-
 export const GoogleTagManagerHead = ({ gtmId }: Props) => {
+  
     return (
         <>
             <Script

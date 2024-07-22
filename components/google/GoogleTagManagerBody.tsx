@@ -1,10 +1,22 @@
-
+'use client';
+import { useEffect, useState } from 'react';
 
 interface Props {
     gtmId: string;
 }
 
 export const GoogleTagManagerBody = ({ gtmId }: Props) => {
+
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) {
+        return <></>;
+    }
+
     return (
         <noscript>
             <iframe

@@ -3,6 +3,7 @@ export * from './banners/index';
 export * from './error/index';
 export * from './footers/index';
 export * from './forms/index';
+export * from './google/index';
 export * from './menus/index';
 export * from './sections/index';
 export * from './tables/index';

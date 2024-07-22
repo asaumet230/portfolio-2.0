@@ -1,8 +1,9 @@
+const { hostname } = require("os");
 
 module.exports = {
   siteUrl: 'https://www.andressaumet.com',
   generateRobotsTxt: true,
-  exclude: ['/dashboard/**'],
+  exclude: ['/dashboard/**', 'https://www.andressaumet.com/api/downloadcv' ],
   robotsTxtOptions: {
     policies: [
       { userAgent: '*', allow: '/' },
@@ -11,14 +12,7 @@ module.exports = {
   },
   sitemapSize: 7000, 
   outDir: './public',
-  additionalPaths: async (config) => [
-    await config.transform(config, '/blog'),
-    await config.transform(config, '/contactame'),
-    await config.transform(config, '/politica-privacidad-y-proteccion-datos'),
-    await config.transform(config, '/proyectos-desarrollo-web-y-aplicaciones-moviles'),
-    await config.transform(config, '/terminos-y-condiciones'),
-    await config.transform(config, '/login'),
-    await config.transform(config, '/registro'),
-
+  additionalSitemaps: [
+    'https://www.andressaumet.com/sitemap-0.xml',
   ],
 }

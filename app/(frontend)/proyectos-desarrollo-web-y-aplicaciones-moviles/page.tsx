@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { Metadata } from 'next';
+
 import { MobilProjects, Separator, WebProjects } from "@/components";
 import { getProjects } from "@/api";
 
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Proyectos destacados web y móviles | Andres Felipe Saumet',
   description: 'Descubre cómo transformo ideas en proyectos web y móviles efectivos con tecnologías de vanguardia. Explora mis trabajos exitosos, entra ya.',
   keywords: "desarrollo web, aplicaciones móviles, desarrollo web full stack,",

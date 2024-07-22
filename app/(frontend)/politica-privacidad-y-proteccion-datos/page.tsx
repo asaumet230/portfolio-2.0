@@ -1,11 +1,45 @@
+import { Metadata } from "next";
 import Link from "next/link";
 
+
+export const metadata: Metadata = {
+    title: "Política de Privacidad | Andres Felipe Saumet.",
+    description: "Lee nuestra política de privacidad y protección de datos personales.",
+    keywords: "política de privacidad, protección de datos",
+    robots: "index, follow",
+    openGraph: {
+        title: "Política de Privacidad | Andres Felipe Saumet.",
+        description: "Lee nuestra política de privacidad y protección de datos personales.",
+        url: "https://www.andressaumet.com/politica-privacidad-y-proteccion-datos",
+        type: "website",
+        images: [
+            {
+                url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+                width: 800,
+                height: 600,
+                alt: "Política de Privacidad | Andres Felipe Saumet.",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Política de Privacidad | Andres Felipe Saumet.",
+        description: "Lee nuestra política de privacidad y protección de datos personales.",
+        images: [
+            {
+                url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+                alt: "Política de Privacidad | Andres Felipe Saumet.",
+            },
+        ],
+    },
+};
+
 export default function PoliticaPrivacidadYProteccionDatosPage() {
-    
+
     return (
         <div className="mx-auto w-8/12 mt-14 mb-20 max-[640px]:w-10/12 tracking-wide leading-6 text-pretty">
             <h1 className="text-center">Política de Privacidad y Protección de Datos</h1>
-            <br /> 
+            <br />
             <br />
             <h2>1. Introducción</h2>
             <br />

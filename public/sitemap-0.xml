@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://www.andressaumet.com/api/downloadcv</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/nuevo-proyecto</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/articulos</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/perfil</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/herramientas</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/testimonios</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/login</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/usuarios</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/trabajos</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/projectos-moviles</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/blog</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/terminos-y-condiciones</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/contactame</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/politica-privacidad-y-proteccion-datos</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/registro</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/dashboard/projectos-web</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://www.andressaumet.com/proyectos-destacados</loc><lastmod>2024-07-21T01:18:22.916Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/api/downloadcv</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/dashboard</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/login</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/contactame</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/politica-privacidad-y-proteccion-datos</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/registro</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/blog</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/proyectos-desarrollo-web-y-aplicaciones-moviles</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.andressaumet.com/terminos-y-condiciones</loc><lastmod>2024-07-21T13:53:52.708Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

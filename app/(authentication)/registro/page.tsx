@@ -1,4 +1,38 @@
+import { Metadata } from "next";
+
 import { AuthBackground, RegisterForm, } from "@/components";
+
+export const metadata: Metadata = {
+  title: "Registro | Andres Felipe Saumet",
+  description: "Crea tu cuenta y únete a nuestra comunidad.",
+  keywords: "registro, crear cuenta, unirse, comunidad, beneficios",
+  robots: "index, follow",
+  openGraph: {
+    title: "Registro | Andres Felipe Saumet",
+    description: "Crea tu cuenta y únete a nuestra comunidad.",
+    url: "https://www.andressaumet.com/registro",
+    type: "website",
+    images: [
+      {
+        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+        width: 800,
+        height: 600,
+        alt: "Registro | Andres Felipe Saumet",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Registro | Andres Felipe Saumet",
+    description: "Crea tu cuenta y únete a nuestra comunidad.",
+    images: [
+      {
+        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+        alt: "Registro | Andres Felipe Saumet",
+      },
+    ],
+  },
+};
 
 export default function RegistrarsePage() {
 

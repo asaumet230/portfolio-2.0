@@ -32,7 +32,8 @@ export const metadata: Metadata = {
     title: "Desarrollo Web y Desarrollos de Apps | Andres Felipe Saumet",
     description: "Ofrecemos servicios de desarrollo web y desarrollo de apps móviles. Especializado en tecnologías como React, Angular, Node.js, Flutter y más.",
     images: ["https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75", "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-light.webp&w=1200&q=75"],
-    url: "https://www.andressaumet.com/"
+    url: "https://www.andressaumet.com/",
+    type: "website"
   },
   twitter: {
     card: "summary_large_image",

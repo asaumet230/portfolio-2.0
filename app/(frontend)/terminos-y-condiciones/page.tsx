@@ -1,3 +1,38 @@
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+    title: "Términos y Condiciones | Andres Felipe Saumet.",
+    description: "Lee los términos y condiciones de uso de nuestro sitio web.",
+    keywords: "términos y condiciones",
+    robots: "index, follow",
+    openGraph: {
+        title: "Términos y Condiciones | Andres Felipe Saumet.",
+        description: "Lee los términos y condiciones de uso de nuestro sitio web.",
+        url: "https://www.andressaumet.com/terminos-y-condiciones",
+        type: "website",
+        images: [
+            {
+                url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+                width: 800,
+                height: 600,
+                alt: "Términos y Condiciones | Andres Felipe Saumet.",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Términos y Condiciones | Andres Felipe Saumet.",
+        description: "Lee los términos y condiciones de uso de nuestro sitio web.",
+        images: [
+            {
+                url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+                alt: "Términos y Condiciones | Andres Felipe Saumet.",
+            },
+        ],
+    },
+};
+
 
 export default function TerminosYcondicionesPage() {
     return (

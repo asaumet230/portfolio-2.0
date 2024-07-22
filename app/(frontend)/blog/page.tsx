@@ -1,4 +1,38 @@
+import { Metadata } from "next";
 import { CardPost, PostSideBar } from "@/components";
+
+
+export const metadata: Metadata = {
+  title: "Blog Desarrollo Web y Móvil | Andres Saumet",
+  description: "Explora tutoriales, noticias y tendencias en desarrollo web y móvil.Explora tutoriales, noticias y tendencias en desarrollo web y móvil.",
+  keywords: "blog, Andres Saumet, desarrollo web, desarrollo móvil, JavaScript, TypeScript, React, Flutter, Dart",
+  robots: "index, follow",
+  openGraph: {
+    title: "Blog Desarrollo Web y Móvil | Andres Saumet",
+    description: "Tutoriales y tendencias en desarrollo web y móvil.",
+    url: "https://www.andressaumet.com/blog",
+    type: "website",
+    images: [
+      {
+        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+        width: 800,
+        height: 600,
+        alt: "Blog Desarrollo Web y Móvil | Andres Saumet",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog Desarrollo Web y Móvil | Andres Saumet",
+    description: "Tutoriales y tendencias en desarrollo web y móvil.",
+    images: [
+      {
+        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
+        alt: "Blog Desarrollo Web y Móvil | Andres Saumet",
+      },
+    ],
+  },
+};
 
 export default function Blog() {
   

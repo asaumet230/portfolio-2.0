@@ -2,6 +2,10 @@
 User-agent: *
 Allow: /
 
+# Googlebot
+User-agent: Googlebot
+Disallow: /dashboard/*
+
 # Host
 Host: https://www.andressaumet.com
 

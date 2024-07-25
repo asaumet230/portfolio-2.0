@@ -19,6 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body className={`${lato.variable} ${leagueOfSpartan.variable}`}>
         <GoogleTagManagerBody gtmId={googleTagManagerId} />
+
         <Providers>
           {children}
         </Providers>

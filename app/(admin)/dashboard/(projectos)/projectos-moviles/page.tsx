@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import { SiDart, SiFlutter } from "react-icons/si";
 
 import { AdminPorjectsTable } from "@/components";
+import { getProjects } from "@/api";
+
 import { IProjectTableColumns, IProjectTableRow } from "@/interfaces";
 
 
@@ -95,7 +97,15 @@ const mobilProjects: IProjectTableRow[] = [
 
 
 
-export default function ProjectosMovilesPage() {
+
+
+export default async function ProjectosMovilesPage() {
+
+
+  const { projects } = await getProjects('mobil');
+
+
+  console.log(projects);
 
   return (
     <div className="w-full bg-white p-4 rounded-lg card-shadow">

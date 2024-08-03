@@ -42,7 +42,7 @@ export default function RegistrarsePage() {
 
         <AuthBackground
           image={"/images/register-background.webp"}
-          title={"Crea tu cuenta"}
+          title={"Crea tu cuenta Registro"}
           message={"Únete a nuestra comunidad. Completa el formulario para crear tu cuenta y comenzar a disfrutar de todos nuestros beneficios."} />
 
         <RegisterForm />

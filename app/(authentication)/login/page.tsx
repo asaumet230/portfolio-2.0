@@ -43,7 +43,7 @@ export default function LoginPage() {
 
         <AuthBackground
           image={"/images/login-background.webp"}
-          title={"Bienvenido de Nuevo"}
+          title={"Bienvenido de Nuevo al Login"}
           message={"Por favor, ingresa tus credenciales para acceder a tu cuenta. Nos alegra verte de nuevo."} />
 
         <LoginForm />

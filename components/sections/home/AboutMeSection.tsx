@@ -39,7 +39,6 @@ export const AboutMeSection = () => {
   }
 
 
-
   return (
     <section className="mt-20" id="about-me-section">
       <div className="section">

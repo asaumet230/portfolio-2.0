@@ -11,7 +11,7 @@ interface Props {
   tools: ITool[];
 }
 
-export const ToolsSection = ({ tools }: Props) => {
+export const ToolsSection = ({ tools = [] }: Props) => {
 
   const darkMode = useAppSelector( state =>  state.theme.darkMode );
 

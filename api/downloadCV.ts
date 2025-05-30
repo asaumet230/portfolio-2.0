@@ -1,5 +1,5 @@
 
- //* FROM SERVER:
+//* FROM SERVER:
 export const downloadCV = async () => {
 
   try {

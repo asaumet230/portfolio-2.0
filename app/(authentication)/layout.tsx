@@ -10,7 +10,7 @@ export default function AuthenticationLayout({ children }: { children: React.Rea
   return (
     <>
       <GoogleReCaptchaProvider reCaptchaKey={recaptchaKey}>
-         {children}
+        {children}
       </GoogleReCaptchaProvider>
     </>
   );

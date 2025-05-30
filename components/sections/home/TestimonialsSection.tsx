@@ -24,7 +24,7 @@ interface Props {
     testimonials: ITestimonial[];
 }
 
-export const TestimonialsSection = ({ testimonials }: Props) => {
+export const TestimonialsSection = ({ testimonials = []}: Props) => {
 
     return (
 

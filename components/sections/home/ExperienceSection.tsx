@@ -6,7 +6,9 @@ interface Props {
     experiencies: IExperience[];
 }
 
-export const ExperienceSection = ({ experiencies }:Props) => {
+export const ExperienceSection = ({ experiencies = []}:Props) => {
+
+    
     return (
         <section className="mt-20">
             <div className="section">

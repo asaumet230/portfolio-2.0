@@ -7,6 +7,7 @@ export const getTestimonials = async (): Promise<TestimonialsResponse> => {
     try {
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/testimonials`, {
+
             next: {
                 revalidate: 86400, // 24 horas en segundos
             }

@@ -1,5 +1,6 @@
 export * from './banners/index';
 export * from './banners/index';
+export * from './cards/index';
 export * from './error/index';
 export * from './footers/index';
 export * from './forms/index';

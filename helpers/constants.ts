@@ -11,6 +11,10 @@ export const menuData: IMenuLink[] = [
       url: '/proyectos-desarrollo-web-y-aplicaciones-moviles',
     },
     {
+      name: 'herramientas',
+      url: '/herramientas',
+    },
+    {
       name: 'contactame',
       url: '/contactame',
     },

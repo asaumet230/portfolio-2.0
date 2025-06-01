@@ -2,7 +2,9 @@
 
 import { FaSearch } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
+
 import { useAppDispatch } from "@/store";
+
 import { toggleModal } from "@/store/searchModal/searchModalSlice";
 import { toggleSidebar } from "@/store/sidebar/sidebarSlice";
 

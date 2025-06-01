@@ -47,6 +47,19 @@ h4 {
   margin: 0 auto;
 }
 
+.tools {
+  max-width: 1200px;
+  width: 75%;
+  margin: 0 auto;
+  text-align: justify;
+}
+
+.tools-card-container {
+  width: 100%;
+  margin: 0 auto;
+  text-align: justify;
+}
+
 .links {
   text-transform: capitalize;
   font-size: 18px;
@@ -85,6 +98,11 @@ h4 {
 
 .card-button-dark:hover {
   @apply dark:bg-gradient-to-l from-indigo-600 to-indigo-500;
+}
+
+/* Cards */
+.card-button {
+  @apply inline-block text-base font-semibold px-4 py-2 bg-gray-950 text-white rounded-md hover:bg-gray-800 transition dark:bg-gradient-to-l from-indigo-700 to-indigo-600 dark:text-slate-200;
 }
 
 /* Recaptcha */
@@ -137,4 +155,15 @@ h4 {
   .swiper-pagination-bullet-active {
     background: rgb(79 70 229) !important;
   }
+}
+
+@media (max-width: 600px) {
+  .tools {
+    width: 90%;
+  }
+
+  .tools-card-container {
+    width: 80%;
+  }
+ 
 }

@@ -32,10 +32,7 @@ export const metadata = {
 };
 
 
-
 export default function Herramientas() {
-
-
 
     return (
         <div className="tools flex-col pt-8 pb-16">

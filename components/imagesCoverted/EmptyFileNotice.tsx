@@ -8,7 +8,7 @@ interface EmptyFileNoticeProps {
 
 export const EmptyFileNotice = ({ noticeText }: EmptyFileNoticeProps) => {
     return (
-        <div className="text-center text-gray-500 text-sm font-medium animate__animated animate__fadeIn">
+        <div className="text-center text-gray-500 dark:text-slate-200 text-sm font-medium animate__animated animate__fadeIn">
             { noticeText }
         </div>
     )

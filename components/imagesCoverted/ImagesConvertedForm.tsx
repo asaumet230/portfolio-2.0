@@ -17,7 +17,7 @@ import {
 } from '.';
 
 import { useAppDispatch, useAppSelector } from '@/store';
-import { isImagesLoad } from '@/store/imageComponentsLoad/imagesComponentsLoad';
+import { isImagesLoad, isSelectedFiles } from '@/store/imageComponentsLoad/imagesComponentsLoad';
 
 import { ConvertedImage, ImagePreview } from '@/interfaces';
 import { triggerBlobDownload } from '@/helpers';
@@ -89,6 +89,7 @@ export const ImagesForm = () => {
         }));
 
         setFilesToConvert(files);
+        dispatch(isSelectedFiles(true));
         setFilePreviews(newPreviews);
     };
 
@@ -136,8 +137,8 @@ export const ImagesForm = () => {
                 )
             );
 
-            filesToConvert.length === 1 ? Swal.fire('¡Listo!', 'La imagen fue convertida con éxito.', 'success') : Swal.fire('¡Listo!', 'Las imágenes fueron convertidas con éxito.', 'success') 
-            
+            filesToConvert.length === 1 ? Swal.fire('¡Listo!', 'La imagen fue convertida con éxito.', 'success') : Swal.fire('¡Listo!', 'Las imágenes fueron convertidas con éxito.', 'success')
+
         } else {
             Swal.fire('Error', 'Hubo un problema al convertir las imágenes.', 'error');
         }
@@ -192,11 +193,9 @@ export const ImagesForm = () => {
         setIsLoading(false);
         setGlobalProgress(0);
         dispatch(isImagesLoad(false));
+        dispatch(isSelectedFiles(false));
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
-
-
-
 
     return (
         <div className='flex flex-col items-center justify-center'>

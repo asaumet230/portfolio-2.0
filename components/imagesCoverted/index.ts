@@ -8,3 +8,4 @@ export * from './FileUploader';
 export * from './ImagesConvertedForm';
 export * from './ImagesFormatSelector';
 export * from './RemoveFileButton';
+export * from './SharpConvertDetails';

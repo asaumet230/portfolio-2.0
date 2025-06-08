@@ -12,7 +12,7 @@ export const FormatSelector = ({ outputFormat, setOutputFormat }: FormatSelector
       <div className='flex flex-col items-center justify-center sm:flex-row'>
         <label className='font-semibold mr-5 mb-3 sm:mb-2 text-xl sm:text-2xl '>Formato de salida:</label>
         <select
-          className='p-2 font-semibold text-indigo-600 border-2 border-indigo-300 rounded-md text-base sm:text-lg'
+          className='p-2 font-semibold text-indigo-600 border-2 border-indigo-300 rounded-md text-base sm:text-lg dark:bg-gray-200 dark:border-indigo-500 '
           name='outputFormat'
           value={outputFormat}
           onChange={(e) => setOutputFormat(e.target.value)}>

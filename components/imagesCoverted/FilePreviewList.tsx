@@ -25,11 +25,11 @@ export const FilePreviewList = ({
     handleRemoveFile
 }: FilePreviewListProps) => {
     return (
-        <div className="w-full max-w-3xl mt-6 space-y-4 animate__animated animate__fadeIn">
+        <div className="w-full min-h-32 max-w-3xl mt-6 space-y-4 animate__animated animate__fadeIn">
             {
                 filePreviews.map((item, index) => (
 
-                    <div key={index} className="flex items-center justify-between bg-gray-50 border border-gray-300 p-2 rounded-lg shadow-md ">
+                    <div key={index} className="flex items-center justify-between bg-gray-50 border border-gray-300 dark:border-2 dark:border-gray-400 p-2 rounded-lg shadow-md ">
 
                         <img src={item.url} alt={item.file.name} className="w-12 h-12 object-cover rounded-lg mr-2 sm:mr-4 border border-gray-300" />
 

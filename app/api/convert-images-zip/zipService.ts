@@ -1,32 +1,33 @@
 import archiver from 'archiver';
-import { createWriteStream } from 'fs';
-import { unlink, readFile } from 'fs/promises';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { PassThrough } from 'stream';
 
-export const createZipWithImages = async (files: { buffer: Buffer; name: string }[]): Promise<{ buffer: Buffer; fileName: string }> => {
+export const createZipWithImages = async (
+  files: { buffer: Buffer; name: string }[]
+): Promise<{ buffer: Buffer; fileName: string }> => {
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  const stream = new PassThrough();
 
-    const zipName = `imagenes-${uuidv4()}.zip`;
-    const zipPath = path.join('/tmp', zipName);
+  const chunks: Buffer[] = [];
 
-    const output = createWriteStream(zipPath);
-    const archive = archiver('zip', { zlib: { level: 9 } });
+  stream.on('data', (chunk) => chunks.push(chunk));
 
-    archive.pipe(output);
+  const finalizePromise = new Promise<void>((resolve, reject) => {
+    stream.on('end', resolve);
+    stream.on('error', reject);
+  });
 
-    files.forEach(file => {
-        archive.append(file.buffer, { name: file.name });
-    });
+  archive.pipe(stream);
 
-    await archive.finalize();
+  for (const file of files) {
+    archive.append(file.buffer, { name: file.name });
+  }
 
-    await new Promise<void>((resolve, reject) => {
-        output.on('close', resolve);
-        output.on('error', reject);
-    });
+  archive.finalize();
 
-    const buffer = await readFile(zipPath);
-    await unlink(zipPath);
+  await finalizePromise;
 
-    return { buffer, fileName: zipName };
+  const buffer = Buffer.concat(chunks);
+  const fileName = `imagenes-${Date.now()}.zip`;
+
+  return { buffer, fileName };
 };

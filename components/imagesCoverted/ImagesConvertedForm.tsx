@@ -19,22 +19,22 @@ import {
 import { useAppDispatch, useAppSelector } from '@/store';
 import { isImagesLoad, isSelectedFiles } from '@/store/imageComponentsLoad/imagesComponentsLoad';
 
-import { ConvertedImage, ImagePreview } from '@/interfaces';
-import { triggerBlobDownload } from '@/helpers';
-import { convertImagesService, downloadImagesZipService } from '@/services';
+import { ConvertedFile, ImagePreview } from '@/interfaces';
+import { compressImageBeforeUpload, generateZipFromConverted, uploadAndConvertImage } from '@/helpers';
+
 
 export const ImagesForm = () => {
 
     const [conversionFinished, setConversionFinished] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [globalProgress, setGlobalProgress] = useState(0);
 
     const [outputFormat, setOutputFormat] = useState('webp');
     const [urls, setUrls] = useState<string[]>([]);
 
     const [filePreviews, setFilePreviews] = useState<ImagePreview[]>([]);
     const [filesToConvert, setFilesToConvert] = useState<FileList | null>(null);
+    const [imagesData, setImagesData] = useState<ConvertedFile[]>([]);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,6 +51,8 @@ export const ImagesForm = () => {
 
     const validateAndStoreFiles = (files: FileList | null) => {
 
+        const MAX_IMAGE_SIZE_MB = 12;
+
         if (!files || files.length === 0) {
             Swal.fire('¡Ups!', 'Selecciona al menos una imagen.', 'warning');
             return;
@@ -62,10 +64,18 @@ export const ImagesForm = () => {
             return;
         }
 
-        if (files.length > 20) {
-            Swal.fire('¡Ups!', 'Solo se permiten hasta 20 imágenes a la vez.', 'warning');
+        if (files.length > 5) {
+            Swal.fire('¡Ups!', 'Solo se permiten hasta 5 imágenes a la vez.', 'warning');
             return;
         }
+
+        const oversizedFiles = Array.from(files).filter(file => file.size / 1024 / 1024 > MAX_IMAGE_SIZE_MB);
+        if (oversizedFiles.length > 0) {
+            const names = oversizedFiles.map(f => f.name).join(', ');
+            Swal.fire('Imagen muy grande', `Estas imágenes superan los ${MAX_IMAGE_SIZE_MB} MB: ${names}`, 'error');
+            return;
+        }
+
 
         const sameFormatImages = Array.from(files).every(file => {
             const fileExt = file.name.split('.').pop()?.toLowerCase();
@@ -108,57 +118,64 @@ export const ImagesForm = () => {
         }
 
         setIsLoading(true);
-        setGlobalProgress(0);
+        const updatedUrls: string[] = [];
 
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.floor(Math.random() * 5) + 3;
-            setGlobalProgress(p => Math.min(progress, 95));
-            if (progress >= 95) clearInterval(interval);
-        }, 100);
+        for (let i = 0; i < filePreviews.length; i++) {
+            const preview = filePreviews[i];
 
-        const result = await convertImagesService(filesToConvert, outputFormat);
+            try {
 
-        clearInterval(interval);
-        setGlobalProgress(100);
-        await new Promise(resolve => setTimeout(resolve, 400));
+                const compressedFile = await compressImageBeforeUpload(preview.file);
+                const converted = await uploadAndConvertImage(compressedFile, outputFormat, (percent) => {
+                    setFilePreviews(prev =>
+                        prev.map((p, idx) =>
+                            idx === i ? { ...p, progress: percent } : p
+                        )
+                    );
+                });
 
-        if (result && result.files) {
-            const updatedPreviews = filePreviews.map((preview, index) => ({
-                ...preview,
-                convertedSizeKB: result.files[index]?.sizeKB ?? 0
-            }));
+                setFilePreviews(prev =>
+                    prev.map((p, idx) =>
+                        idx === i ? { ...p, convertedSizeKB: converted.sizeKB, progress: 100, completed: true } : p
+                    )
+                );
 
-            setConversionFinished(true);
-            setFilePreviews(updatedPreviews);
-            setUrls(
-                result.files.map((f: ConvertedImage) =>
-                    `data:image/${outputFormat};base64,${f.base64}`
-                )
-            );
+                updatedUrls.push(`data:image/${outputFormat};base64,${converted.base64}`);
 
-            filesToConvert.length === 1 ? Swal.fire('¡Listo!', 'La imagen fue convertida con éxito.', 'success') : Swal.fire('¡Listo!', 'Las imágenes fueron convertidas con éxito.', 'success')
+            } catch (error) {
+                console.error(`Fallo al convertir imagen ${preview.file.name}`, error);
+            }
+        }
 
+        setUrls(updatedUrls);
+        setConversionFinished(true);
+
+        const successfulPreviews = filePreviews.filter((_, i) => updatedUrls[i]);
+        const imagesData = successfulPreviews.map((preview, index) => ({
+            base64: updatedUrls[index].split(',').pop()!,
+            name: preview.file.name,
+            sizeKB: preview.convertedSizeKB ?? 0,
+        }));
+
+        setImagesData(imagesData);
+
+        if (updatedUrls.length === 0) {
+            Swal.fire('Error', 'No se pudo convertir ninguna imagen.', 'error');
+        } else if (updatedUrls.length < filePreviews.length) {
+            Swal.fire('¡Parcialmente convertido!', `Se convirtieron ${updatedUrls.length} de ${filePreviews.length} imágenes.`, 'warning');
         } else {
-            Swal.fire('Error', 'Hubo un problema al convertir las imágenes.', 'error');
+            Swal.fire('¡Listo!', 'Las imágenes fueron convertidas con éxito.', 'success');
         }
     };
 
     const handleDownloadAllAsZip = async () => {
-
-        if (!filesToConvert || filesToConvert.length === 0) {
-            Swal.fire('¡Ups!', 'Primero debes seleccionar imágenes válidas.', 'warning');
+        
+        if (!urls || urls.length === 0) {
+            Swal.fire('¡Ups!', 'Primero debes convertir las imágenes.', 'warning');
             return;
         }
 
-        const blob = await downloadImagesZipService(filesToConvert, outputFormat);
-
-        if (!blob) {
-            Swal.fire('Error', 'No se pudo descargar el archivo ZIP.', 'error');
-            return;
-        }
-
-        triggerBlobDownload(blob, 'imagenes-convertidas.zip');
+        await generateZipFromConverted(imagesData, outputFormat);
     };
 
     const handleDownloadByUrl = (url: string, filename: string) => {
@@ -172,6 +189,10 @@ export const ImagesForm = () => {
     };
 
     const handleRemoveFile = (index: number) => {
+
+        if (filePreviews.length === 1) {
+            return handleReset();
+        }
 
         const updated = [...filePreviews];
 
@@ -191,7 +212,6 @@ export const ImagesForm = () => {
         setConversionFinished(false);
         setIsDragging(false);
         setIsLoading(false);
-        setGlobalProgress(0);
         dispatch(isImagesLoad(false));
         dispatch(isSelectedFiles(false));
         if (fileInputRef.current) fileInputRef.current.value = '';
@@ -236,7 +256,8 @@ export const ImagesForm = () => {
                     <ConvertActions
                         filesToConvert={filesToConvert}
                         handleConvert={handleConvert}
-                        handleReset={handleReset} />
+                        handleReset={handleReset} 
+                        isLoading={isLoading}/>
                 )
             }
             {
@@ -254,7 +275,6 @@ export const ImagesForm = () => {
                         filePreviews={filePreviews}
                         urls={urls}
                         isLoading={isLoading}
-                        globalProgress={globalProgress}
                         outputFormat={outputFormat}
                         handleDownloadByUrl={handleDownloadByUrl}
                         handleRemoveFile={handleRemoveFile} />
@@ -262,7 +282,7 @@ export const ImagesForm = () => {
             }
 
             {
-                filePreviews.length === 0 && (<EmptyFileNotice noticeText='No has seleccionado ningún archivo. Puedes convertir hasta 20 imágenes por carga.' />)
+                filePreviews.length === 0 && (<EmptyFileNotice noticeText='No has seleccionado ningún archivo, selecciona hasta 5 imágenes por carga ( máx. 12 MB cada una ).' />)
             }
 
             {urls.length > 0 && (

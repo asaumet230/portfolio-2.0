@@ -9,7 +9,6 @@ interface FilePreviewListProps {
     filePreviews: ImagePreview[];
     urls: string[];
     isLoading: boolean;
-    globalProgress: number;
     outputFormat: string;
     handleDownloadByUrl: (url: string, filename: string) => void;
     handleRemoveFile: (index: number) => void;
@@ -19,7 +18,6 @@ export const FilePreviewList = ({
     filePreviews,
     urls,
     isLoading,
-    globalProgress,
     outputFormat,
     handleDownloadByUrl,
     handleRemoveFile
@@ -39,14 +37,22 @@ export const FilePreviewList = ({
                             <p className="text-sm text-gray-500">
                                 Tamaño: {item.originalSizeKB} KB
                             </p>
+
                         </div>
 
 
                         <div className={`flex flex-col items-center justify-center ${!isLoading && 'hidden'} w-6/12 sm:flex-row`}>
-                            { isLoading && (<PreviewProgressBar globalProgress={globalProgress} />)}
+                            {isLoading && (<PreviewProgressBar ImageProgress={item.progress} />)}
+
+                            {isLoading && !item.completed && (
+                                <p className="text-sm font-semibold mx-3 mb-2 animate-pulse">
+                                    {item.progress < 100 ? 'Subiendo...' : 'Convirtiendo...'}
+                                </p>
+                            )}
 
                             {
-                                globalProgress === 100 && urls[index] && (
+
+                                item.completed && urls[index] && (
                                     <DownloadInfo
                                         urls={urls}
                                         filePreviews={filePreviews}

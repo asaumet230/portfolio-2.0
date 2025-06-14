@@ -6,3 +6,9 @@ export interface ConvertedImage {
 export interface ConvertedImageResponse {
   files: ConvertedImage[];
 }
+
+export interface ConvertedFile {
+  name: string;
+  base64: string;
+  sizeKB: number;
+}

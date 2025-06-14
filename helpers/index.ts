@@ -1,4 +1,6 @@
 export * from './changeThemeMode';
+export * from './compressImageBeforeUpload';
 export * from './constants';
-export * from './downloadHelpers';
+export * from './generateZipFromConverted';
 export * from './revalidateRecaptcha';
+export * from './uploadAndConvertImage';

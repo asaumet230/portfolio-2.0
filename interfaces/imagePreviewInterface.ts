@@ -4,4 +4,5 @@ export interface ImagePreview {
     originalSizeKB: number;
     convertedSizeKB?: number;
     progress: number;
+    completed?: boolean;
 }

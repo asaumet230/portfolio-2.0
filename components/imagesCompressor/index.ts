@@ -1,4 +1,5 @@
 export * from './CompressActions';
+export * from './CompresslyDetails';
 export * from './CompressPreviewProgressBar';
 export * from './CompressProgressImagesUpload';
 export * from './CompressRemoveFileButton';

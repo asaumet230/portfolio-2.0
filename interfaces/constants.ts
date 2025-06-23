@@ -29,4 +29,15 @@ interface IIconTecnology {
   icon: JSX.Element;
 }
 
+export interface ICard {
+  title: string;
+  description: string;
+  image: {
+    light: string;
+    dark: string;
+  };
+  url: string;
+  alt: string;
+}
+
 

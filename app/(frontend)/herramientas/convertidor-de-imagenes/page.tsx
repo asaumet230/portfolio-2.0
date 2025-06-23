@@ -25,7 +25,7 @@ export const metadata: Metadata = {
       "https://www.andressaumet.com/images/sharpconvert-dark.webp",
       "https://www.andressaumet.com/images/sharpconvert-light.webp"
     ],
-    url: "https://www.andressaumet.com/",
+    url: "https://www.andressaumet.com/herramientas/convertidor-de-imagenes",
     type: "website"
   },
   twitter: {

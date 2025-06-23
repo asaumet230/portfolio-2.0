@@ -132,21 +132,19 @@ export const SharpConvertDetails = () => {
               </div>
             </section>
 
-            <div className="flex justify-center mt-12">
+            <div className="flex flex-col md:flex-row gap-4 justify-center mb-20 px-4 max-w-2xl mx-auto">
               <Link
-                href="https://github.com/asaumet230/sharpconvert.git" 
+                href="https://github.com/asaumet230/sharpconvert.git"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-5 py-3 rounded-lg font-medium shadow-md transition">
-                  <FaGithub className="text-xl" />
-                  Ver código en GitHub
+                className="flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium shadow-md transition w-full md:w-auto md:flex-1">
+                <FaGithub className="text-xl" />
+                Ver código en GitHub
               </Link>
-            </div>
 
-            <div className="text-center my-14">
               <a
                 href="#converitor-images-form"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition w-full md:w-auto md:flex-1 text-center">
                 Comienza a convertir ahora
               </a>
             </div>

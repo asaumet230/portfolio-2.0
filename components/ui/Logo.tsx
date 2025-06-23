@@ -18,6 +18,11 @@ export const Logo = () => {
           ? '/images/sharpconvert-dark.webp'
           : '/images/sharpconvert-light.webp';
 
+      case pathname.startsWith('/herramientas/comprimir-imagenes-gratis'):
+        return darkMode
+          ? '/images/compressly-dark.webp'
+          : '/images/compressly-light.webp';
+
       default:
         return darkMode
           ? '/images/logo-andres-saumet-dark.webp'
@@ -37,7 +42,7 @@ export const Logo = () => {
   }
 
   const logoSrc = getLogoSrc(pathname, darkMode);
-   const { width, height } = getLogoDimensions(pathname);
+  const { width, height } = getLogoDimensions(pathname);
 
   return (
     <div>

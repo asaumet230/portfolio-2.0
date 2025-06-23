@@ -33,7 +33,7 @@ export const FilesPreviewList = ({ filesPreviewList, handleRemoveFile, isLoading
                             {isLoading && (<CompressPreviewProgressBar ImageProgress={item.progress} />)}
 
                             {isLoading && !item.completed && (
-                                <p className="text-sm font-semibold mx-3 mb-2 animate-pulse">
+                                <p className="text-sm font-semibold mx-3 mb-2 animate-pulse dark:text-black">
                                     {item.progress < 100 && 'Comprimiendo...'}
                                 </p>
                             )}

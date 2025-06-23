@@ -7,7 +7,7 @@ import { useAppDispatch } from '@/store';
 import { IMenuLink } from '@/interfaces';
 import { toggleSidebar } from '@/store/sidebar/sidebarSlice';
 
-export const SidebarLinks: FC<IMenuLink> = ({ name, url }) => {
+export const SidebarLinks: FC<IMenuLink> = ({ name, url, children }) => {
 
     const router = useRouter();
     const pathname = usePathname();

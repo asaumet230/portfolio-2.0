@@ -1,12 +1,16 @@
-import Card from "./Card"
+import { Card } from ".";
+
+import { cardsData } from "@/helpers"
 
 export const CardsGrid = () => {
 
     return (
-        <div className='tools-card-container grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-4'>
-            <Card />
+        <div className='grid grid-cols-1 w-7/12 mx-auto sm:w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-fr'>
+            {
+                cardsData.map((card) => <Card key={card.alt} {...card} />)
+            }
         </div>
     )
 }
 
-export default CardsGrid
+export default CardsGrid;

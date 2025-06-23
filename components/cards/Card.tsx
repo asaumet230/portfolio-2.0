@@ -1,31 +1,34 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { useAppSelector } from '@/store';
+import { ICard } from '@/interfaces';
 
-export const Card = () => {
+
+export const Card = ({ title, description, image, url, alt }: ICard) => {
 
     const darkMode = useAppSelector(state => state.theme.darkMode);
 
     return (
-        <div className='border border-gray-200 rounded-xl hover:shadow-lg hover:scale-105 transition-transform duration-300'>
+        <div className='flex flex-col h-full border border-gray-200 rounded-xl hover:shadow-lg hover:scale-105 transition-transform duration-300'>
             <Image
-                className='rounded-t-xl w-full object-cover'
-                src={ darkMode?  '/images/sharpconvert-card-dark.webp' : '/images/sharpconvert-card-light.webp'}
-                alt='convertidor-de-imagenes'
+                className='rounded-t-xl w-full h-40 object-contains px-2'
+                src={darkMode ? image.dark : image.light}
+                alt={alt}
                 width={100}
                 height={100}
             />
-            <div className='px-6 pt-3 pb-6 flex-col justify-between items-center align-middle'>
-                <h3 className="text-center mb-2 text-base">Transforma tus imágenes a JPG, PNG, WebP o AVIF fácilmente</h3>
-                <p className='text-center text-base font-light mb-4'>Con SharpConvert puedes cambiar el formato de tus imágenes sin complicaciones. Solo súbelas, elige el tipo de archivo y descárgalas. Rápido, seguro y sin marcas de agua.</p>
+            <div className='flex flex-col justify-between flex-1 px-6 pt-3 pb-6 text-center'>
+                <h3 className="mb-2 text-base font-semibold">{title}</h3>
+                <p className='text-center text-base font-light mb-4'>{description}</p>
                 <div className='w-full text-center'>
-                    <a href="/herramientas/convertidor-de-imagenes" className="card-button ">Ir a herramienta</a>
+                    <Link href={url} className="card-button ">Ir a herramienta</Link>
                 </div>
             </div>
         </div>
     )
 }
 
-export default Card
+export default Card;

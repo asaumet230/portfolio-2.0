@@ -2,7 +2,7 @@ export * from './ConvertActions';
 export * from './ConvertedImageGallery';
 export * from './DownloadActions';
 export * from './DownloadInfo';
-export * from './EmptyFileNotice';
+export * from '../ui/EmptyFileNotice';
 export * from './FilePreviewList';
 export * from './FileUploader';
 export * from './ImagesConvertedForm';

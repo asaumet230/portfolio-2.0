@@ -1,6 +1,7 @@
 export * from './CardPost';
 export * from './Cursor';
 export * from './DarkMode';
+export * from './EmptyFileNotice';
 export * from './LoadingModal';
 export * from './Logo';
 export * from './PreviewProgressBar';

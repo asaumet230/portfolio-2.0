@@ -1,5 +1,3 @@
-import React from 'react'
-
 import 'animate.css';
 
 interface EmptyFileNoticeProps {
@@ -14,4 +12,4 @@ export const EmptyFileNotice = ({ noticeText }: EmptyFileNoticeProps) => {
     )
 }
 
-export default EmptyFileNotice
+export default EmptyFileNotice;

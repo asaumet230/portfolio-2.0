@@ -10,3 +10,4 @@ export * from './menus/index';
 export * from './sections/index';
 export * from './tables/index';
 export * from './ui/index';
+export * from './imagesCompressor/index';

@@ -28,7 +28,7 @@ export const FilesPreviewList = ({ filesPreviewList, handleRemoveFile, isLoading
                                 Tamaño: {item.originalSizeKB} KB
                             </p>
                         </div>
-                         <div className={`flex flex-col items-center justify-center ${!isLoading && 'hidden'} w-6/12 sm:flex-row`}>
+                         <div className={`flex flex-col items-center justify-center ${!isLoading && 'hidden'} w-7/12 sm:w-6/12 sm:flex-row`}>
                          
                             {isLoading && (<CompressPreviewProgressBar ImageProgress={item.progress} />)}
 

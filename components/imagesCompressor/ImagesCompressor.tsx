@@ -147,7 +147,7 @@ export const ImagesCompressor = () => {
     }
 
     return (
-        <div className="bg-white p-6 dark:bg-gray-700">
+        <div className="bg-white p-2 sm:p-6 dark:bg-gray-700">
 
             <input
                 type="file"

@@ -1,5 +1,6 @@
 {
   "name": "portfolio-2.0",
+  "description": "A modern portfolio website built with Next.js, React, and Tailwind CSS",
   "version": "0.1.0",
   "private": true,
   "scripts": {

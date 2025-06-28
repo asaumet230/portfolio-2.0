@@ -5,7 +5,7 @@ import { SocialMediaLinks } from '../ui';
 export const Footer = () => {
   return (
     <div className='bg-slate-100 pt-8 dark:bg-[#262f3a]'>
-      <div className='section grid grid-cols-3 max-[640px]:grid-cols-1'>
+      <div className='section grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
 
         <div className='text-center max-[640px]:py-1'>
           <h3 className='text-xl max-[640px]:text-lg'>Paginas</h3>
@@ -29,6 +29,24 @@ export const Footer = () => {
             </ul>
           </nav>
         </div>
+
+       <div className='text-center max-[640px]:py-1'>
+          <h3 className='text-xl max-[640px]:text-lg'>Herramientas</h3>
+          <nav className='py-3'>
+            <ul>
+              <li className='py-1'>
+                <Link href={'/herramientas/convertidor-de-imagenes'}>Convertidor de imágenes</Link>
+              </li>
+              <li className='py-1'>
+                <Link href={'/herramientas/comprimir-imagenes-gratis'}>Comprimir imágenes gratis</Link>
+              </li>
+              <li className='py-1'>
+                <Link href={'/herramientas/minuscula-a-mayuscula'}>Minúscula a Mayúscula</Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        
         <div className='text-center max-[640px]:py-1'>
           <h3 className='text-xl max-[640px]:text-lg'>Políticas</h3>
           <nav className='py-3'>

@@ -22,6 +22,10 @@ export const menuData: IMenuLink[] = [
         name: 'Comprimir imágenes gratis',
         url: '/herramientas/comprimir-imagenes-gratis',
       },
+      {
+        name: 'Minúscula a Mayúscula',
+        url: '/herramientas/minuscula-a-mayuscula',
+      },
     ]
   },
   {
@@ -58,4 +62,15 @@ export const cardsData: ICard[] = [
     url: '/herramientas/comprimir-imagenes-gratis',
     alt: 'comprimir-imagenes-gratis',
   },
+  {
+    title: 'Convertir texto de minúscula a mayúscula',
+    description: 'Convierte tu texto fácilmente entre mayúsculas y minúsculas online',
+    image: {
+      light: '/images/textcasepro-light-card.webp',
+      dark: '/images/textcasepro-dark-card.webp',
+    },
+    url: '/herramientas/minuscula-a-mayuscula',
+    alt: 'convertir-texto-minuscula-a-mayuscula',
+  }
+
 ];

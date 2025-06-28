@@ -67,6 +67,10 @@ h4 {
   font-family: var(--font-league-spartan);
 }
 
+.search-link {
+   font-family: var(--font-league-spartan);
+}
+
 .images {
   width: auto;
   height: auto;

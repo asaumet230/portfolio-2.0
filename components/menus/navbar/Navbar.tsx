@@ -20,7 +20,7 @@ export const Navbar = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <header className="container p-3 flex justify-between items-center max-[500px]:px-0">
+    <header className="container p-3 flex justify-between items-center">
       <Logo />
       <div className="flex">
         <nav className={styles['display-desktop-menu']}>
@@ -40,8 +40,8 @@ export const Navbar = () => {
 
 
         <div className={`ml-12 px-4 py-2 cursor-pointer ${styles['display-search-link']}`} onClick={()=> dispatch( toggleModal(true) )}>
-          <FaSearch />
-          <p className="links capitalize ml-2">buscar</p>
+          <FaSearch className="text-[16px]" />
+          <p className="capitalize ml-2 text-[16px] font-bold search-link">buscar</p>
         </div>
         <DarkMode />
         <SystemMode />

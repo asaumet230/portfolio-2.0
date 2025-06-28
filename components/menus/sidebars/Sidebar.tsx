@@ -34,60 +34,55 @@ export const Sidebar = () => {
   }
 
   return (
-    <>
-      {
-        isSidebarOpen ? (
-          <div className={`${styles['sidebar-container']} dark:bg-gradient-to-tr to-[#262f3a] from-[#0d1117] animate__animated animate__faster animate__slideInLeft`}>
-            <div className='p-8 h-full flex flex-col justify-between'>
 
-              <div className='flex justify-between items-center'>
-                <div>
-                  <Image
-                    priority
-                    height={110}
-                    width={180}
-                    src={darkMode ? "/images/logo-andres-saumet-dark.webp" : "/images/logo-andres-saumet.webp"}
-                    className='images'
-                    alt={"logo-andres-saumet"} />
-                </div>
-                <div>
-                  <p className='links font-bold cursor-pointer ml-4' onClick={() => dispatch(toggleSidebar(false))}> Cerrar X</p>
-                </div>
-              </div>
+    <div className={`${isSidebarOpen ? 'left-0' : '-left-full'} lg:hidden bg-white w-full h-full fixed z-10 transition-all duration-300 ease-in-out dark:bg-gradient-to-tr to-[#262f3a] from-[#0d1117] animate__animated animate__faster animate__slideInLeft`}>
+      <div className='p-8 h-full flex flex-col justify-between'>
 
-              <nav className='mt-8'>
-                <ul>
-                  {
-                    menuData.map((link) => (
-                      <SidebarLinks {...link} key={link.url} />
-                    ))
-                  }
-                </ul>
-              </nav>
-
-              <div className={`flex items-center py-5 px-3 cursor-pointer ${styles['display-search-link']}`} onClick={handleSearch}>
-                <FaSearch />
-                <p className="links capitalize ml-2">buscar</p>
-              </div>
-
-              <div className='flex-col flex-1'></div>
-              <hr />
-
-              <div className='links p-3 mt-3 flex cursor-pointer' onClick={() => handleNavigation('/login')}>
-                <FaUser />
-                <p className='ml-2'>Iniciar Sesión</p>
-              </div>
-              <div className='links p-3 flex cursor-pointer' onClick={() => handleNavigation('/registro')}>
-                <FaUserPlus />
-                <p className='ml-2'>Registrarse</p>
-              </div>
-            </div>
+        <div className='flex justify-between items-center'>
+          <div>
+            <Image
+              priority
+              height={110}
+              width={180}
+              src={darkMode ? "/images/logo-andres-saumet-dark.webp" : "/images/logo-andres-saumet.webp"}
+              className='images'
+              alt={"logo-andres-saumet"} />
           </div>
-        ) : (<></>)
-      }
-    </>
+          <div>
+            <p className='links font-bold cursor-pointer ml-4' onClick={() => dispatch(toggleSidebar(false))}> Cerrar X</p>
+          </div>
+        </div>
 
+        <nav className='mt-8'>
+          <ul>
+            {
+              menuData.map((link) => (
+                <SidebarLinks {...link} key={link.url} />
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div className={`flex items-center py-5 px-3 cursor-pointer ${styles['display-search-link']}`} onClick={handleSearch}>
+          <FaSearch />
+          <p className="links capitalize ml-2">buscar</p>
+        </div>
+
+        <div className='flex-col flex-1'></div>
+        <hr />
+
+        <div className='links p-3 mt-3 flex items-center cursor-pointer' onClick={() => handleNavigation('/login')}>
+          <FaUser size={16}/>
+          <p className='ml-2'>Iniciar Sesión</p>
+        </div>
+        <div className='links p-3 flex items-center cursor-pointer' onClick={() => handleNavigation('/registro')}>
+          <FaUserPlus size={20}/>
+          <p className='ml-2'>Registrarse</p>
+        </div>
+      </div>
+    </div>
   )
+
 }
 
 export default Sidebar;

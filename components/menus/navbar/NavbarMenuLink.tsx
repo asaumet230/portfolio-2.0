@@ -1,6 +1,7 @@
 'use client'
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -17,14 +18,16 @@ export const NavbarMenuLink: FC<IMenuLink> = ({ name, url, children }) => {
         <li className={`relative group links px-4 py-2 ${(pathname === url) && 'bg-[#e2e6f0] transition-all ease-in-out duration-200 rounded-xl dark:bg-[#2e374ad1] dark:border border-[#6e7681]'} `}>
 
             {
-                !children ? <Link href={url}>{name}</Link> : (
-                    <div className="flex items-center justify-center gap-1">
-                        <Link href={url}>{name}</Link>
-                        <IoChevronDown className="text-lg font-bold group-hover:rotate-180 transition-all duration-200" />
+                !children ? (<Link href={url} className='text-[16px]'>{name}</Link>) : (
+                    <div className="flex justify-center items-center mt-0.5 gap-1">
+                        <Link
+                            href={url}
+                            className='text-[16px]'>{name}</Link>
+                        <IoChevronDown className="font-bold group-hover:rotate-180 transition-all duration-200" />
                     </div>
                 )
             }
-            
+
             {
                 children && (
                     <ul
@@ -32,7 +35,10 @@ export const NavbarMenuLink: FC<IMenuLink> = ({ name, url, children }) => {
                         {
                             children.map((child) => (
                                 <li key={child.url} className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${(pathname === child.url) && 'bg-[#e2e6f0] transition-all ease-in-out duration-200 dark:bg-[#2e374ad1]'} `}>
-                                    <Link href={child.url} className="block text-sm font-base text-gray-800 dark:text-gray-200">
+                                    <Link
+                                        href={child.url}
+                                        prefetch={false}
+                                        className="block text-sm text-gray-800 dark:text-gray-200">
                                         {child.name}
                                     </Link>
                                 </li>

@@ -12,7 +12,7 @@
     align-items: center;
 }
 
-@media( max-width:920px ) {
+@media( max-width:1145px ) {
 
     .display-desktop-menu {
         display: none;
@@ -29,3 +29,4 @@
     }
     
 }
+

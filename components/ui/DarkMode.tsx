@@ -63,14 +63,14 @@ export const DarkMode = () => {
                     (<div className="group relative">
                         <SocialMediaMessage title="Modo Noche" isNextTo={true} />
                         <MdNightsStay
-                            size={25}
+                            size={20}
                             className="animate__animated animate__fadeIn" />
                     </div>)
                     :
                     (<div className="group relative">
                         <SocialMediaMessage title="Modo Día" isNextTo={true} />
                         <MdSunny
-                            size={25}
+                            size={20}
                             className="animate__animated animate__fadeIn" />
                     </div>)
 

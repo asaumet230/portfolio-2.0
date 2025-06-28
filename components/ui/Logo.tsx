@@ -23,6 +23,11 @@ export const Logo = () => {
           ? '/images/compressly-dark.webp'
           : '/images/compressly-light.webp';
 
+      case pathname.startsWith('/herramientas/minuscula-a-mayuscula'):
+        return darkMode
+          ? '/images/textcasepro-dark.webp'
+          : '/images/textcasepro-light.webp'
+
       default:
         return darkMode
           ? '/images/logo-andres-saumet-dark.webp'
@@ -33,7 +38,14 @@ export const Logo = () => {
   function getLogoDimensions(pathname: string): { width: number; height: number } {
 
     switch (true) {
+
       case pathname.startsWith('/herramientas/convertidor-de-imagenes'):
+        return { width: 125, height: 125 };
+
+      case pathname.startsWith('/herramientas/comprimir-imagenes-gratis'):
+        return { width: 129, height: 129 };
+
+      case pathname.startsWith('/herramientas/minuscula-a-mayuscula'):
         return { width: 125, height: 125 };
 
       default:

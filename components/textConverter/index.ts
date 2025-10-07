@@ -1,2 +1,2 @@
-export * from './TextCaseProDetails';
-export * from './TextConverterForm';
+export { TextCaseProDetails } from './TextCaseProDetails';
+export { TextConverterForm } from './TextConverterForm';

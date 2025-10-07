@@ -1,2 +1,2 @@
-export * from './HomeBanner';
-export * from './HomeBannerTitle';
+export { HomeBanner } from './HomeBanner';
+export { HomeBannerTitle } from './HomeBannerTitle';

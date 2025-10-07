@@ -1,4 +1,4 @@
-export * from './MobilProjectDescription';
-export * from './MobilProjects';
-export * from './WebProjectDescription';
-export * from './WebProjects';
+export { MobilProjectDescription } from './MobilProjectDescription';
+export { MobilProjects } from './MobilProjects';
+export { WebProjectDescription } from './WebProjectDescription';
+export { WebProjects } from './WebProjects';

@@ -1,0 +1,63 @@
+/* Personalización de botones de navegación de Swiper */
+.swiperGallery :global(.swiper-button-next),
+.swiperGallery :global(.swiper-button-prev) {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.swiperGallery :global(.swiper-button-next):hover,
+.swiperGallery :global(.swiper-button-prev):hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
+.swiperGallery :global(.swiper-button-next::after),
+.swiperGallery :global(.swiper-button-prev::after) {
+  font-size: 22px;
+  font-weight: bold;
+  color: #000000;
+}
+
+/* Dark mode */
+:global(.dark) .swiperGallery :global(.swiper-button-next),
+:global(.dark) .swiperGallery :global(.swiper-button-prev) {
+  background: rgba(55, 65, 81, 0.9);
+}
+
+:global(.dark) .swiperGallery :global(.swiper-button-next):hover,
+:global(.dark) .swiperGallery :global(.swiper-button-prev):hover {
+  background: rgba(55, 65, 81, 1);
+}
+
+:global(.dark) .swiperGallery :global(.swiper-button-next::after),
+:global(.dark) .swiperGallery :global(.swiper-button-prev::after) {
+  color: #ffffff;
+}
+
+/* Personalización de paginación */
+.swiperGallery :global(.swiper-pagination-bullet) {
+  width: 10px;
+  height: 10px;
+  background: rgba(156, 163, 175, 0.6);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.swiperGallery :global(.swiper-pagination-bullet-active) {
+  background: #000000;
+  width: 24px;
+  border-radius: 5px;
+}
+
+:global(.dark) .swiperGallery :global(.swiper-pagination-bullet) {
+  background: rgba(156, 163, 175, 0.4);
+}
+
+:global(.dark) .swiperGallery :global(.swiper-pagination-bullet-active) {
+  background: #ffffff;
+}

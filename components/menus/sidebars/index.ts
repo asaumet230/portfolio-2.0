@@ -1,3 +1,3 @@
-export * from './PostSideBar';
-export * from './Sidebar';
-export * from './SidebarLinks';
+export { PostSideBar } from './PostSideBar';
+export { Sidebar } from './Sidebar';
+export { SidebarLinks } from './SidebarLinks';

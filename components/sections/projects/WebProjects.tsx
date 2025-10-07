@@ -47,12 +47,19 @@ export const WebProjects = ({ projects }: Props) => {
             spaceBetween: 50,
           },
         }}
-        
+        threshold={5}
+        touchRatio={1}
+        touchAngle={45}
+        preventClicks={false}
+        preventClicksPropagation={false}
+        slideToClickedSlide={false}
+        allowTouchMove={true}
+        watchSlidesProgress={true}
         className='mt-6 w-9/12 max-[640px]:w-10/12'>
 
         {
           projects.map((project) => (
-            <SwiperSlide key={project.name} >
+            <SwiperSlide key={project.name} style={{ pointerEvents: 'auto' }}>
               <WebProjectDescription project={project}/>
             </SwiperSlide>
 

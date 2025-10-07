@@ -1,3 +1,3 @@
-export * from './home/index';
-export * from './projects/index';
-export * from './auth/index'
+export { AboutMeSection, ExperienceItemSection, ExperienceSection, SkillsSection, TestimonialsSection, ToolsSection } from './home/index';
+export { MobilProjectDescription, MobilProjects, WebProjectDescription, WebProjects } from './projects/index';
+export { AuthBackground, LoginForm, RegisterForm } from './auth/index';

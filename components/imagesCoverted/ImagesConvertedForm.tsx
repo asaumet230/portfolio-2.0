@@ -12,7 +12,7 @@ import {
     DownloadActions,
     FilePreviewList,
     FileUploader,
-    FormatSelector,
+    
     EmptyFileNotice
 } from '.';
 
@@ -21,6 +21,7 @@ import { isImagesLoad, isSelectedFiles } from '@/store/imageComponentsLoad/image
 
 import { ConvertedFile, ImagePreview } from '@/interfaces';
 import { compressImageBeforeUpload, generateZipFromConverted, uploadAndConvertImage } from '@/helpers';
+import FormatSelector from './ImagesFormatSelector';
 
 
 export const ImagesForm = () => {

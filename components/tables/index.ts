@@ -1,2 +1,2 @@
-export * from './AdminPorjectsTable';
-export * from './ProjectTableRow';
+export { AdminPorjectsTable } from './AdminPorjectsTable';
+export { ProjectTableRow } from './ProjectTableRow';

@@ -1,3 +1,3 @@
-export * from './AuthBackground';
-export * from './LoginForm';
-export * from './RegisterForm';
+export { AuthBackground } from './AuthBackground';
+export { LoginForm } from './LoginForm';
+export { RegisterForm } from './RegisterForm';

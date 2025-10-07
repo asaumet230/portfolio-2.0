@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import {
   FaBootstrap,
@@ -92,15 +93,19 @@ export const WebProjectDescription = ({ project }: Props) => {
 
   return (
     <article className={`rounded-xl border border-slate-200 card-shadow bg-white ${styles['card-effect']} dark:bg-[#262f3a]`}>
-      <Image
-        priority
-        className='rounded-t-xl w-full'
-        width={350}
-        height={170}
-        src={project.images[0]}
-        alt={project.name} />
+      <Link href={`/proyectos/${project.slug}`}>
+        <Image
+          priority
+          className='rounded-t-xl w-full hover:opacity-90 transition-opacity cursor-pointer'
+          width={350}
+          height={170}
+          src={project.images[0]}
+          alt={project.name} />
+      </Link>
       <div className="py-8 px-8">
-        <h3 className='text-xl text-center capitalize'>{project.name}</h3>
+        <Link href={`/proyectos/${project.slug}`}>
+          <h3 className='text-xl text-center capitalize hover:text-secondary-color dark:hover:text-indigo-600 transition-colors cursor-pointer'>{project.name}</h3>
+        </Link>
         <p className='font-light text-sm mt-1 text-center leading-relaxed'>{project.description}</p>
         <div>
           <h4 className='text-lg text-left mt-4 capitalize font-medium'>tecnologías usadas:</h4>
@@ -116,17 +121,13 @@ export const WebProjectDescription = ({ project }: Props) => {
           </div>
         </div>
         <div>
-          <h4 className='text-lg text-left mt-4 capitalize font-medium'>Url App & código fuente:</h4>
+          <h4 className='text-lg text-left mt-4 capitalize font-medium'>Enlaces:</h4>
 
           <div className='mt-4 flex mx-auto justify-center'>
-            <a href={project.urlApp} className={`${styles['card-button']} card-button-dark`}>
+            <Link href={`/proyectos/${project.slug}`} className={`${styles['card-button']} card-button-dark`}>
               <FaDesktop className='dark:text-slate-300' />
-              <p className='capitalize ml-1 dark:text-slate-300'>app</p>
-            </a>
-            <a href={project.urlRepository} className={`${styles['card-button']} card-button-dark ml-2`}>
-              <FaGithub className='dark:text-slate-300' />
-              <p className='capitalize ml-1 dark:text-slate-300'>Codígo</p>
-            </a>
+              <p className='capitalize ml-1 dark:text-slate-300'>Ver Más</p>
+            </Link>
           </div>
 
         </div>

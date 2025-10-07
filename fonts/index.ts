@@ -1,1 +1,1 @@
-export * from './fonts';
+export { lato, leagueOfSpartan } from './fonts';

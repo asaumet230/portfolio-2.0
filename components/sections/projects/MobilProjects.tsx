@@ -43,12 +43,19 @@ export const MobilProjects = ({ projects }: Props) => {
         }}
         spaceBetween={40}
         pagination={{ clickable: true }}
-
+        threshold={5}
+        touchRatio={1}
+        touchAngle={45}
+        preventClicks={false}
+        preventClicksPropagation={false}
+        slideToClickedSlide={false}
+        allowTouchMove={true}
+        watchSlidesProgress={true}
         className='mt-4 mx-auto w-9/12 max-[1250px]:w-8/12 max-[720px]:w-10/12'>
 
         {
           projects.map((project) => (
-            <SwiperSlide key={project.name}>
+            <SwiperSlide key={project.name} style={{ pointerEvents: 'auto' }}>
               <MobilProjectDescription project={project} />
             </SwiperSlide>
           ))

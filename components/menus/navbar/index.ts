@@ -1,6 +1,6 @@
 
 // Server Component
-export * from './Navbar';
+export { Navbar, default as NavbarDefault } from './Navbar';
 
 // Client Component
-export * from './NavbarMenuLink';
+export { NavbarMenuLink, default as NavbarMenuLinkDefault } from './NavbarMenuLink';

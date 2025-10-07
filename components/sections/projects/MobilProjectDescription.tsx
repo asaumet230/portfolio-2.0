@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { FaGithub } from 'react-icons/fa6';
 import { HiDevicePhoneMobile } from 'react-icons/hi2';
@@ -23,25 +24,25 @@ export const MobilProjectDescription = ({ project }: Props) => {
             <>
               <Image
                 priority
-                className='images'
-                height="300"
-                width="169"
+                className='object-contain'
+                height="400"
+                width="225"
                 src={project.images[0]}
                 alt={project.name} />
               <Image
                 priority
-                className='images max-[750px]:hidden'
-                height="300"
-                width="169"
+                className='object-contain max-[750px]:hidden'
+                height="400"
+                width="225"
                 src={project.images[1]}
                 alt={project.name} />
             </>
           ) : (
             <Image
               priority
-              className='images'
-              height="300"
-              width="169"
+              className='object-contain'
+              height="400"
+              width="225"
               src={project.images[0]}
               alt={project.name} />
           )
@@ -49,7 +50,9 @@ export const MobilProjectDescription = ({ project }: Props) => {
       </div>
 
       <div className='py-6 px-10'>
-        <h3 className='text-xl capitalize'>{project.name}</h3>
+        <Link href={`/proyectos/${project.slug}`}>
+          <h3 className='text-xl capitalize hover:text-secondary-color dark:hover:text-indigo-600 transition-colors cursor-pointer'>{project.name}</h3>
+        </Link>
         <p className='font-light text-sm  mt-1 leading-relaxed'>{project.description}</p>
         <h4 className='text-lg text-left mt-4 capitalize'>tecnologías usadas:</h4>
         <div className='flex justify-evenly mt-3 w-9/12 mx-auto'>
@@ -62,16 +65,12 @@ export const MobilProjectDescription = ({ project }: Props) => {
             <p className='font-light text-center capitalize mt-2'>Dart</p>
           </div>
         </div>
-        <h4 className='text-lg text-left mt-4 capitalize'>código fuente:</h4>
+        <h4 className='text-lg text-left mt-4 capitalize'>Enlaces:</h4>
         <div className='mt-4 flex mx-auto justify-center'>
-          <a href={project.urlApp} className={`${styles['card-button']} card-button-dark`}>
+          <Link href={`/proyectos/${project.slug}`} className={`${styles['card-button']} card-button-dark`}>
             <HiDevicePhoneMobile className='dark:text-slate-300' />
-            <p className='capitalize ml-1 dark:text-slate-300'>app</p>
-          </a>
-          <a href={project.urlRepository} className={`${styles['card-button']} card-button-dark ml-2`}>
-            <FaGithub className='dark:text-slate-300' />
-            <p className='capitalize ml-1 dark:text-slate-300'>Codígo</p>
-          </a>
+            <p className='capitalize ml-1 dark:text-slate-300'>Ver Más</p>
+          </Link>
         </div>
       </div>
     </article>

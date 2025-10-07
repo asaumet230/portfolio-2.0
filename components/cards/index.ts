@@ -1,2 +1,2 @@
-export * from './CardsGrid';
-export * from './Card';
+export { CardsGrid } from './CardsGrid';
+export { Card } from './Card';

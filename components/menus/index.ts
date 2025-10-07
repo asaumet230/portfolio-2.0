@@ -1,2 +1,2 @@
-export * from './navbar/index';
-export * from './sidebars/index';
+export { Navbar, NavbarDefault, NavbarMenuLink, NavbarMenuLinkDefault } from './navbar/index';
+export { PostSideBar, Sidebar, SidebarLinks } from './sidebars/index';

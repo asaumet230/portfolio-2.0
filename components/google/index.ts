@@ -1,2 +1,2 @@
-export * from './GoogleTagManagerBody';
-export * from './GoogleTagManagerHead';
+export { GoogleTagManagerBody } from './GoogleTagManagerBody';
+export { GoogleTagManagerHead } from './GoogleTagManagerHead';

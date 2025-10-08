@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaShieldAlt, FaApple, FaGooglePlay, FaFileContract } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaShieldAlt, FaApple, FaGooglePlay, FaFileContract, FaUserTimes } from 'react-icons/fa';
 import { SiFlutter, SiDart, SiReact, SiNextdotjs, SiTypescript, SiJavascript, SiNodedotjs, SiAngular, SiWordpress, SiBootstrap, SiTailwindcss, SiCss3, SiGatsby } from 'react-icons/si';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -261,6 +261,27 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
               </div>
             </section>
           )}
+
+          <section className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 p-6 md:p-8 rounded-2xl border border-red-100 dark:border-gray-700">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-12 h-12 bg-red-500 dark:bg-red-600 rounded-full flex items-center justify-center">
+                <FaUserTimes className="text-white" size={24} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold mb-2">Eliminar Cuenta</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                  ¿Necesitas eliminar tu cuenta? Aprende cómo eliminar permanentemente tu cuenta y todos los datos asociados de nuestros sistemas.
+                </p>
+                <Link
+                  href={`/proyectos/${slug}/delete-account`}
+                  className="inline-flex items-center gap-2 text-red-600 dark:text-red-400 hover:underline font-semibold"
+                >
+                  Solicitar Eliminación de Cuenta
+                  <FaExternalLinkAlt size={14} />
+                </Link>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
     </>

@@ -14,7 +14,7 @@ export async function GET(_: NextRequest) {
         headers.set('Content-Type', 'application/pdf');
         headers.set('Content-Disposition', 'attachment; filename=andres-felipe-saumet-web-mobil-developer.pdf');
 
-        return new NextResponse(fileBuffer, { headers });
+        return new NextResponse(Buffer.from(fileBuffer), { headers });
 
     } catch (error) {
         return new NextResponse('File not found', { status: 404 });

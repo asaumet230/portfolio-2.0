@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { IoMdArrowRoundBack, IoMdEye, IoMdEyeOff } from 'react-icons/io';
 
-
+import { useAppDispatch, useAppSelector } from '@/store';
+import { loginUser } from '@/store/auth/authSlice';
 import { LoadingModal, Spinner } from '@/components';
 import { revalidateRecaptcha } from '@/helpers';
 
@@ -15,6 +17,10 @@ import 'animate.css';
 
 
 export const LoginForm = () => {
+
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    const { isLoading, error } = useAppSelector(state => state.auth);
 
     const [isClient, setIsClient] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
@@ -75,27 +81,26 @@ export const LoginForm = () => {
             }
 
             try {
+                const resultAction = await dispatch(loginUser({
+                    email: values.email,
+                    password: values.password
+                }));
 
-
-                const res = await fetch('', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: values.email,
-                        password: values.password
-                    }),
-                });
-
-                console.log(`ESTA ES LA RESPUESTA: ${res}`);
-
-                if (res.ok) {
+                if (loginUser.fulfilled.match(resultAction)) {
                     setFormSubmitted(true);
                     resetForm();
                     setTimeout(() => {
                         setFormSubmitted(false);
+                        router.push('/dashboard');
+                    }, 1500);
+                } else {
+                    setFormErrorSubmitted(true);
+                    setErrorMessage(resultAction.payload as string);
+                    setSubmitting(false);
+
+                    setTimeout(() => {
+                        setFormErrorSubmitted(false);
+                        setErrorMessage('');
                     }, 8000);
                 }
 
@@ -194,7 +199,7 @@ export const LoginForm = () => {
 
 
                     {formSubmitted && <p className='success-message animate__animated animate__fadeIn mt-6'>Login exitoso</p>}
-                    {(formErrorSubmitted || recaptchaError) && <p className='error-message font-bold animate__animated animate__fadeIn'>{errorMessage}</p>}
+                    {(formErrorSubmitted || recaptchaError || error) && <p className='error-message font-bold animate__animated animate__fadeIn'>{errorMessage || error}</p>}
 
                     <div className='mt-5 pb-6 pt-14'>
                         <Link

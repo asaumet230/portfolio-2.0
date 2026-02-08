@@ -1,8 +1,13 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import Link from "next/link";
+
+import { useAppDispatch, useAppSelector } from '@/store';
+import { checkAuth, logout } from '@/store/auth/authSlice';
+import { LoadingModal } from '@/components';
 
 import { AiFillProject } from "react-icons/ai";
 import { BiSolidChevronDown, BiSolidChevronRight } from "react-icons/bi";
@@ -79,8 +84,35 @@ const menuItemList = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode; }) {
 
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    const { isAuthenticated, isLoading, user } = useAppSelector(state => state.auth);
+
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    useEffect(() => {
+        dispatch(checkAuth());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (!isLoading && !isAuthenticated) {
+            router.push('/login');
+        }
+    }, [isAuthenticated, isLoading, router]);
+
+    const handleLogout = () => {
+        dispatch(logout());
+        router.push('/login');
+    };
+
+    if (isLoading) {
+        return <LoadingModal />;
+    }
+
+    if (!isAuthenticated) {
+        return null;
+    }
 
     return (
 
@@ -100,10 +132,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
 
                 <div className="hidden lg:flex items-center space-x-4">
-                    <span className="text-white text-sm tracking-widest">Bienvenido Andres Saumet</span>
-                    <FaCircleUser
-                        color="#ffffff"
-                        size={25} />
+                    <span className="text-white text-sm tracking-widest">
+                        Bienvenido {user?.firstName} {user?.lastName}
+                    </span>
+                    <button
+                        onClick={handleLogout}
+                        className="text-white text-sm hover:text-gray-300 transition-colors"
+                        title="Cerrar sesión"
+                    >
+                        <FaCircleUser
+                            color="#ffffff"
+                            size={25} />
+                    </button>
                 </div>
                 <div
                     onClick={() => setIsMenuVisible(!isMenuVisible)}

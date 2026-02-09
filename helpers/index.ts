@@ -1,4 +1,3 @@
-export { apiClient } from './apiClient';
 export { changeThemeMode } from './changeThemeMode';
 export { compressImageBeforeUpload } from './compressImageBeforeUpload';
 export { menuData, cardsData } from './constants';

@@ -1,22 +1,19 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { auth } from "@/auth";
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get('auth-token')?.value;
+export default auth((req) => {
+  const isLoggedIn = !!req.auth;
+  const isLoginPage = req.nextUrl.pathname === "/login";
+  const isDashboard = req.nextUrl.pathname.startsWith("/dashboard");
 
-  // If the route is /dashboard/* and there's NO token
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (isLoginPage && isLoggedIn) {
+    return Response.redirect(new URL("/dashboard", req.nextUrl));
   }
 
-  // If user is on /login and already authenticated
-  if (request.nextUrl.pathname === '/login' && token) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+  if (isDashboard && !isLoggedIn) {
+    return Response.redirect(new URL("/login", req.nextUrl));
   }
-
-  return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login'],
+  matcher: ["/dashboard/:path*", "/login"],
 };

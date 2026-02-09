@@ -1,29 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { IoMdArrowRoundBack, IoMdEye, IoMdEyeOff } from 'react-icons/io';
 
-import { useAppDispatch, useAppSelector } from '@/store';
-import { loginUser } from '@/store/auth/authSlice';
 import { LoadingModal, Spinner } from '@/components';
 import { revalidateRecaptcha } from '@/helpers';
 
 import 'animate.css';
 
-
 export const LoginForm = () => {
 
     const router = useRouter();
-    const dispatch = useAppDispatch();
-    const { isLoading, error } = useAppSelector(state => state.auth);
-
     const [isClient, setIsClient] = useState(false);
-    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [isAuthenticating, setIsAuthenticating] = useState(false);
     const [formErrorSubmitted, setFormErrorSubmitted] = useState(false);
     const [recaptchaError, setRecaptchaError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -31,12 +25,9 @@ export const LoginForm = () => {
 
     const { executeRecaptcha } = useGoogleReCaptcha();
 
-
     useEffect(() => {
         setIsClient(true);
     }, []);
-
-   
 
     const { handleSubmit, getFieldProps, errors, touched, isSubmitting, isValid } = useFormik({
 
@@ -81,31 +72,35 @@ export const LoginForm = () => {
             }
 
             try {
-                const resultAction = await dispatch(loginUser({
+                setIsAuthenticating(true);
+                
+                const result = await signIn('credentials', {
                     email: values.email,
-                    password: values.password
-                }));
+                    password: values.password,
+                    redirect: false,
+                });
 
-                if (loginUser.fulfilled.match(resultAction)) {
-                    setFormSubmitted(true);
-                    resetForm();
-                    setTimeout(() => {
-                        setFormSubmitted(false);
-                        router.push('/dashboard');
-                    }, 1500);
-                } else {
+                if (result?.error) {
+                    setIsAuthenticating(false);
                     setFormErrorSubmitted(true);
-                    setErrorMessage(resultAction.payload as string);
+                    setErrorMessage(result.error || 'Login failed');
                     setSubmitting(false);
 
                     setTimeout(() => {
                         setFormErrorSubmitted(false);
                         setErrorMessage('');
                     }, 8000);
+                } else if (result?.ok) {
+                    // Mantener loading mientras se redirecciona
+                    resetForm();
+                    setTimeout(() => {
+                        router.push('/dashboard');
+                    }, 800);
                 }
 
             } catch (error) {
                 console.log(error);
+                setIsAuthenticating(false);
                 setSubmitting(false);
                 setFormErrorSubmitted(true);
                 setErrorMessage('Tu mensaje no pudo ser envido');
@@ -134,7 +129,23 @@ export const LoginForm = () => {
         return <LoadingModal />;
     }
 
-  
+    // Mostrar loading fullscreen mientras se autentica
+    if (isAuthenticating) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-900 z-50">
+                <div className="bg-white dark:bg-[#262f3a] rounded-lg p-8 flex flex-col items-center gap-4">
+                    <Spinner width="40" height="40" color="#7b7db0" />
+                    <p className="text-lg font-semibold text-gray-800 dark:text-white">
+                        Autenticando...
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Redirigiendo al dashboard
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <main className='w-full lg:w-5/12 px-8 flex flex-col justify-center max-[640px]:px-6'>
 
@@ -195,18 +206,16 @@ export const LoginForm = () => {
 
                         }</button>
 
-                    <p className='ml-1 my-5 text-center'>Si no tienes cuenta, registrate <Link href={'/registro'} className='text-secondary-color dark:text-indigo-600'>Aquí</Link></p>
+                    <p className='ml-1 my-5 text-center'>Si no tienes cuenta, registrate <a href={'/registro'} className='text-secondary-color dark:text-indigo-600'>Aquí</a></p>
 
-
-                    {formSubmitted && <p className='success-message animate__animated animate__fadeIn mt-6'>Login exitoso</p>}
-                    {(formErrorSubmitted || recaptchaError || error) && <p className='error-message font-bold animate__animated animate__fadeIn'>{errorMessage || error}</p>}
+                    {(formErrorSubmitted || recaptchaError) && <p className='error-message font-bold animate__animated animate__fadeIn'>{errorMessage}</p>}
 
                     <div className='mt-5 pb-6 pt-14'>
-                        <Link
+                        <a
                             href={'/'}
                             className='flex items-center font-ligth hover:text-secondary-color dark:hover:text-indigo-600'>
                             <IoMdArrowRoundBack className='mr-1' />Regresa a Inicio
-                        </Link>
+                        </a>
                     </div>
                 </form>
             </div>

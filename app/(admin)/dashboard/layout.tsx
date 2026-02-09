@@ -1,21 +1,20 @@
 'use client'
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 import Image from "next/image";
 import Link from "next/link";
-
-import { useAppDispatch, useAppSelector } from '@/store';
-import { checkAuth, logout } from '@/store/auth/authSlice';
-import { LoadingModal } from '@/components';
 
 import { AiFillProject } from "react-icons/ai";
 import { BiSolidChevronDown, BiSolidChevronRight } from "react-icons/bi";
 import { BsFileEarmarkPost, BsTools } from "react-icons/bs";
 import { FaCircleUser, FaUser, FaUsers } from "react-icons/fa6";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoLogOut } from "react-icons/io5";
 import { IoMdHome, IoMdMenu } from "react-icons/io";
 import { MdReviews, MdWork } from "react-icons/md";
+
+import { LoadingModal } from '@/components';
 
 import 'animate.css';
 
@@ -85,34 +84,25 @@ const menuItemList = [
 export default function DashboardLayout({ children }: { children: React.ReactNode; }) {
 
     const router = useRouter();
-    const dispatch = useAppDispatch();
-    const { isAuthenticated, isLoading, user } = useAppSelector(state => state.auth);
+    const { data: session, status } = useSession();
 
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    useEffect(() => {
-        dispatch(checkAuth());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
-            router.push('/login');
-        }
-    }, [isAuthenticated, isLoading, router]);
-
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleLogout = async () => {
+        await signOut({ redirect: false });
         router.push('/login');
     };
 
-    if (isLoading) {
+    if (status === 'loading') {
         return <LoadingModal />;
     }
 
-    if (!isAuthenticated) {
+    if (status === 'unauthenticated') {
         return null;
     }
+
+    const userName = session?.user?.name || 'Usuario';
 
     return (
 
@@ -133,17 +123,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 <div className="hidden lg:flex items-center space-x-4">
                     <span className="text-white text-sm tracking-widest">
-                        Bienvenido {user?.firstName} {user?.lastName}
+                        Bienvenido {userName}
                     </span>
-                    <button
-                        onClick={handleLogout}
-                        className="text-white text-sm hover:text-gray-300 transition-colors"
-                        title="Cerrar sesión"
-                    >
-                        <FaCircleUser
-                            color="#ffffff"
-                            size={25} />
-                    </button>
+                    <FaCircleUser
+                        color="#ffffff"
+                        size={25} />
                 </div>
                 <div
                     onClick={() => setIsMenuVisible(!isMenuVisible)}
@@ -163,8 +147,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <div className="flex h-screen">
                 <div
-                    className={`bg-gray-200 p-4 min-h-full ${isMenuVisible ? 'w-full fixed animate__animated animate__slideInLeft animate__faster' : 'hidden'} lg:block lg:w-60 lg:relative`}>
-                    <aside>
+                    className={`bg-gray-200 p-4 min-h-full flex flex-col ${isMenuVisible ? 'w-full fixed animate__animated animate__slideInLeft animate__faster' : 'hidden'} lg:block lg:w-60 lg:relative`}>
+                    <aside className="flex-1">
                         <nav>
                             <ul className="space-y-2 tracking-wide">
                                 {
@@ -215,6 +199,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             </ul>
                         </nav>
                     </aside>
+
+                    {/* Logout button con mismo diseño que el menú */}
+                    <div className="mt-auto pt-8 border-t border-gray-300">
+                        <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center p-2 hover:bg-gray-300 hover:cursor-pointer rounded transition-colors"
+                        >
+                            <IoLogOut size={20} className="mr-3" />
+                            <span className="capitalize">Cerrar sesión</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex-1 mx-auto p-4 overflow-x-auto">

@@ -12,8 +12,13 @@ export const getTestimonials = async (): Promise<TestimonialsResponse> => {
                 revalidate: 86400, // 24 horas en segundos
             }
         });
-        const data: TestimonialsResponse = await res.json()
-        return data;
+        const data = await res.json();
+        
+        return {
+            ok: data.ok,
+            message: data.message || 'Testimonios obtenidos correctamente',
+            testimonials: data.testimonials,
+        };
 
     } catch (error) {
         console.log(error);

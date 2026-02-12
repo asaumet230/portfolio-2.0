@@ -11,8 +11,13 @@ export const getExperiences = async (): Promise<ExperiencesResponse> => {
                 revalidate: 86400, // 24 horas en segundos
             }
         });
-        const data: ExperiencesResponse = await res.json()
-        return data;
+        const data = await res.json();
+        
+        return {
+            ok: data.ok,
+            message: data.message || 'Experiencias obtenidas correctamente',
+            experiences: data.experiences,
+        };
 
     } catch (error) {
         console.log(error);

@@ -6,9 +6,15 @@ export const getProjects = async (category: string): Promise<ProjectsResponse> =
 
     try {
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/search/${category}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/category/${category}`);
       const data = await res.json();
-      return data;
+      
+      return {
+        ok: data.ok,
+        message: data.message || 'Proyectos obtenidos correctamente',
+        projects: data.projects,
+        totalPages: data.totalPages,
+      };
 
     } catch (error) {
       console.log(error)
@@ -20,7 +26,7 @@ export const getProjectBySlug = async (slug: string): Promise<ProjectResponse> =
 
     try {
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/slug/${slug}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/${slug}`, {
         next: { revalidate: 3600 } // Revalidate cada hora
       });
 
@@ -29,7 +35,12 @@ export const getProjectBySlug = async (slug: string): Promise<ProjectResponse> =
       }
 
       const data = await res.json();
-      return data;
+      
+      return {
+        ok: data.ok,
+        message: data.message || 'Proyecto obtenido correctamente',
+        project: data.project,
+      };
 
     } catch (error) {
       console.log(error)

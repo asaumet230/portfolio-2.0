@@ -11,8 +11,13 @@ export const getTools = async (): Promise<ToolResponse> => {
                 revalidate: 86400, // 24 horas en segundos
             }
         });
-        const data: ToolResponse = await res.json();
-        return data;
+        const data = await res.json();
+        
+        return {
+            ok: data.ok,
+            message: data.message || 'Herramientas obtenidas correctamente',
+            tools: data.tools,
+        };
 
     } catch (error) {
         console.log(error);

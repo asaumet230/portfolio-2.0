@@ -36,6 +36,7 @@ export interface ProjectsResponse {
 
 export interface ProjectResponse {
     ok: boolean;
+    message?: string;
     project: IProject;
 }
 

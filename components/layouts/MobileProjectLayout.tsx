@@ -69,7 +69,7 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
           <div className="flex flex-col items-center">
             <div className="relative aspect-[9/16] w-full max-w-sm mx-auto">
 
-             
+
                 <Image
                   src={project.images[0]}
                   alt={project.name}
@@ -109,7 +109,7 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
               <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
                 <h3 className="text-xl font-bold mb-4">Tecnologías</h3>
                 <div className="flex flex-wrap gap-2">
-                  {project.tecnologies.map((tech, index) => (
+                  {project.technologies?.map((tech, index) => (
                     <span
                       key={index}
                       className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium capitalize hover:bg-secondary-color hover:text-white dark:hover:bg-indigo-600 transition-colors duration-200"

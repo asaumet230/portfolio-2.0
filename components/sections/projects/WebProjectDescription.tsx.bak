@@ -81,7 +81,7 @@ export const WebProjectDescription = ({ project }: Props) => {
 
   const iconsTecnologies: any[] = [];
 
-  project.technologies.forEach(tecnology => {
+  project.tecnologies.forEach(tecnology => {
 
     iconsGuide.forEach(icon => {
 

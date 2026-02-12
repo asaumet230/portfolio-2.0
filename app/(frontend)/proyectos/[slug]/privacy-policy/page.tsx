@@ -87,11 +87,23 @@ export default async function PrivacyPolicyPage({ params }: Props) {
 
       <main className="section">
         <div className="max-w-4xl mx-auto">
-       
-          <article
-            className="privacy-policy-content"
-            dangerouslySetInnerHTML={{ __html: project.privacyPolicy.content }}
-          />
+
+          {project.privacyPolicy?.content ? (
+            <article
+              className="privacy-policy-content"
+              dangerouslySetInnerHTML={{
+                __html: typeof project.privacyPolicy.content === 'string'
+                  ? project.privacyPolicy.content
+                  : JSON.stringify(project.privacyPolicy.content)
+              }}
+            />
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 dark:text-gray-400">
+                Privacy Policy not available for this project.
+              </p>
+            </div>
+          )}
 
           <div className="my-12 pt-8 border-t border-gray-300 dark:border-gray-700 flex flex-col sm:flex-row gap-4 sm:justify-between">
             <Link

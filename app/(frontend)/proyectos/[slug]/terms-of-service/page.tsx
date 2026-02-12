@@ -87,11 +87,23 @@ export default async function TermsOfServicePage({ params }: Props) {
 
       <main className="section">
         <div className="max-w-4xl mx-auto">
-          
-          <article
-            className="privacy-policy-content"
-            dangerouslySetInnerHTML={{ __html: project.termsOfService.content }}
-          />
+
+          {project.termsOfService?.content ? (
+            <article
+              className="privacy-policy-content"
+              dangerouslySetInnerHTML={{
+                __html: typeof project.termsOfService.content === 'string'
+                  ? project.termsOfService.content
+                  : JSON.stringify(project.termsOfService.content)
+              }}
+            />
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 dark:text-gray-400">
+                Terms and Conditions not available for this project.
+              </p>
+            </div>
+          )}
 
          
           <div className="my-12 pt-8 border-t border-gray-300 dark:border-gray-700 flex flex-col sm:flex-row gap-4 sm:justify-between">

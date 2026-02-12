@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: `${project.name} | Proyecto de Andrés Felipe Saumet`,
       description: project.description,
-      keywords: `${project.name}, ${project.tecnologies.join(', ')}, ${project.category}`,
+      keywords: `${project.name}, ${project.technologies.join(', ')}, ${project.category}`,
       robots: "index, follow",
       openGraph: {
         title: `${project.name} | Proyecto de Andrés Felipe Saumet`,

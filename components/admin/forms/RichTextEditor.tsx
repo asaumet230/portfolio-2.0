@@ -212,7 +212,7 @@ export function RichTextEditor({
           }`}
           title="Cita"
         >
-          "
+          {'"'}
         </button>
 
         <button

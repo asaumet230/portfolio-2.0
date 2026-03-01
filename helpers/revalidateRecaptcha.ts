@@ -4,6 +4,13 @@ import { IRecaptchaResponse, IRevalidateRecaptchaResponse } from "@/interfaces";
 
 export const revalidateRecaptcha = async (token: string): Promise<IRevalidateRecaptchaResponse> => {
 
+    // 🔒 RECAPTCHA DESHABILITADO TEMPORALMENTE PARA TESTING
+    return {
+        success: true,
+        message: 'Ok no eres un robot',
+    }
+
+    /*
     try {
         const res = await fetch('/api/recaptcha', {
             method: 'POST',
@@ -37,4 +44,5 @@ export const revalidateRecaptcha = async (token: string): Promise<IRevalidateRec
             message: 'No se pudo completar la validación del Recaptcha',
         }
     }
+    */
 }

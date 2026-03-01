@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
 
 export default function PerfilPage() {
+  const { data: session } = useSession();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -29,7 +31,8 @@ export default function PerfilPage() {
     e.preventDefault();
     try {
       setIsLoading(true);
-      await apiClient.put('/users/profile', formData);
+      const token = (session as any)?.accessToken;
+      await apiClient.put('/users/profile', formData, token);
       toast.success('Perfil actualizado correctamente');
     } catch (error: any) {
       toast.error(error.message || 'Error al actualizar perfil');
@@ -48,10 +51,11 @@ export default function PerfilPage() {
 
     try {
       setIsLoading(true);
+      const token = (session as any)?.accessToken;
       await apiClient.put('/users/change-password', {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
-      });
+      }, token);
       toast.success('Contraseña actualizada correctamente');
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error: any) {

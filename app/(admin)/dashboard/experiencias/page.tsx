@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { DataTable } from '@/components/admin/tables/DataTable';
 import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
@@ -18,6 +19,7 @@ interface Experience {
 }
 
 export default function ExperienciasPage() {
+  const { data: session } = useSession();
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,11 +74,12 @@ export default function ExperienciasPage() {
       return;
     }
     try {
+      const token = (session as any)?.accessToken;
       if (selectedExperience) {
-        await apiClient.put(`/experiences/${selectedExperience._id}`, formData);
+        await apiClient.put(`/experiences/${selectedExperience._id}`, formData, token);
         toast.success('Experiencia actualizada');
       } else {
-        await apiClient.post('/experiences', formData);
+        await apiClient.post('/experiences', formData, token);
         toast.success('Experiencia creada');
       }
       setIsModalOpen(false);
@@ -90,7 +93,8 @@ export default function ExperienciasPage() {
   const handleConfirmDelete = async () => {
     if (!selectedExperience) return;
     try {
-      await apiClient.delete(`/experiences/${selectedExperience._id}`);
+      const token = (session as any)?.accessToken;
+      await apiClient.delete(`/experiences/${selectedExperience._id}`, token);
       toast.success('Experiencia eliminada');
       setIsDeleteModalOpen(false);
       fetchExperiences();

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { DataTable } from '@/components/admin/tables/DataTable';
 import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
@@ -18,6 +19,7 @@ interface Article {
 }
 
 export default function ArticulosPage() {
+  const { data: session } = useSession();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,11 +67,12 @@ export default function ArticulosPage() {
       return;
     }
     try {
+      const token = (session as any)?.accessToken;
       if (selectedArticle) {
-        await apiClient.put(`/articles/${selectedArticle._id}`, formData);
+        await apiClient.put(`/articles/${selectedArticle._id}`, formData, token);
         toast.success('Artículo actualizado');
       } else {
-        await apiClient.post('/articles', formData);
+        await apiClient.post('/articles', formData, token);
         toast.success('Artículo creado');
       }
       setIsModalOpen(false);
@@ -83,7 +86,8 @@ export default function ArticulosPage() {
   const handleConfirmDelete = async () => {
     if (!selectedArticle) return;
     try {
-      await apiClient.delete(`/articles/${selectedArticle._id}`);
+      const token = (session as any)?.accessToken;
+      await apiClient.delete(`/articles/${selectedArticle._id}`, token);
       toast.success('Artículo eliminado');
       setIsDeleteModalOpen(false);
       fetchArticles();

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { DataTable } from '@/components/admin/tables/DataTable';
 import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
@@ -18,6 +19,7 @@ interface User {
 const ROLES = ['user_role', 'admin_role', 'sales_role', 'seo_role'];
 
 export default function UsuariosPage() {
+  const { data: session } = useSession();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,14 +76,16 @@ export default function UsuariosPage() {
         if (formData.password) {
           updateData.password = formData.password;
         }
-        await apiClient.put(`/users/${selectedUser._id}`, updateData);
+        const token = (session as any)?.accessToken;
+        await apiClient.put(`/users/${selectedUser._id}`, updateData, token);
         toast.success('Usuario actualizado');
       } else {
         if (!formData.password) {
           toast.error('Contraseña requerida para nuevo usuario');
           return;
         }
-        await apiClient.post('/users', formData);
+        const token = (session as any)?.accessToken;
+        await apiClient.post('/users', formData, token);
         toast.success('Usuario creado');
       }
       setIsModalOpen(false);
@@ -95,7 +99,8 @@ export default function UsuariosPage() {
   const handleConfirmDelete = async () => {
     if (!selectedUser) return;
     try {
-      await apiClient.delete(`/users/${selectedUser._id}`);
+      const token = (session as any)?.accessToken;
+      await apiClient.delete(`/users/${selectedUser._id}`, token);
       toast.success('Usuario eliminado');
       setIsDeleteModalOpen(false);
       fetchUsers();

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { DataTable } from '@/components/admin/tables/DataTable';
 import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
@@ -16,6 +17,7 @@ interface Testimonial {
 }
 
 export default function TestimoniosPage() {
+  const { data: session } = useSession();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,11 +63,12 @@ export default function TestimoniosPage() {
       return;
     }
     try {
+      const token = (session as any)?.accessToken;
       if (selectedTestimonial) {
-        await apiClient.put(`/testimonials/${selectedTestimonial._id}`, formData);
+        await apiClient.put(`/testimonials/${selectedTestimonial._id}`, formData, token);
         toast.success('Testimonial actualizado');
       } else {
-        await apiClient.post('/testimonials', formData);
+        await apiClient.post('/testimonials', formData, token);
         toast.success('Testimonial creado');
       }
       setIsModalOpen(false);
@@ -79,7 +82,8 @@ export default function TestimoniosPage() {
   const handleConfirmDelete = async () => {
     if (!selectedTestimonial) return;
     try {
-      await apiClient.delete(`/testimonials/${selectedTestimonial._id}`);
+      const token = (session as any)?.accessToken;
+      await apiClient.delete(`/testimonials/${selectedTestimonial._id}`, token);
       toast.success('Testimonial eliminado');
       setIsDeleteModalOpen(false);
       fetchTestimonials();

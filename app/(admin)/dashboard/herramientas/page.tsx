@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { DataTable } from '@/components/admin/tables/DataTable';
 import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
@@ -15,6 +16,7 @@ interface Tool {
 }
 
 export default function HerramientasPage() {
+  const { data: session } = useSession();
   const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,11 +57,12 @@ export default function HerramientasPage() {
       return;
     }
     try {
+      const token = (session as any)?.accessToken;
       if (selectedTool) {
-        await apiClient.put(`/tools/${selectedTool._id}`, formData);
+        await apiClient.put(`/tools/${selectedTool._id}`, formData, token);
         toast.success('Herramienta actualizada');
       } else {
-        await apiClient.post('/tools', formData);
+        await apiClient.post('/tools', formData, token);
         toast.success('Herramienta creada');
       }
       setIsModalOpen(false);
@@ -73,7 +76,8 @@ export default function HerramientasPage() {
   const handleConfirmDelete = async () => {
     if (!selectedTool) return;
     try {
-      await apiClient.delete(`/tools/${selectedTool._id}`);
+      const token = (session as any)?.accessToken;
+      await apiClient.delete(`/tools/${selectedTool._id}`, token);
       toast.success('Herramienta eliminada');
       setIsDeleteModalOpen(false);
       fetchTools();

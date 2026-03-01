@@ -1,12 +1,28 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { getProjectBySlug } from "@/api/projects";
+import { getProjectBySlug, getProjects } from "@/api/projects";
 import { WebProjectLayout, MobileProjectLayout } from "@/components/layouts";
 
 interface Props {
   params: {
     slug: string;
+  }
+}
+
+export async function generateStaticParams() {
+  try {
+    const [webProjects, mobilProjects] = await Promise.all([
+      getProjects('web'),
+      getProjects('mobil'),
+    ]);
+
+    return [
+      ...webProjects.projects.map(p => ({ slug: p.slug })),
+      ...mobilProjects.projects.map(p => ({ slug: p.slug })),
+    ];
+  } catch (error) {
+    return [];
   }
 }
 

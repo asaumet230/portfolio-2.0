@@ -6,9 +6,11 @@ export const getProjects = async (category: string): Promise<ProjectsResponse> =
 
     try {
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/category/${category}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_PATH}/projects/category/${category}`, {
+        next: { revalidate: 86400 } // Cache for 24 hours
+      });
       const data = await res.json();
-      
+
       return {
         ok: data.ok,
         message: data.message || 'Proyectos obtenidos correctamente',
@@ -35,7 +37,7 @@ export const getProjectBySlug = async (slug: string): Promise<ProjectResponse> =
       }
 
       const data = await res.json();
-      
+
       return {
         ok: data.ok,
         message: data.message || 'Proyecto obtenido correctamente',

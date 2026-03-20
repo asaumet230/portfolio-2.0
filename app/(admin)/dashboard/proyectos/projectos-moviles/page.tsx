@@ -15,6 +15,7 @@ interface Project {
   technologies: string[];
   description: string;
   slug: string;
+  images: string[];
 }
 
 export default function ProjectosMovilesPage() {
@@ -24,6 +25,8 @@ export default function ProjectosMovilesPage() {
   const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     fetchProjects();
@@ -63,7 +66,29 @@ export default function ProjectosMovilesPage() {
     }
   };
 
+  const totalPages = Math.ceil(projects.length / itemsPerPage);
+  const paginatedProjects = projects.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
+  };
+
   const columns = [
+    {
+      key: 'images' as const,
+      label: 'Foto',
+      render: (images: string[]) => images?.[0] ? (
+        <img
+          src={images[0]}
+          alt="thumbnail"
+          className="w-16 h-28 object-cover rounded"
+        />
+      ) : <span className="text-gray-400">—</span>,
+    },
     { key: 'name' as const, label: 'Nombre' },
     {
       key: 'technologies' as const,
@@ -91,14 +116,75 @@ export default function ProjectosMovilesPage() {
         </button>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={projects}
-        loading={loading}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        emptyMessage="No hay proyectos móviles"
-      />
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-gray-500">
+          {projects.length} proyectos · página {currentPage} de {totalPages || 1}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-500">Mostrar</span>
+          {[5, 10, 20].map((n) => (
+            <button
+              key={n}
+              onClick={() => handleItemsPerPageChange(n)}
+              className={`w-10 py-1 text-sm rounded border transition text-center ${
+                itemsPerPage === n
+                  ? 'bg-blue-500 text-white border-blue-500'
+                  : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div
+        key={`${currentPage}-${itemsPerPage}`}
+        style={{ animation: 'fadeIn 0.3s ease-in-out' }}
+      >
+        <DataTable
+          columns={columns}
+          data={paginatedProjects}
+          loading={loading}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          emptyMessage="No hay proyectos móviles"
+        />
+      </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm rounded border border-gray-300 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            ← Anterior
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-3 py-2 text-sm rounded border transition ${
+                currentPage === page
+                  ? 'bg-blue-500 text-white border-blue-500'
+                  : 'border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-sm rounded border border-gray-300 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            Siguiente →
+          </button>
+        </div>
+      )}
 
       <DeleteConfirmModal
         isOpen={isDeleteModalOpen}

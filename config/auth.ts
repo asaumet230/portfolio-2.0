@@ -4,6 +4,10 @@ import Credentials from "next-auth/providers/credentials";
 const API_BASE = process.env.NEXT_PUBLIC_API_PATH || "http://localhost:8080/api";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  session: {
+    strategy: 'jwt',
+    maxAge: 60 * 60 * 24 * 7, // 7 días en segundos
+  },
   providers: [
     Credentials({
       credentials: {
@@ -34,7 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const data = await response.json();
 
           return {
-            id: data.user.uid,
+            id: data.user._id,
             email: data.user.email,
             name: `${data.user.firstName} ${data.user.lastName}`,
             token: data.token,
@@ -61,7 +65,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
+        // token.id = MongoDB _id; token.sub = NextAuth fallback UUID
+        session.user.id = (token.id || token.sub) as string;
         (session.user as any).role = token.role as string;
         (session.user as any).firstName = token.firstName;
         (session.user as any).lastName = token.lastName;

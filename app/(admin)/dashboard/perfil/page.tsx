@@ -1,12 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
 
 export default function PerfilPage() {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  const hasFetched = useRef(false);
+
+  const [image, setImage] = useState<string>('');
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -25,16 +32,101 @@ export default function PerfilPage() {
     confirmPassword: '',
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  // Pre-populate from session immediately
+  useEffect(() => {
+    if (!session?.user || hasFetched.current) return;
+    hasFetched.current = true;
+
+    const user = session.user as any;
+    setFormData((prev) => ({
+      ...prev,
+      firstName: user.firstName || user.name?.split(' ')[0] || '',
+      lastName: user.lastName || user.name?.split(' ').slice(1).join(' ') || '',
+      email: user.email || '',
+    }));
+
+    // Try to fetch extended data from backend
+    const userId = user.id;
+    const token = (session as any)?.accessToken;
+
+    if (!userId || !token) return;
+
+    apiClient.get(`/users/${userId}`, token)
+      .then((response) => {
+        const u = response.user;
+        const isDefaultImage = u.image?.includes('No-Image');
+        if (u.image && !isDefaultImage) setImage(u.image);
+        setFormData({
+          firstName : u.firstName || '',
+          lastName  : u.lastName  || '',
+          email     : u.email     || '',
+          bio       : u.bio       || '',
+          phone     : u.phone     || '',
+          twitter   : u.socialMediaNetworks?.twitter?.link   || '',
+          github    : u.socialMediaNetworks?.github?.link    || '',
+          portfolio : u.socialMediaNetworks?.portfolio?.link || '',
+          linkedin  : u.socialMediaNetworks?.linkedin?.link  || '',
+        });
+      })
+      .catch((error) => {
+        console.warn('No se pudo cargar datos extendidos del perfil:', error.message);
+      });
+  }, [session]);
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingPhoto(true);
+      const form = new FormData();
+      form.append('file', file);
+
+      const res = await fetch('/api/upload-profile', { method: 'POST', body: form });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Error al subir imagen');
+
+      const userId = (session?.user as any)?.id;
+      const token = (session as any)?.accessToken;
+      await apiClient.put(`/users/${userId}`, { image: data.url }, token);
+
+      setImage(data.url);
+      toast.success('Foto actualizada');
+    } catch (error: any) {
+      toast.error(error.message || 'Error al actualizar foto');
+    } finally {
+      setUploadingPhoto(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setIsLoading(true);
+      const userId = (session?.user as any)?.id;
       const token = (session as any)?.accessToken;
-      await apiClient.put('/users/profile', formData, token);
+      const payload = {
+        firstName : formData.firstName,
+        lastName  : formData.lastName,
+        email     : formData.email,
+        bio       : formData.bio,
+        phone     : formData.phone,
+        socialMediaNetworks: {
+          twitter   : { link: formData.twitter,   userName: formData.twitter   || 'no user name' },
+          github    : { link: formData.github,     userName: formData.github    || 'no user name' },
+          portfolio : { link: formData.portfolio,  userName: formData.portfolio || 'no user name' },
+          linkedin  : { link: formData.linkedin,   userName: formData.linkedin  || 'no user name' },
+        },
+      };
+      const result = await apiClient.put(`/users/${userId}`, payload, token);
+      console.log('PUT /users response:', result);
       toast.success('Perfil actualizado correctamente');
     } catch (error: any) {
+      console.error('Error al guardar perfil:', error);
+      console.error('userId:', (session?.user as any)?.id);
+      console.error('token exists:', !!(session as any)?.accessToken);
       toast.error(error.message || 'Error al actualizar perfil');
     } finally {
       setIsLoading(false);
@@ -52,7 +144,8 @@ export default function PerfilPage() {
     try {
       setIsLoading(true);
       const token = (session as any)?.accessToken;
-      await apiClient.put('/users/change-password', {
+      const userId = (session?.user as any)?.id;
+      await apiClient.put(`/users/${userId}/password`, {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       }, token);
@@ -65,11 +158,61 @@ export default function PerfilPage() {
     }
   };
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const inputClass = 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500';
+
+  if (!mounted) return null;
+
   return (
-    <div className="space-y-8 max-w-2xl">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Mi Perfil</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">Actualiza tu información personal</p>
+    <div className="space-y-8 max-w-2xl" style={{ animation: 'fadeIn 0.3s ease-in-out' }}>
+      <div className="flex items-center gap-6">
+        <div className="relative flex-shrink-0 group">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingPhoto}
+            className="block rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            title="Cambiar foto"
+          >
+            {image ? (
+              <img
+                src={image}
+                alt="Foto de perfil"
+                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 border-4 border-white shadow-md flex items-center justify-center">
+                <span className="text-3xl font-bold text-gray-400 dark:text-gray-500">
+                  {formData.firstName?.[0]?.toUpperCase() || '?'}
+                </span>
+              </div>
+            )}
+            <div className="absolute inset-0 rounded-full bg-black bg-opacity-0 group-hover:bg-opacity-40 transition flex items-center justify-center">
+              {uploadingPhoto ? (
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
+              ) : (
+                <span className="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition">
+                  Cambiar
+                </span>
+              )}
+            </div>
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handlePhotoChange}
+          />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Mi Perfil</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Actualiza tu información personal</p>
+          <p className="text-xs text-gray-400 mt-1">Haz clic en el avatar para cambiar la foto</p>
+        </div>
       </div>
 
       {/* Información Personal */}
@@ -82,14 +225,14 @@ export default function PerfilPage() {
             placeholder="Nombre"
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+            className={inputClass}
           />
           <input
             type="text"
             placeholder="Apellido"
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            className="px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+            className={inputClass}
           />
         </div>
 
@@ -98,14 +241,14 @@ export default function PerfilPage() {
           placeholder="Email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <textarea
           placeholder="Bio / Acerca de mí"
           value={formData.bio}
           onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24"
+          className={`${inputClass} h-24`}
         />
 
         <input
@@ -113,17 +256,17 @@ export default function PerfilPage() {
           placeholder="Teléfono"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-6 pt-4 border-t">Redes Sociales</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t">Redes Sociales</h3>
 
         <input
           type="url"
           placeholder="LinkedIn"
           value={formData.linkedin}
           onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <input
@@ -131,7 +274,7 @@ export default function PerfilPage() {
           placeholder="GitHub"
           value={formData.github}
           onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <input
@@ -139,7 +282,7 @@ export default function PerfilPage() {
           placeholder="Twitter"
           value={formData.twitter}
           onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <input
@@ -147,7 +290,7 @@ export default function PerfilPage() {
           placeholder="Portafolio"
           value={formData.portfolio}
           onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <button
@@ -163,28 +306,43 @@ export default function PerfilPage() {
       <form onSubmit={handlePasswordChange} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Cambiar Contraseña</h2>
 
+        {/* Hidden username for accessibility/password managers */}
+        <input
+          type="email"
+          autoComplete="username"
+          value={formData.email}
+          readOnly
+          className="hidden"
+        />
+
         <input
           type="password"
           placeholder="Contraseña actual"
+          autoComplete="current-password"
+          suppressHydrationWarning
           value={passwordData.currentPassword}
           onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <input
           type="password"
           placeholder="Nueva contraseña"
+          autoComplete="new-password"
+          suppressHydrationWarning
           value={passwordData.newPassword}
           onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <input
           type="password"
           placeholder="Confirmar contraseña"
+          autoComplete="new-password"
+          suppressHydrationWarning
           value={passwordData.confirmPassword}
           onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-          className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+          className={inputClass}
         />
 
         <button

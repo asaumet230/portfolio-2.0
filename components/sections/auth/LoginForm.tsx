@@ -13,6 +13,8 @@ import { revalidateRecaptcha } from '@/helpers';
 
 import 'animate.css';
 
+const REMEMBER_KEY = 'login_remembered_email';
+
 export const LoginForm = () => {
 
     const router = useRouter();
@@ -22,6 +24,9 @@ export const LoginForm = () => {
     const [recaptchaError, setRecaptchaError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [rememberMe, setRememberMe] = useState(() =>
+        typeof window !== 'undefined' ? !!localStorage.getItem(REMEMBER_KEY) : false
+    );
 
     const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -29,10 +34,12 @@ export const LoginForm = () => {
         setIsClient(true);
     }, []);
 
-    const { handleSubmit, getFieldProps, errors, touched, isSubmitting, isValid } = useFormik({
+    const savedEmail = typeof window !== 'undefined' ? localStorage.getItem(REMEMBER_KEY) : '';
+
+    const formik = useFormik({
 
         initialValues: {
-            email: '',
+            email: savedEmail || '',
             password: '',
         },
 
@@ -91,7 +98,11 @@ export const LoginForm = () => {
                         setErrorMessage('');
                     }, 8000);
                 } else if (result?.ok) {
-                    // Mantener loading mientras se redirecciona
+                    if (rememberMe) {
+                        localStorage.setItem(REMEMBER_KEY, values.email);
+                    } else {
+                        localStorage.removeItem(REMEMBER_KEY);
+                    }
                     resetForm();
                     setTimeout(() => {
                         router.push('/dashboard');
@@ -122,8 +133,9 @@ export const LoginForm = () => {
                 .required('Campo requerido')
                 .min(6, 'La contraseña debe de tener mínimo 6 caracteres')
         }),
-    }
-    );
+    });
+
+    const { handleSubmit, getFieldProps, errors, touched, isSubmitting, isValid } = formik;
 
     if (!isClient) {
         return <LoadingModal />;
@@ -155,22 +167,23 @@ export const LoginForm = () => {
 
                 <form
                     noValidate
-                    onSubmit={handleSubmit} 
-                    autoComplete="off">
+                    onSubmit={handleSubmit}>
 
                     <input
                         type='email'
                         placeholder='Correo'
+                        autoComplete='username'
                         className="w-full rounded-md py-2.5 px-4 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                         {...getFieldProps('email')} />
 
                     {(touched.email && errors.email) && <p className='error-message animate__animated animate__fadeIn'>{errors.email}</p>}
-                    
+
 
                     <div className='relative'>
                         <input
                             type={ isPasswordVisible ? 'text' : 'password' }
                             placeholder='Contraseña'
+                            autoComplete='current-password'
                             className="w-full rounded-md py-2.5 px-4 mt-5 border text-sm outline-[#7b7db0] dark:bg-slate-200 dark:text-gray-700 dark:placeholder:text-gray-600 dark:outline-indigo-600"
                             {...getFieldProps('password')} />
 
@@ -188,6 +201,16 @@ export const LoginForm = () => {
                     </div>
 
                     {(touched.password && errors.password) && <p className='error-message animate__animated animate__fadeIn'>{errors.password}</p>}
+
+                    <label className='flex items-center gap-2 mt-4 cursor-pointer select-none text-sm'>
+                        <input
+                            type='checkbox'
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                            className='w-4 h-4 accent-[#7b7db0] dark:accent-indigo-600 cursor-pointer'
+                        />
+                        <span>Recordarme</span>
+                    </label>
 
                     <button
                         disabled={isSubmitting || !isValid}

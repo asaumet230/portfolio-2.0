@@ -27,6 +27,7 @@ export default function ProjectosWebPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [expandedTech, setExpandedTech] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchProjects();
@@ -93,7 +94,36 @@ export default function ProjectosWebPage() {
     {
       key: 'technologies' as const,
       label: 'Tecnologías',
-      render: (tech: string[]) => tech.slice(0, 3).join(', ') + (tech.length > 3 ? '...' : ''),
+      render: (tech: string[], row: Project) => {
+        const isExpanded = expandedTech.has(row._id);
+        const visible = isExpanded ? tech : tech.slice(0, 3);
+        const remaining = tech.length - 3;
+        return (
+          <div className="flex flex-wrap gap-1 max-w-[200px]">
+            {visible.map((t) => (
+              <span key={t} className="px-2 py-0.5 bg-violet-100 dark:bg-violet-900/50 text-violet-700 dark:text-violet-300 text-xs rounded border border-violet-200 dark:border-violet-700 capitalize">
+                {t}
+              </span>
+            ))}
+            {!isExpanded && remaining > 0 && (
+              <button
+                onClick={() => setExpandedTech((prev) => new Set(prev).add(row._id))}
+                className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition cursor-pointer"
+              >
+                +{remaining}
+              </button>
+            )}
+            {isExpanded && (
+              <button
+                onClick={() => setExpandedTech((prev) => { const s = new Set(prev); s.delete(row._id); return s; })}
+                className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition cursor-pointer"
+              >
+                ver menos
+              </button>
+            )}
+          </div>
+        );
+      },
     },
     {
       key: 'description' as const,

@@ -13,34 +13,75 @@ interface Article {
   title: string;
   slug: string;
   content: string;
+  excerpt: string;
   category: string;
+  featuredImage: string;
+  tags: string[];
   published: boolean;
   author?: string;
+  createdAt: string;
+}
+
+interface ArticleCategory {
+  _id: string;
+  name: string;
+  slug: string;
 }
 
 export default function ArticulosPage() {
   const { data: session } = useSession();
   const [articles, setArticles] = useState<Article[]>([]);
+  const [categories, setCategories] = useState<ArticleCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [formData, setFormData] = useState({ title: '', slug: '', content: '', category: '', published: false, author: '' });
+  const [expandedTags, setExpandedTags] = useState<Set<string>>(new Set());
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  const handleTogglePublished = async (article: Article) => {
+    if (togglingId === article._id) return;
+    const token = (session as any)?.accessToken;
+    const newValue = !article.published;
+    setTogglingId(article._id);
+    setArticles((prev) => prev.map((a) => a._id === article._id ? { ...a, published: newValue } : a));
+    try {
+      await apiClient.put(`/articles/${article._id}`, { published: newValue }, token);
+    } catch (error: any) {
+      setArticles((prev) => prev.map((a) => a._id === article._id ? { ...a, published: article.published } : a));
+      toast.error(error.message || 'Error al actualizar estado');
+    } finally {
+      setTogglingId(null);
+    }
+  };
 
   useEffect(() => {
-    fetchArticles();
-  }, []);
+    if (session) fetchData();
+  }, [session]);
 
-  const fetchArticles = async () => {
+  const fetchData = async () => {
+    const token = (session as any)?.accessToken;
     try {
       setLoading(true);
-      const response = await apiClient.get('/articles');
-      setArticles(response.articles || []);
+      const [articlesRes, categoriesRes] = await Promise.all([
+        apiClient.get('/articles/admin/all', token),
+        apiClient.get('/article-categories'),
+      ]);
+      setArticles(articlesRes.articles || []);
+      setCategories(categoriesRes.articleCategories || categoriesRes.categories || []);
     } catch (error) {
       toast.error('Error al cargar artículos');
     } finally {
       setLoading(false);
     }
+  };
+
+  const getCategoryName = (categoryId: string) => {
+    const found = categories.find((c) => c._id === categoryId);
+    return found ? found.name : categoryId;
   };
 
   const handleEdit = (article: Article) => {
@@ -77,7 +118,7 @@ export default function ArticulosPage() {
       }
       setIsModalOpen(false);
       setFormData({ title: '', slug: '', content: '', category: '', published: false, author: '' });
-      fetchArticles();
+      fetchData();
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
     }
@@ -90,20 +131,118 @@ export default function ArticulosPage() {
       await apiClient.delete(`/articles/${selectedArticle._id}`, token);
       toast.success('Artículo eliminado');
       setIsDeleteModalOpen(false);
-      fetchArticles();
+      fetchData();
     } catch (error: any) {
       toast.error(error.message || 'Error al eliminar');
     }
   };
 
+  const totalPages = Math.ceil(articles.length / itemsPerPage);
+  const paginatedArticles = articles.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
+  };
+
+  const ArticleImage = ({ src, title }: { src?: string; title: string }) => {
+    const [error, setError] = useState(false);
+    const initial = title?.[0]?.toUpperCase() || '?';
+    if (src && !error) {
+      return (
+        <img
+          src={src}
+          alt={title}
+          onError={() => setError(true)}
+          className="w-14 h-14 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+        />
+      );
+    }
+    return (
+      <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
+        {initial}
+      </div>
+    );
+  };
+
   const columns = [
+    {
+      key: 'featuredImage',
+      label: 'Imagen',
+      render: (value: string, row: Article) => <ArticleImage src={value} title={row.title} />,
+    },
     { key: 'title' as const, label: 'Título' },
-    { key: 'category' as const, label: 'Categoría' },
-    { key: 'author' as const, label: 'Autor' },
+    {
+      key: 'category',
+      label: 'Categoría',
+      render: (value: string) => (
+        <span className="inline-block px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs rounded font-medium border border-blue-200 dark:border-blue-700 whitespace-nowrap">
+          {getCategoryName(value)}
+        </span>
+      ),
+    },
+    {
+      key: 'tags',
+      label: 'Tags',
+      render: (value: string[], row: Article) => {
+        const isExpanded = expandedTags.has(row._id);
+        const tags = value || [];
+        const visible = isExpanded ? tags : tags.slice(0, 3);
+        const remaining = tags.length - 3;
+        return (
+          <div className="flex flex-wrap gap-1 max-w-[200px]">
+            {visible.map((tag) => (
+              <span key={tag} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded border border-gray-200 dark:border-gray-600">
+                {tag}
+              </span>
+            ))}
+            {!isExpanded && remaining > 0 && (
+              <button
+                onClick={() => setExpandedTags((prev) => new Set(prev).add(row._id))}
+                className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400 text-xs rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition cursor-pointer"
+              >
+                +{remaining}
+              </button>
+            )}
+            {isExpanded && (
+              <button
+                onClick={() => setExpandedTags((prev) => { const s = new Set(prev); s.delete(row._id); return s; })}
+                className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400 text-xs rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition cursor-pointer"
+              >
+                ver menos
+              </button>
+            )}
+          </div>
+        );
+      },
+    },
     {
       key: 'published' as const,
-      label: 'Estado',
-      render: (published: boolean) => (published ? '✅ Publicado' : '📝 Borrador'),
+      label: 'Publicado',
+      render: (published: boolean, row: Article) => (
+        <button
+          onClick={() => handleTogglePublished(row)}
+          disabled={togglingId === row._id}
+          className="flex items-center gap-2 group"
+          title={published ? 'Despublicar' : 'Publicar'}
+        >
+          <div className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${published ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'} ${togglingId === row._id ? 'opacity-50' : ''}`}>
+            <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${published ? 'translate-x-5' : 'translate-x-0'}`} />
+          </div>
+          <span className={`text-xs font-medium ${published ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}`}>
+            {published ? 'Sí' : 'No'}
+          </span>
+        </button>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Creado',
+      render: (value: string) => (
+        <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+          {new Date(value).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
+        </span>
+      ),
     },
   ];
 
@@ -123,7 +262,65 @@ export default function ArticulosPage() {
         </button>
       </div>
 
-      <DataTable columns={columns} data={articles} loading={loading} onEdit={handleEdit} onDelete={handleDelete} emptyMessage="No hay artículos" />
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-gray-500">
+          {articles.length} artículos · página {currentPage} de {totalPages || 1}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-500">Mostrar</span>
+          {[5, 10, 20].map((n) => (
+            <button
+              key={n}
+              onClick={() => handleItemsPerPageChange(n)}
+              className={`w-10 py-1 text-sm rounded border transition text-center ${
+                itemsPerPage === n
+                  ? 'bg-blue-500 text-white border-blue-500'
+                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div key={`${currentPage}-${itemsPerPage}`} style={{ animation: 'fadeIn 0.3s ease-in-out' }}>
+        <DataTable columns={columns} data={paginatedArticles} loading={loading} onEdit={handleEdit} onDelete={handleDelete} emptyMessage="No hay artículos" />
+      </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            ← Anterior
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-3 py-2 text-sm rounded border transition ${
+                currentPage === page
+                  ? 'bg-blue-500 text-white border-blue-500'
+                  : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-sm rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          >
+            Siguiente →
+          </button>
+        </div>
+      )}
 
       <Modal
         isOpen={isModalOpen}

@@ -4,6 +4,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
+import {
+  FaUser, FaEnvelope, FaPhone, FaInfoCircle,
+  FaLinkedin, FaGithub, FaTwitter, FaGlobe, FaLock,
+  FaEye, FaEyeSlash
+} from 'react-icons/fa';
 
 export default function PerfilPage() {
   const { data: session } = useSession();
@@ -32,7 +37,12 @@ export default function PerfilPage() {
     confirmPassword: '',
   });
 
-  // Pre-populate from session immediately
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+
   useEffect(() => {
     if (!session?.user || hasFetched.current) return;
     hasFetched.current = true;
@@ -45,10 +55,8 @@ export default function PerfilPage() {
       email: user.email || '',
     }));
 
-    // Try to fetch extended data from backend
     const userId = user.id;
     const token = (session as any)?.accessToken;
-
     if (!userId || !token) return;
 
     apiClient.get(`/users/${userId}`, token)
@@ -76,21 +84,16 @@ export default function PerfilPage() {
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     try {
       setUploadingPhoto(true);
       const form = new FormData();
       form.append('file', file);
-
       const res = await fetch('/api/upload-profile', { method: 'POST', body: form });
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || 'Error al subir imagen');
-
       const userId = (session?.user as any)?.id;
       const token = (session as any)?.accessToken;
       await apiClient.put(`/users/${userId}`, { image: data.url }, token);
-
       setImage(data.url);
       toast.success('Foto actualizada');
     } catch (error: any) {
@@ -120,13 +123,9 @@ export default function PerfilPage() {
           linkedin  : { link: formData.linkedin,   userName: formData.linkedin  || 'no user name' },
         },
       };
-      const result = await apiClient.put(`/users/${userId}`, payload, token);
-      console.log('PUT /users response:', result);
+      await apiClient.put(`/users/${userId}`, payload, token);
       toast.success('Perfil actualizado correctamente');
     } catch (error: any) {
-      console.error('Error al guardar perfil:', error);
-      console.error('userId:', (session?.user as any)?.id);
-      console.error('token exists:', !!(session as any)?.accessToken);
       toast.error(error.message || 'Error al actualizar perfil');
     } finally {
       setIsLoading(false);
@@ -135,12 +134,10 @@ export default function PerfilPage() {
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error('Las contraseñas no coinciden');
       return;
     }
-
     try {
       setIsLoading(true);
       const token = (session as any)?.accessToken;
@@ -161,7 +158,8 @@ export default function PerfilPage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const inputClass = 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500';
+  const inputClass = 'w-full pl-10 pr-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500';
+  const iconClass = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
 
   if (!mounted) return null;
 
@@ -177,11 +175,7 @@ export default function PerfilPage() {
             title="Cambiar foto"
           >
             {image ? (
-              <img
-                src={image}
-                alt="Foto de perfil"
-                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
-              />
+              <img src={image} alt="Foto de perfil" className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" />
             ) : (
               <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 border-4 border-white shadow-md flex items-center justify-center">
                 <span className="text-3xl font-bold text-gray-400 dark:text-gray-500">
@@ -193,20 +187,11 @@ export default function PerfilPage() {
               {uploadingPhoto ? (
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white" />
               ) : (
-                <span className="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition">
-                  Cambiar
-                </span>
+                <span className="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition">Cambiar</span>
               )}
             </div>
           </button>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handlePhotoChange}
-          />
+          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
         </div>
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Mi Perfil</h1>
@@ -220,84 +205,54 @@ export default function PerfilPage() {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Información Personal</h2>
 
         <div className="grid grid-cols-2 gap-4">
-          <input
-            type="text"
-            placeholder="Nombre"
-            value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            className={inputClass}
-          />
-          <input
-            type="text"
-            placeholder="Apellido"
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            className={inputClass}
-          />
+          <div className="relative">
+            <FaUser className={iconClass} />
+            <input type="text" placeholder="Nombre" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} className={inputClass} />
+          </div>
+          <div className="relative">
+            <FaUser className={iconClass} />
+            <input type="text" placeholder="Apellido" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className={inputClass} />
+          </div>
         </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaEnvelope className={iconClass} />
+          <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className={inputClass} />
+        </div>
 
-        <textarea
-          placeholder="Bio / Acerca de mí"
-          value={formData.bio}
-          onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-          className={`${inputClass} h-24`}
-        />
+        <div className="relative">
+          <FaInfoCircle className="absolute left-3 top-3 text-gray-400 dark:text-gray-500 w-4 h-4" />
+          <textarea placeholder="Bio / Acerca de mí" value={formData.bio} onChange={(e) => setFormData({ ...formData, bio: e.target.value })} className={`w-full pl-10 pr-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 h-24`} />
+        </div>
 
-        <input
-          type="tel"
-          placeholder="Teléfono"
-          value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaPhone className={iconClass} />
+          <input type="tel" placeholder="Teléfono" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className={inputClass} />
+        </div>
 
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t">Redes Sociales</h3>
 
-        <input
-          type="url"
-          placeholder="LinkedIn"
-          value={formData.linkedin}
-          onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaLinkedin className={`${iconClass} text-blue-600`} />
+          <input type="url" placeholder="LinkedIn" value={formData.linkedin} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} className={inputClass} />
+        </div>
 
-        <input
-          type="url"
-          placeholder="GitHub"
-          value={formData.github}
-          onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaGithub className={`${iconClass} text-gray-800 dark:text-gray-300`} />
+          <input type="url" placeholder="GitHub" value={formData.github} onChange={(e) => setFormData({ ...formData, github: e.target.value })} className={inputClass} />
+        </div>
 
-        <input
-          type="url"
-          placeholder="Twitter"
-          value={formData.twitter}
-          onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaTwitter className={`${iconClass} text-sky-500`} />
+          <input type="url" placeholder="Twitter / X" value={formData.twitter} onChange={(e) => setFormData({ ...formData, twitter: e.target.value })} className={inputClass} />
+        </div>
 
-        <input
-          type="url"
-          placeholder="Portafolio"
-          value={formData.portfolio}
-          onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaGlobe className={`${iconClass} text-green-500`} />
+          <input type="url" placeholder="Portafolio" value={formData.portfolio} onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })} className={inputClass} />
+        </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition disabled:opacity-50"
-        >
+        <button type="submit" disabled={isLoading} className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition disabled:opacity-50">
           {isLoading ? 'Guardando...' : 'Guardar Cambios'}
         </button>
       </form>
@@ -306,50 +261,33 @@ export default function PerfilPage() {
       <form onSubmit={handlePasswordChange} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Cambiar Contraseña</h2>
 
-        {/* Hidden username for accessibility/password managers */}
-        <input
-          type="email"
-          autoComplete="username"
-          value={formData.email}
-          readOnly
-          className="hidden"
-        />
+        <input type="email" autoComplete="username" value={formData.email} readOnly className="hidden" />
 
-        <input
-          type="password"
-          placeholder="Contraseña actual"
-          autoComplete="current-password"
-          suppressHydrationWarning
-          value={passwordData.currentPassword}
-          onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaLock className={iconClass} />
+          <input type={showPasswords.current ? 'text' : 'password'} placeholder="Contraseña actual" autoComplete="current-password" suppressHydrationWarning value={passwordData.currentPassword} onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button type="button" onClick={() => setShowPasswords((p) => ({ ...p, current: !p.current }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
+            {showPasswords.current ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+          </button>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Nueva contraseña"
-          autoComplete="new-password"
-          suppressHydrationWarning
-          value={passwordData.newPassword}
-          onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaLock className={iconClass} />
+          <input type={showPasswords.new ? 'text' : 'password'} placeholder="Nueva contraseña" autoComplete="new-password" suppressHydrationWarning value={passwordData.newPassword} onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button type="button" onClick={() => setShowPasswords((p) => ({ ...p, new: !p.new }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
+            {showPasswords.new ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+          </button>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Confirmar contraseña"
-          autoComplete="new-password"
-          suppressHydrationWarning
-          value={passwordData.confirmPassword}
-          onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <FaLock className={iconClass} />
+          <input type={showPasswords.confirm ? 'text' : 'password'} placeholder="Confirmar contraseña" autoComplete="new-password" suppressHydrationWarning value={passwordData.confirmPassword} onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button type="button" onClick={() => setShowPasswords((p) => ({ ...p, confirm: !p.confirm }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
+            {showPasswords.confirm ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+          </button>
+        </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition disabled:opacity-50"
-        >
+        <button type="submit" disabled={isLoading} className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition disabled:opacity-50">
           {isLoading ? 'Actualizando...' : 'Actualizar Contraseña'}
         </button>
       </form>

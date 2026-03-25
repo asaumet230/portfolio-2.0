@@ -7,13 +7,19 @@ import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
+import { FaInstagram, FaFacebook, FaLinkedin, FaTwitter, FaGlobe } from 'react-icons/fa';
 
 interface Testimonial {
   _id: string;
-  clientName: string;
-  company: string;
+  name: string;
+  major: string;
+  image: string;
   content: string;
-  rating?: number;
+  url?: string;
+  instagram?: string;
+  facebook?: string;
+  linkedin?: string;
+  twitter?: string;
 }
 
 export default function TestimoniosPage() {
@@ -23,7 +29,7 @@ export default function TestimoniosPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
-  const [formData, setFormData] = useState({ clientName: '', company: '', content: '', rating: 5 });
+  const [formData, setFormData] = useState({ name: '', major: '', content: '', url: '', instagram: '', facebook: '', linkedin: '', twitter: '' });
 
   useEffect(() => {
     fetchTestimonials();
@@ -44,10 +50,14 @@ export default function TestimoniosPage() {
   const handleEdit = (testimonial: Testimonial) => {
     setSelectedTestimonial(testimonial);
     setFormData({
-      clientName: testimonial.clientName,
-      company: testimonial.company,
+      name: testimonial.name,
+      major: testimonial.major,
       content: testimonial.content,
-      rating: testimonial.rating || 5,
+      url: testimonial.url || '',
+      instagram: testimonial.instagram || '',
+      facebook: testimonial.facebook || '',
+      linkedin: testimonial.linkedin || '',
+      twitter: testimonial.twitter || '',
     });
     setIsModalOpen(true);
   };
@@ -58,7 +68,7 @@ export default function TestimoniosPage() {
   };
 
   const handleSave = async () => {
-    if (!formData.clientName || !formData.content) {
+    if (!formData.name || !formData.content) {
       toast.error('Nombre y contenido son requeridos');
       return;
     }
@@ -72,7 +82,7 @@ export default function TestimoniosPage() {
         toast.success('Testimonial creado');
       }
       setIsModalOpen(false);
-      setFormData({ clientName: '', company: '', content: '', rating: 5 });
+      setFormData({ name: '', major: '', content: '', url: '', instagram: '', facebook: '', linkedin: '', twitter: '' });
       fetchTestimonials();
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
@@ -93,17 +103,73 @@ export default function TestimoniosPage() {
   };
 
   const columns = [
-    { key: 'clientName' as const, label: 'Cliente' },
-    { key: 'company' as const, label: 'Empresa' },
     {
-      key: 'content' as const,
-      label: 'Contenido',
-      render: (content: string) => content.substring(0, 50) + '...',
+      key: 'image' as const,
+      label: 'Foto',
+      render: (value: string, row: Testimonial) =>
+        value ? (
+          <img
+            src={value}
+            alt={row.name}
+            className="w-10 h-10 object-cover rounded-full border border-gray-200 dark:border-gray-600"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-400 text-xs">
+            N/A
+          </div>
+        ),
+    },
+    { key: 'name' as const, label: 'Cliente' },
+    {
+      key: 'major' as const,
+      label: 'Cargo / Empresa',
+      render: (value: string) => (
+        <span className="inline-block px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs rounded font-medium border border-blue-200 dark:border-blue-700">
+          {value}
+        </span>
+      ),
     },
     {
-      key: 'rating' as const,
-      label: 'Rating',
-      render: (rating: number) => `⭐ ${rating || '-'}`,
+      key: 'content' as const,
+      label: 'Testimonio',
+      render: (content: string) =>
+        content?.length > 60 ? content.substring(0, 60) + '...' : content,
+    },
+    {
+      key: 'url' as const,
+      label: 'Links',
+      render: (_: string, row: Testimonial) => (
+        <div className="flex gap-3 items-center">
+          {row.url && (
+            <a href={row.url} target="_blank" rel="noopener noreferrer" title="Sitio web" className="text-gray-600 dark:text-gray-400 hover:text-blue-500 transition">
+              <FaGlobe size={16} />
+            </a>
+          )}
+          {row.instagram && (
+            <a href={row.instagram} target="_blank" rel="noopener noreferrer" title="Instagram" className="text-gray-600 dark:text-gray-400 hover:text-pink-500 transition">
+              <FaInstagram size={16} />
+            </a>
+          )}
+          {row.facebook && (
+            <a href={row.facebook} target="_blank" rel="noopener noreferrer" title="Facebook" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 transition">
+              <FaFacebook size={16} />
+            </a>
+          )}
+          {row.linkedin && (
+            <a href={row.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn" className="text-gray-600 dark:text-gray-400 hover:text-blue-700 transition">
+              <FaLinkedin size={16} />
+            </a>
+          )}
+          {row.twitter && (
+            <a href={row.twitter} target="_blank" rel="noopener noreferrer" title="Twitter" className="text-gray-600 dark:text-gray-400 hover:text-sky-500 transition">
+              <FaTwitter size={16} />
+            </a>
+          )}
+          {!row.url && !row.instagram && !row.facebook && !row.linkedin && !row.twitter && (
+            <span className="text-gray-400 text-xs">-</span>
+          )}
+        </div>
+      ),
     },
   ];
 
@@ -114,7 +180,7 @@ export default function TestimoniosPage() {
         <button
           onClick={() => {
             setSelectedTestimonial(null);
-            setFormData({ clientName: '', company: '', content: '', rating: 5 });
+            setFormData({ name: '', major: '', content: '', url: '', instagram: '', facebook: '', linkedin: '', twitter: '' });
             setIsModalOpen(true);
           }}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
@@ -141,20 +207,19 @@ export default function TestimoniosPage() {
         }
       >
         <div className="space-y-4">
-          <input type="text" placeholder="Nombre del cliente" value={formData.clientName} onChange={(e) => setFormData({ ...formData, clientName: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="text" placeholder="Empresa" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="text" placeholder="Nombre del cliente" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="text" placeholder="Cargo / Empresa" value={formData.major} onChange={(e) => setFormData({ ...formData, major: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
           <textarea placeholder="Contenido del testimonio" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
-          <select value={formData.rating} onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="5">⭐⭐⭐⭐⭐ 5 estrellas</option>
-            <option value="4">⭐⭐⭐⭐ 4 estrellas</option>
-            <option value="3">⭐⭐⭐ 3 estrellas</option>
-            <option value="2">⭐⭐ 2 estrellas</option>
-            <option value="1">⭐ 1 estrella</option>
-          </select>
+          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Redes sociales (opcional)</p>
+          <input type="url" placeholder="Sitio web" value={formData.url} onChange={(e) => setFormData({ ...formData, url: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="url" placeholder="Instagram" value={formData.instagram} onChange={(e) => setFormData({ ...formData, instagram: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="url" placeholder="Facebook" value={formData.facebook} onChange={(e) => setFormData({ ...formData, facebook: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="url" placeholder="LinkedIn" value={formData.linkedin} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="url" placeholder="Twitter / X" value={formData.twitter} onChange={(e) => setFormData({ ...formData, twitter: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
         </div>
       </Modal>
 
-      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleConfirmDelete} title="Eliminar Testimonio" message={`¿Estás seguro que deseas eliminar el testimonio de "${selectedTestimonial?.clientName}"?`} />
+      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleConfirmDelete} title="Eliminar Testimonio" message={`¿Estás seguro que deseas eliminar el testimonio de "${selectedTestimonial?.name}"?`} />
     </div>
   );
 }

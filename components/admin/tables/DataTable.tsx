@@ -53,12 +53,12 @@ export function DataTable<T extends { id?: string; _id?: string }>({
             {columns.map((column) => (
               <th
                 key={String(column.key)}
-                className="px-6 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 border-b"
+                className="px-6 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700"
               >
                 {column.label}
               </th>
             ))}
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 border-b">
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
               Acciones
             </th>
           </tr>
@@ -67,7 +67,7 @@ export function DataTable<T extends { id?: string; _id?: string }>({
           {data.map((row, index) => (
             <tr
               key={row._id || row.id || index}
-              className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b"
+              className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-700/50"
             >
               {columns.map((column) => (
                 <td
@@ -87,7 +87,7 @@ export function DataTable<T extends { id?: string; _id?: string }>({
                       className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900 rounded transition"
                       title="Ver"
                     >
-                      <EyeOpenIcon className="w-4 h-4 text-blue-500" />
+                      <EyeOpenIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </button>
                   )}
                   {onEdit && (
@@ -96,7 +96,7 @@ export function DataTable<T extends { id?: string; _id?: string }>({
                       className="p-2 hover:bg-yellow-100 dark:hover:bg-yellow-900 rounded transition"
                       title="Editar"
                     >
-                      <Pencil2Icon className="w-4 h-4 text-yellow-500" />
+                      <Pencil2Icon className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
                     </button>
                   )}
                   {onDelete && (
@@ -105,7 +105,7 @@ export function DataTable<T extends { id?: string; _id?: string }>({
                       className="p-2 hover:bg-red-100 dark:hover:bg-red-900 rounded transition"
                       title="Eliminar"
                     >
-                      <TrashIcon className="w-4 h-4 text-red-500" />
+                      <TrashIcon className="w-4 h-4 text-red-600 dark:text-red-400" />
                     </button>
                   )}
                 </div>

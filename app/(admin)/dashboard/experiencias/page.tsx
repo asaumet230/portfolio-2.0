@@ -11,12 +11,20 @@ import toast from 'react-hot-toast';
 interface Experience {
   _id: string;
   company: string;
+  city: string;
   position: string;
-  description: string;
-  startDate: string;
-  endDate?: string;
-  isCurrently?: boolean;
+  year: number;
+  url: string;
+  createdAt: string;
 }
+
+const EMPTY_FORM = {
+  company: '',
+  city: '',
+  position: '',
+  year: new Date().getFullYear(),
+  url: '',
+};
 
 export default function ExperienciasPage() {
   const { data: session } = useSession();
@@ -25,14 +33,7 @@ export default function ExperienciasPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState<Experience | null>(null);
-  const [formData, setFormData] = useState({
-    company: '',
-    position: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-    isCurrently: false,
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
 
   useEffect(() => {
     fetchExperiences();
@@ -54,11 +55,10 @@ export default function ExperienciasPage() {
     setSelectedExperience(experience);
     setFormData({
       company: experience.company,
+      city: experience.city,
       position: experience.position,
-      description: experience.description,
-      startDate: experience.startDate,
-      endDate: experience.endDate || '',
-      isCurrently: experience.isCurrently || false,
+      year: experience.year,
+      url: experience.url,
     });
     setIsModalOpen(true);
   };
@@ -69,8 +69,8 @@ export default function ExperienciasPage() {
   };
 
   const handleSave = async () => {
-    if (!formData.company || !formData.position) {
-      toast.error('Empresa y puesto son requeridos');
+    if (!formData.company || !formData.position || !formData.city) {
+      toast.error('Empresa, cargo y ciudad son requeridos');
       return;
     }
     try {
@@ -83,7 +83,7 @@ export default function ExperienciasPage() {
         toast.success('Experiencia creada');
       }
       setIsModalOpen(false);
-      setFormData({ company: '', position: '', description: '', startDate: '', endDate: '', isCurrently: false });
+      setFormData(EMPTY_FORM);
       fetchExperiences();
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
@@ -105,14 +105,51 @@ export default function ExperienciasPage() {
 
   const columns = [
     { key: 'company' as const, label: 'Empresa' },
-    { key: 'position' as const, label: 'Puesto' },
     {
-      key: 'startDate' as const,
-      label: 'Período',
-      render: (start: string, row: Experience) => {
-        const end = row.endDate || (row.isCurrently ? 'Actualmente' : '-');
-        return `${start} - ${end}`;
-      },
+      key: 'position' as const,
+      label: 'Cargo',
+      render: (value: string) => (
+        <span className="inline-block px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs rounded font-medium border border-blue-200 dark:border-blue-700 capitalize">
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'city',
+      label: 'Ciudad',
+      render: (value: string) => (
+        <span className="capitalize">{value}</span>
+      ),
+    },
+    {
+      key: 'year',
+      label: 'Año',
+      render: (value: number) => (
+        <span className="inline-block px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded font-medium border border-gray-200 dark:border-gray-600">
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'url',
+      label: 'URL',
+      render: (value: string) =>
+        value && value !== '/' ? (
+          <a href={value} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline text-xs truncate max-w-[140px] block">
+            {value.replace(/^https?:\/\//, '')}
+          </a>
+        ) : (
+          <span className="text-gray-400 text-xs">—</span>
+        ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Creado',
+      render: (value: string) => (
+        <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+          {new Date(value).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
+        </span>
+      ),
     },
   ];
 
@@ -123,7 +160,7 @@ export default function ExperienciasPage() {
         <button
           onClick={() => {
             setSelectedExperience(null);
-            setFormData({ company: '', position: '', description: '', startDate: '', endDate: '', isCurrently: false });
+            setFormData(EMPTY_FORM);
             setIsModalOpen(true);
           }}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
@@ -151,16 +188,10 @@ export default function ExperienciasPage() {
       >
         <div className="space-y-4">
           <input type="text" placeholder="Empresa" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="text" placeholder="Puesto/Cargo" value={formData.position} onChange={(e) => setFormData({ ...formData, position: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <textarea placeholder="Descripción" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
-          <input type="date" placeholder="Fecha inicio" value={formData.startDate} onChange={(e) => setFormData({ ...formData, startDate: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={formData.isCurrently} onChange={(e) => setFormData({ ...formData, isCurrently: e.target.checked, endDate: e.target.checked ? '' : formData.endDate })} className="rounded" />
-            <span className="text-gray-700 dark:text-gray-300">Trabajo actualmente aquí</span>
-          </label>
-          {!formData.isCurrently && (
-            <input type="date" placeholder="Fecha fin" value={formData.endDate} onChange={(e) => setFormData({ ...formData, endDate: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          )}
+          <input type="text" placeholder="Cargo / Puesto" value={formData.position} onChange={(e) => setFormData({ ...formData, position: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="text" placeholder="Ciudad" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="number" placeholder="Año" value={formData.year} onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+          <input type="url" placeholder="URL (https://...)" value={formData.url} onChange={(e) => setFormData({ ...formData, url: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
         </div>
       </Modal>
 

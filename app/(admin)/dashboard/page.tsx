@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
 import { FaFolderOpen, FaTools, FaQuoteLeft, FaNewspaper, FaBriefcase, FaUsers } from 'react-icons/fa';
 
@@ -15,6 +16,7 @@ interface Stats {
 }
 
 export default function DashboardPage() {
+  const { data: session } = useSession();
   const [stats, setStats] = useState<Stats>({
     projectsCount: 0,
     toolsCount: 0,
@@ -25,10 +27,11 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    if (session) fetchStats();
+  }, [session]);
 
   const fetchStats = async () => {
+    const token = (session as any)?.accessToken;
     try {
       const [projects, tools, testimonials, articles, experiences, users] = await Promise.all([
         apiClient.get('/projects').then((res) => res.projects?.length || 0).catch(() => 0),
@@ -36,7 +39,7 @@ export default function DashboardPage() {
         apiClient.get('/testimonials').then((res) => res.testimonials?.length || 0).catch(() => 0),
         apiClient.get('/articles').then((res) => res.articles?.length || 0).catch(() => 0),
         apiClient.get('/experiences').then((res) => res.experiences?.length || 0).catch(() => 0),
-        apiClient.get('/users').then((res) => res.users?.length || 0).catch(() => 0),
+        apiClient.get('/users', token).then((res) => res.users?.length || 0).catch(() => 0),
       ]);
 
       setStats({

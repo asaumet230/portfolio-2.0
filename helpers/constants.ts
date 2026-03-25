@@ -33,8 +33,8 @@ export const menuData: IMenuLink[] = [
     url: '/contactame',
   },
   {
-    name: 'blog',
-    url: '/blog',
+    name: 'blog de tecnología',
+    url: '/blog-de-tecnologia',
   },
 ];
 

@@ -16,6 +16,8 @@ import {
   BackpackIcon,
   PersonIcon,
   ExitIcon,
+  GlobeIcon,
+  LayersIcon,
 } from '@radix-ui/react-icons';
 
 const menuItems = [
@@ -27,6 +29,8 @@ const menuItems = [
   { href: '/dashboard/articulos', label: 'Artículos', icon: FileTextIcon },
   { href: '/dashboard/experiencias', label: 'Trabajos', icon: BackpackIcon },
   { href: '/dashboard/usuarios', label: 'Usuarios', icon: PersonIcon },
+  { href: '/dashboard/paginas', label: 'Páginas', icon: LayersIcon },
+  { href: '/dashboard/sitemap', label: 'Sitemap', icon: GlobeIcon },
 ];
 
 export default function AdminLayout({
@@ -56,6 +60,7 @@ export default function AdminLayout({
               height={65}
               priority
               className="object-contain"
+              style={{ height: 'auto' }}
             />
           </Link>
         </div>

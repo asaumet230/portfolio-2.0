@@ -18,7 +18,7 @@ export const Footer = () => {
                 <Link href={'/contactame'}>Contactame</Link>
               </li>
               <li className='py-1'>
-                <Link href={'/blog'}>Blog</Link>
+                <Link href={'/blog-de-tecnologia'}>Blog de Tecnología</Link>
               </li>
               <li className='py-1'>
                 <Link href={'/login'}>Inicia Sesión</Link>

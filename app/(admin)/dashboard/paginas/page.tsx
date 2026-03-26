@@ -68,7 +68,7 @@ export default function PaginasPage() {
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
               {pages.map((page) => (
-                <tr key={page._id} className="hover:bg-gray-50 dark:hover:bg-gray-750 transition">
+                <tr key={page._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <GlobeIcon className="w-4 h-4 text-gray-400 shrink-0" />

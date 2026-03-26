@@ -2,7 +2,7 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface RichTextEditorProps {
   value?: string;
@@ -40,6 +40,14 @@ export function RichTextEditor({
     },
   });
 
+  useEffect(() => {
+    if (!editor || !value) return;
+    const current = editor.getHTML();
+    if (current !== value) {
+      editor.commands.setContent(value, false);
+    }
+  }, [value, editor]);
+
   if (!editor) {
     return null;
   }
@@ -76,7 +84,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('bold')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Negrilla"
         >
@@ -88,7 +96,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm italic transition ${
             editor.isActive('italic')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Itálica"
         >
@@ -100,7 +108,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm line-through transition ${
             editor.isActive('strike')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Tachado"
         >
@@ -112,7 +120,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm font-mono transition ${
             editor.isActive('code')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Código"
         >
@@ -128,7 +136,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 1 })
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Título 1"
         >
@@ -140,7 +148,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 2 })
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Título 2"
         >
@@ -152,7 +160,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 3 })
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Título 3"
         >
@@ -164,7 +172,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 4 })
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Título 4"
         >
@@ -180,7 +188,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('bulletList')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Lista de puntos"
         >
@@ -192,7 +200,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('orderedList')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Lista numerada"
         >
@@ -208,7 +216,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('blockquote')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Cita"
         >
@@ -220,7 +228,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('codeBlock')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Bloque de código"
         >
@@ -236,7 +244,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('link')
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Agregar enlace"
         >
@@ -245,7 +253,7 @@ export function RichTextEditor({
 
         <button
           onClick={unsetLink}
-          className="px-3 py-1 rounded text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          className="px-3 py-1 rounded text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           title="Remover enlace"
         >
           🔗 ✕
@@ -260,7 +268,7 @@ export function RichTextEditor({
           className={`px-3 py-1 rounded text-sm transition ${
             showCode
               ? 'bg-blue-500 text-white'
-              : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
           }`}
           title="Ver código HTML"
         >
@@ -270,7 +278,10 @@ export function RichTextEditor({
 
       {/* Editor */}
       {!showCode ? (
-        <div className={`${height} overflow-y-auto bg-white dark:bg-gray-700 border-t dark:border-gray-600`}>
+        <div
+          className={`${height} overflow-y-auto bg-white dark:bg-gray-700 border-t dark:border-gray-600`}
+          style={{ resize: 'vertical', minHeight: '8rem' }}
+        >
           <EditorContent editor={editor} />
         </div>
       ) : (
@@ -280,6 +291,7 @@ export function RichTextEditor({
             editor.commands.setContent(e.target.value);
           }}
           className={`w-full ${height} p-3 font-mono text-sm border-t dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none`}
+          style={{ resize: 'vertical', minHeight: '8rem' }}
           placeholder="HTML code..."
         />
       )}

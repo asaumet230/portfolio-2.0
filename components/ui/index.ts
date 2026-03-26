@@ -1,3 +1,4 @@
+export { AuthorBio } from './AuthorBio';
 export { CardPost } from './CardPost';
 export { Cursor } from './Cursor';
 export { DarkMode } from './DarkMode';

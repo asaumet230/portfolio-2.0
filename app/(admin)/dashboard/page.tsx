@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
-import { FaFolderOpen, FaTools, FaQuoteLeft, FaNewspaper, FaBriefcase, FaUsers } from 'react-icons/fa';
+import { FaFolderOpen, FaTools, FaQuoteLeft, FaNewspaper, FaBriefcase, FaUsers, FaFileAlt, FaTags } from 'react-icons/fa';
 
 interface Stats {
   projectsCount: number;
@@ -13,6 +13,8 @@ interface Stats {
   articlesCount: number;
   experiencesCount: number;
   usersCount: number;
+  pagesCount: number;
+  categoriesCount: number;
 }
 
 export default function DashboardPage() {
@@ -24,6 +26,8 @@ export default function DashboardPage() {
     articlesCount: 0,
     experiencesCount: 0,
     usersCount: 0,
+    pagesCount: 0,
+    categoriesCount: 0,
   });
 
   useEffect(() => {
@@ -33,13 +37,15 @@ export default function DashboardPage() {
   const fetchStats = async () => {
     const token = (session as any)?.accessToken;
     try {
-      const [projects, tools, testimonials, articles, experiences, users] = await Promise.all([
+      const [projects, tools, testimonials, articles, experiences, users, pages, categories] = await Promise.all([
         apiClient.get('/projects').then((res) => res.projects?.length || 0).catch(() => 0),
         apiClient.get('/tools').then((res) => res.tools?.length || 0).catch(() => 0),
         apiClient.get('/testimonials').then((res) => res.testimonials?.length || 0).catch(() => 0),
         apiClient.get('/articles').then((res) => res.articles?.length || 0).catch(() => 0),
         apiClient.get('/experiences').then((res) => res.experiences?.length || 0).catch(() => 0),
         apiClient.get('/users', token).then((res) => res.users?.length || 0).catch(() => 0),
+        apiClient.get('/seo/pages').then((res) => res.pages?.length || 0).catch(() => 0),
+        apiClient.get('/article-categories').then((res) => res.categories?.length || 0).catch(() => 0),
       ]);
 
       setStats({
@@ -49,6 +55,8 @@ export default function DashboardPage() {
         articlesCount: articles,
         experiencesCount: experiences,
         usersCount: users,
+        pagesCount: pages,
+        categoriesCount: categories,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -62,6 +70,8 @@ export default function DashboardPage() {
     { label: 'Artículos',    count: stats.articlesCount,     href: '/dashboard/articulos',               icon: FaNewspaper,  color: 'text-orange-500', bg: 'bg-orange-50 dark:bg-orange-900/20' },
     { label: 'Experiencias', count: stats.experiencesCount,  href: '/dashboard/experiencias',            icon: FaBriefcase,  color: 'text-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
     { label: 'Usuarios',     count: stats.usersCount,        href: '/dashboard/usuarios',                icon: FaUsers,      color: 'text-rose-500',   bg: 'bg-rose-50 dark:bg-rose-900/20' },
+    { label: 'Páginas',      count: stats.pagesCount,        href: '/dashboard/paginas',                 icon: FaFileAlt,    color: 'text-indigo-500', bg: 'bg-indigo-50 dark:bg-indigo-900/20' },
+    { label: 'Categorías',   count: stats.categoriesCount,   href: '/dashboard/categorias',              icon: FaTags,       color: 'text-teal-500',   bg: 'bg-teal-50 dark:bg-teal-900/20' },
   ];
 
   return (

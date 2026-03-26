@@ -5,10 +5,11 @@ import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
 import {
-  FaUser, FaEnvelope, FaPhone, FaInfoCircle,
+  FaUser, FaEnvelope, FaPhone,
   FaLinkedin, FaGithub, FaTwitter, FaGlobe, FaLock,
   FaEye, FaEyeSlash
 } from 'react-icons/fa';
+import { RichTextEditor } from '@/components/admin/forms/RichTextEditor';
 
 export default function PerfilPage() {
   const { data: session } = useSession();
@@ -158,13 +159,13 @@ export default function PerfilPage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const inputClass = 'w-full pl-10 pr-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500';
+  const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
   const iconClass = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
 
   if (!mounted) return null;
 
   return (
-    <div className="space-y-8 max-w-2xl" style={{ animation: 'fadeIn 0.3s ease-in-out' }}>
+    <div className="space-y-8 max-w-4xl" style={{ animation: 'fadeIn 0.3s ease-in-out' }}>
       <div className="flex items-center gap-6">
         <div className="relative flex-shrink-0 group">
           <button
@@ -220,9 +221,14 @@ export default function PerfilPage() {
           <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className={inputClass} />
         </div>
 
-        <div className="relative">
-          <FaInfoCircle className="absolute left-3 top-3 text-gray-400 dark:text-gray-500 w-4 h-4" />
-          <textarea placeholder="Bio / Acerca de mí" value={formData.bio} onChange={(e) => setFormData({ ...formData, bio: e.target.value })} className={`w-full pl-10 pr-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 h-24`} />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio / Acerca de mí</label>
+          <RichTextEditor
+            value={formData.bio}
+            onChange={(content) => setFormData({ ...formData, bio: content })}
+            placeholder="Escribe tu bio aquí..."
+            height="h-48"
+          />
         </div>
 
         <div className="relative">
@@ -265,7 +271,7 @@ export default function PerfilPage() {
 
         <div className="relative">
           <FaLock className={iconClass} />
-          <input type={showPasswords.current ? 'text' : 'password'} placeholder="Contraseña actual" autoComplete="current-password" suppressHydrationWarning value={passwordData.currentPassword} onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type={showPasswords.current ? 'text' : 'password'} placeholder="Contraseña actual" autoComplete="current-password" suppressHydrationWarning value={passwordData.currentPassword} onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
           <button type="button" onClick={() => setShowPasswords((p) => ({ ...p, current: !p.current }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
             {showPasswords.current ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
           </button>
@@ -273,7 +279,7 @@ export default function PerfilPage() {
 
         <div className="relative">
           <FaLock className={iconClass} />
-          <input type={showPasswords.new ? 'text' : 'password'} placeholder="Nueva contraseña" autoComplete="new-password" suppressHydrationWarning value={passwordData.newPassword} onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type={showPasswords.new ? 'text' : 'password'} placeholder="Nueva contraseña" autoComplete="new-password" suppressHydrationWarning value={passwordData.newPassword} onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
           <button type="button" onClick={() => setShowPasswords((p) => ({ ...p, new: !p.new }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
             {showPasswords.new ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
           </button>
@@ -281,7 +287,7 @@ export default function PerfilPage() {
 
         <div className="relative">
           <FaLock className={iconClass} />
-          <input type={showPasswords.confirm ? 'text' : 'password'} placeholder="Confirmar contraseña" autoComplete="new-password" suppressHydrationWarning value={passwordData.confirmPassword} onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type={showPasswords.confirm ? 'text' : 'password'} placeholder="Confirmar contraseña" autoComplete="new-password" suppressHydrationWarning value={passwordData.confirmPassword} onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })} className="w-full pl-10 pr-10 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
           <button type="button" onClick={() => setShowPasswords((p) => ({ ...p, confirm: !p.confirm }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
             {showPasswords.confirm ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
           </button>

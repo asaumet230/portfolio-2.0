@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { CardPost, PostSideBar } from "@/components";
 
-
 export const metadata: Metadata = {
   title: "Blog de Tecnología y Programación | Andres Saumet",
   description: "Blog de tecnología de Andres Saumet: tutoriales de desarrollo web y móvil, herramientas gratuitas y guías para empresas que quieren digitalizar su negocio.",
@@ -58,19 +57,27 @@ export const metadata: Metadata = {
 };
 
 export default function Blog() {
-  
   return (
-    <div className="container flex max-[920px]:flex-col pt-8 pb-16">
-      <div className="w-9/12 max-[920px]:w-full mr-6 max-[920px]:mr-none">
-        <header className="pt-4 mb-8 px-10">
-          <h1 className="text-left max-[920px]:text-center">Explora la Innovación: Blog de Desarrollo Web y Móvil</h1>
-          <p className="text-justify mt-6 max-[640px]:text-pretty">Bienvenido a mi blog de Andres Saumet Desarrollador Web & movíl, donde comparto mis conocimientos y experiencias como desarrollador web y móvil especializado en JavaScript, TypeScript, React, Dart y Flutter. Aquí encontrarás tutoriales, guías, estudios de caso, y las últimas tendencias en tecnología, diseñados para ayudarte a mejorar tus habilidades y mantenerse al día en el mundo del desarrollo de software. ¡Únete a nuestra comunidad y lleva tu carrera al siguiente nivel!</p>
-        </header>
-        <main>
+    <div className="container mx-auto px-4 pt-10 pb-20">
+      {/* Header */}
+      <header className="mb-10 w-full mx-auto md:w-[85%]">
+        <span className="block text-xs font-semibold uppercase tracking-widest text-[#7b7db0] text-center">Blog de Tecnología</span>
+        <h1 className="mt-2 text-4xl font-bold text-center">Desarrollo Web y Móvil con Andres Saumet</h1>
+        <p className="mt-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed text-justify px-4 md:px-8">
+          Aprende desarrollo web con <strong className="text-gray-700 dark:text-gray-300">Next.js, React y Node.js</strong> y desarrollo móvil con <strong className="text-gray-700 dark:text-gray-300">Flutter y Dart</strong>. Tutoriales prácticos, guías de SEO técnico y herramientas gratuitas para desarrolladores. Si eres empresa o emprendedor buscando digitalizar tu negocio, aquí encuentras contenido que te guía desde la idea hasta el lanzamiento.
+        </p>
+      </header>
+
+      {/* Layout: articles + sidebar */}
+      <div className="flex gap-10 max-[920px]:flex-col items-start">
+        {/* Articles grid */}
+        <main className="flex-1 min-w-0">
           <CardPost />
         </main>
+
+        {/* Sidebar */}
+        <PostSideBar />
       </div>
-      <PostSideBar />
     </div>
-  )
+  );
 }

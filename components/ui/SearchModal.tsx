@@ -9,6 +9,22 @@ import { IoIosSearch } from 'react-icons/io';
 
 import styles from './ui.module.css';
 
+const ImagePlaceholder = () => (
+  <div className="w-full h-full flex items-center justify-center text-gray-300 dark:text-gray-600">
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  </div>
+);
+
+function ArticleThumb({ src, alt }: { src: string; alt: string }) {
+  const [error, setError] = useState(false);
+  if (!src || error) return <ImagePlaceholder />;
+  return (
+    <Image src={src} alt={alt} width={40} height={40} className="w-full h-full object-cover" onError={() => setError(true)} />
+  );
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:8080/api';
 
 interface ArticleResult {
@@ -197,13 +213,7 @@ export const SearchModal = () => {
                         className="flex items-start gap-3 px-4 py-3 hover:bg-[#7b7db0]/5 dark:hover:bg-[#7b7db0]/10 transition-colors group"
                       >
                         <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700 mt-0.5">
-                          {r.featuredImage ? (
-                            <Image src={r.featuredImage} alt={r.title} width={40} height={40} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[#7b7db0]/50">
-                              <IoIosSearch size={14} />
-                            </div>
-                          )}
+                          <ArticleThumb src={r.featuredImage} alt={r.title} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-800 dark:text-gray-200 group-hover:text-[#7b7db0] line-clamp-1 transition-colors">

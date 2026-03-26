@@ -159,7 +159,7 @@ export default function ProjectosWebPage() {
               className={`w-10 py-1 text-sm rounded border transition text-center ${
                 itemsPerPage === n
                   ? 'bg-blue-500 text-white border-blue-500'
-                  : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               {n}
@@ -187,7 +187,7 @@ export default function ProjectosWebPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 text-sm rounded border border-gray-300 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            className="px-4 py-2 text-sm rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
             ← Anterior
           </button>
@@ -199,7 +199,7 @@ export default function ProjectosWebPage() {
               className={`px-3 py-2 text-sm rounded border transition ${
                 currentPage === page
                   ? 'bg-blue-500 text-white border-blue-500'
-                  : 'border-gray-300 hover:bg-gray-50'
+                  : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               {page}
@@ -209,7 +209,7 @@ export default function ProjectosWebPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 text-sm rounded border border-gray-300 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            className="px-4 py-2 text-sm rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
             Siguiente →
           </button>

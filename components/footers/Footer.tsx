@@ -1,8 +1,11 @@
-import Link from 'next/link';
+'use client';
 
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { SocialMediaLinks } from '../ui';
 
 export const Footer = () => {
+  const { data: session } = useSession();
   return (
     <div className='bg-slate-100 pt-8 dark:bg-[#262f3a]'>
       <div className='section grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
@@ -18,14 +21,22 @@ export const Footer = () => {
                 <Link href={'/contactame'}>Contactame</Link>
               </li>
               <li className='py-1'>
-                <Link href={'/blog'}>Blog</Link>
+                <Link href={'/blog-de-tecnologia'}>Blog de Tecnología</Link>
               </li>
-              <li className='py-1'>
-                <Link href={'/login'}>Inicia Sesión</Link>
-              </li>
-              <li className='py-1'>
-                <Link href={'/registro'}>Registrate</Link>
-              </li>
+              {session ? (
+                <li className='py-1'>
+                  <Link href={'/dashboard'}>Dashboard</Link>
+                </li>
+              ) : (
+                <>
+                  <li className='py-1'>
+                    <Link href={'/login'}>Inicia Sesión</Link>
+                  </li>
+                  <li className='py-1'>
+                    <Link href={'/registro'}>Registrate</Link>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         </div>

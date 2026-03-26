@@ -22,7 +22,7 @@ const errorData: ErrorData[] = [
         title: 'Blog',
         subtitle: 'Lee nuestros increíbles artículos',
         icon: <BsFileEarmarkPost color="#312e81" size={30} />,
-        url: '/blog',
+        url: '/blog-de-tecnologia',
     },
     {
         title: 'Proyectos Destacados',

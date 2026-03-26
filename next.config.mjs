@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/blog',
+        destination: '/blog-de-tecnologia',
+        permanent: true, // 301 - preserva SEO juice
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

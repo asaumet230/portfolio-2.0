@@ -97,9 +97,10 @@ export const AuthorBio = async () => {
           </p>
 
           {bio && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              {bio}
-            </p>
+            <div
+              className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed [&_p]:mb-2 [&_strong]:font-semibold [&_strong]:text-gray-800 dark:[&_strong]:text-gray-200 [&_em]:italic [&_p:empty]:hidden"
+              dangerouslySetInnerHTML={{ __html: bio }}
+            />
           )}
 
           {/* Social links */}

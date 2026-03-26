@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PostSideBar, AuthorBio } from '@/components';
 import { FaWhatsapp, FaLinkedinIn } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import { FeaturedImage } from './FeaturedImage';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:8080/api';
 const SITE_URL = 'https://www.andressaumet.com';
@@ -130,18 +130,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-slate-100 dark:border-gray-700 overflow-hidden">
 
             {/* Featured Image */}
-            {article.featuredImage && (
-              <div className="w-full h-52 sm:h-64 md:h-80 overflow-hidden bg-gray-100 dark:bg-gray-700">
-                <Image
-                  src={article.featuredImage}
-                  alt={article.title}
-                  width={900}
-                  height={500}
-                  className="w-full h-full object-cover"
-                  priority
-                />
-              </div>
-            )}
+            <FeaturedImage src={article.featuredImage} alt={article.title} />
 
             <div className="p-5 sm:p-7 md:p-10">
 

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { CardPost, PostSideBar } from "@/components";
 
 export const metadata: Metadata = {
@@ -72,7 +73,9 @@ export default function Blog() {
       <div className="flex gap-10 max-[920px]:flex-col items-start">
         {/* Articles grid */}
         <main className="flex-1 min-w-0">
-          <CardPost />
+          <Suspense fallback={<div className="animate-pulse space-y-4">{[1,2,3].map(i => <div key={i} className="h-48 bg-gray-100 dark:bg-gray-800 rounded-xl" />)}</div>}>
+            <CardPost />
+          </Suspense>
         </main>
 
         {/* Sidebar */}

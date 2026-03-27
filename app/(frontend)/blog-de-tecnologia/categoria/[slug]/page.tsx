@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { CardPost, PostSideBar } from '@/components';
@@ -74,7 +75,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       {/* Layout */}
       <div className="flex gap-10 max-[920px]:flex-col items-start">
         <main className="flex-1 min-w-0">
-          <CardPost categorySlug={params.slug} />
+          <Suspense fallback={<div className="animate-pulse space-y-4">{[1,2,3].map(i => <div key={i} className="h-48 bg-gray-100 dark:bg-gray-800 rounded-xl" />)}</div>}>
+            <CardPost categorySlug={params.slug} />
+          </Suspense>
         </main>
         <PostSideBar />
       </div>

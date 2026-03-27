@@ -1,4 +1,5 @@
 export { AuthorBio } from './AuthorBio';
+export { BlogCategoryFilter } from './BlogCategoryFilter';
 export { CardPost } from './CardPost';
 export { Cursor } from './Cursor';
 export { DarkMode } from './DarkMode';

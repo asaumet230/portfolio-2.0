@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
-import { CardPost, PostSideBar } from "@/components";
+import Link from "next/link";
+import { BlogCategoryFilter, PostSideBar } from "@/components";
 
 export const metadata: Metadata = {
   title: "Blog de Tecnología y Programación | Andres Saumet",
@@ -62,6 +62,15 @@ export default function Blog() {
     <div className="container mx-auto px-4 pt-10 pb-20">
       {/* Header */}
       <header className="mb-10 w-full mx-auto md:w-[85%]">
+        {/* Breadcrumbs */}
+        <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-4">
+          <Link href="/" className="hover:text-[#7b7db0] transition-colors">
+            Inicio
+          </Link>
+          <span>/</span>
+          <span className="text-[#7b7db0] font-medium">Blog de Tecnología</span>
+        </nav>
+
         <span className="block text-xs font-semibold uppercase tracking-widest text-[#7b7db0] text-center">Blog de Tecnología</span>
         <h1 className="mt-2 text-4xl font-bold text-center">Desarrollo Web y Móvil con Andres Saumet</h1>
         <p className="mt-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed text-justify px-4 md:px-8">
@@ -71,11 +80,9 @@ export default function Blog() {
 
       {/* Layout: articles + sidebar */}
       <div className="flex gap-10 max-[920px]:flex-col items-start">
-        {/* Articles grid */}
+        {/* Articles grid with category filter */}
         <main className="flex-1 min-w-0">
-          <Suspense fallback={<div className="animate-pulse space-y-4">{[1,2,3].map(i => <div key={i} className="h-48 bg-gray-100 dark:bg-gray-800 rounded-xl" />)}</div>}>
-            <CardPost />
-          </Suspense>
+          <BlogCategoryFilter />
         </main>
 
         {/* Sidebar */}

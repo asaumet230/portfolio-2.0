@@ -10,4 +10,4 @@ export { Navbar, NavbarDefault, NavbarMenuLink, NavbarMenuLinkDefault, PostSideB
 export { AboutMeSection, ExperienceItemSection, ExperienceSection, SkillsSection, TestimonialsSection, ToolsSection, MobilProjectDescription, MobilProjects, WebProjectDescription, WebProjects, AuthBackground, LoginForm, RegisterForm } from './sections/index';
 export { AdminPorjectsTable, ProjectTableRow } from './tables/index';
 export { TextCaseProDetails, TextConverterForm } from './textConverter/index';
-export { AuthorBio, CardPost, Cursor, DarkMode, LoadingModal, Logo, PreviewProgressBar, ProgressBar, SearchModal, Separator, SocialMediaLinks, SocialMediaMessage, SocialShareSidebar, Spinner, SystemMode, UploadProgressOverlay } from './ui/index';
+export { AuthorBio, BlogCategoryFilter, CardPost, Cursor, DarkMode, LoadingModal, Logo, PreviewProgressBar, ProgressBar, SearchModal, Separator, SocialMediaLinks, SocialMediaMessage, SocialShareSidebar, Spinner, SystemMode, UploadProgressOverlay } from './ui/index';

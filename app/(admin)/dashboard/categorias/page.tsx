@@ -24,7 +24,7 @@ const CategoryThumb = ({ src, alt }: { src?: string; alt: string }) => {
   const [error, setError] = useState(false);
   if (!src || error) {
     return (
-      <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
+      <div className="w-20 h-11 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 flex items-center justify-center shrink-0">
         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
@@ -32,13 +32,13 @@ const CategoryThumb = ({ src, alt }: { src?: string; alt: string }) => {
     );
   }
   return (
-    <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700">
+    <div className="w-20 h-11 rounded-lg overflow-hidden shrink-0 border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
       <Image
         src={src}
         alt={alt}
-        width={40}
-        height={40}
-        className="w-full h-full object-cover"
+        width={80}
+        height={44}
+        className="w-full h-full object-cover object-center"
         onError={() => setError(true)}
       />
     </div>

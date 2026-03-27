@@ -29,8 +29,13 @@ export const BlogCategoryFilter = () => {
     <div>
       {/* Count + select row */}
       <div className="flex items-center justify-between mb-5 px-4 md:px-8">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {total !== null ? `${total} artículo${total !== 1 ? 's' : ''}` : ''}
+        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          {total !== null && total > 0 && (
+            <>
+              <span className="text-[#7b7db0] font-bold text-base">{total}</span>
+              {' '}artículo{total !== 1 ? 's' : ''}
+            </>
+          )}
         </p>
 
         {loadingCats ? (

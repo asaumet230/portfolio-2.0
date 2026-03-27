@@ -105,7 +105,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     <div className="container mx-auto px-4 pt-6 md:pt-10 pb-20">
 
       {/* Breadcrumb */}
-      <nav className="text-xs text-gray-400 dark:text-gray-500 mb-6 flex items-center gap-1.5 flex-wrap">
+      <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex items-center gap-2 flex-wrap">
         <Link href="/" className="hover:text-[#7b7db0] transition-colors">Inicio</Link>
         <span>/</span>
         <Link href="/blog-de-tecnologia" className="hover:text-[#7b7db0] transition-colors">Blog</Link>
@@ -118,7 +118,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           </>
         )}
         <span>/</span>
-        <span className="text-gray-600 dark:text-gray-300 truncate max-w-[180px] md:max-w-xs">{article.title}</span>
+        <span className="text-[#7b7db0] font-medium truncate max-w-[180px] md:max-w-xs">{article.title}</span>
       </nav>
 
       <div className="flex gap-10 max-[920px]:flex-col items-start">

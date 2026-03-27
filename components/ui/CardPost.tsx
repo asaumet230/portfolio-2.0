@@ -195,7 +195,7 @@ export const CardPost = ({ categorySlug }: CardPostProps = {}) => {
       <div className="flex items-center justify-between mb-5">
         {searchQuery && (
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {total} resultado{total !== 1 ? 's' : ''} para <strong className="text-gray-700 dark:text-gray-300">"{searchQuery}"</strong>
+            {total} resultado{total !== 1 ? 's' : ''} para <strong className="text-gray-700 dark:text-gray-300">&ldquo;{searchQuery}&rdquo;</strong>
           </p>
         )}
         {!searchQuery && total > 0 && (

@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
-import { Pencil1Icon, BookmarkIcon } from '@radix-ui/react-icons';
+import { Pencil1Icon } from '@radix-ui/react-icons';
 
 interface ArticleCategory {
   _id: string;
@@ -14,9 +15,35 @@ interface ArticleCategory {
   seoMetadata?: {
     title?: string;
     robots?: string;
+    ogImage?: string;
   };
   updatedAt?: string;
 }
+
+const CategoryThumb = ({ src, alt }: { src?: string; alt: string }) => {
+  const [error, setError] = useState(false);
+  if (!src || error) {
+    return (
+      <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+    );
+  }
+  return (
+    <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-gray-100 dark:bg-gray-700">
+      <Image
+        src={src}
+        alt={alt}
+        width={40}
+        height={40}
+        className="w-full h-full object-cover"
+        onError={() => setError(true)}
+      />
+    </div>
+  );
+};
 
 export default function CategoriasPage() {
   const [categories, setCategories] = useState<ArticleCategory[]>([]);
@@ -72,7 +99,7 @@ export default function CategoriasPage() {
                 <tr key={cat._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <BookmarkIcon className="w-4 h-4 text-gray-400 shrink-0" />
+                      <CategoryThumb src={cat.seoMetadata?.ogImage} alt={cat.name} />
                       <div>
                         <p className="font-medium text-gray-900 dark:text-gray-100 capitalize">
                           {cat.name}

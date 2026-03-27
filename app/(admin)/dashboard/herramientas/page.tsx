@@ -227,7 +227,7 @@ export default function HerramientasPage() {
         </div>
       </Modal>
 
-      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleConfirmDelete} title="Eliminar Herramienta" message={`¿Estás seguro que deseas eliminar "${selectedTool?.name}"?`} />
+      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleConfirmDelete} title="Eliminar Herramienta" message={`¿Estás seguro que deseas eliminar "${selectedTool?.title}"?`} />
     </div>
   );
 }

@@ -44,7 +44,7 @@ export function RichTextEditor({
     if (!editor || !value) return;
     const current = editor.getHTML();
     if (current !== value) {
-      editor.commands.setContent(value, false);
+      editor.commands.setContent(value);
     }
   }, [value, editor]);
 

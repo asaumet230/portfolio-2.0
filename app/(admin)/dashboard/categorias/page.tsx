@@ -12,6 +12,7 @@ interface ArticleCategory {
   slug: string;
   name: string;
   description?: string;
+  articleCount?: number;
   seoMetadata?: {
     title?: string;
     robots?: string;
@@ -96,6 +97,7 @@ export default function CategoriasPage() {
               <tr>
                 <th className="px-6 py-3 text-left font-medium">Categoría</th>
                 <th className="px-6 py-3 text-left font-medium hidden md:table-cell">Título SEO</th>
+                <th className="px-6 py-3 text-center font-medium hidden md:table-cell">Artículos</th>
                 <th className="px-6 py-3 text-left font-medium hidden lg:table-cell">Robots</th>
                 <th className="px-6 py-3 text-left font-medium hidden lg:table-cell">Actualizado</th>
                 <th className="px-6 py-3 text-right font-medium">Acciones</th>
@@ -123,6 +125,15 @@ export default function CategoriasPage() {
                     ) : (
                       <span className="text-xs text-amber-500 dark:text-amber-400">Sin configurar</span>
                     )}
+                  </td>
+                  <td className="px-6 py-4 hidden md:table-cell text-center">
+                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-semibold ${
+                      (cat.articleCount ?? 0) > 0
+                        ? 'bg-[#7b7db0]/10 text-[#7b7db0]'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-400'
+                    }`}>
+                      {cat.articleCount ?? 0}
+                    </span>
                   </td>
                   <td className="px-6 py-4 hidden lg:table-cell">
                     {cat.seoMetadata?.robots ? (

@@ -3,11 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
-import { Pencil1Icon, PlusIcon, Cross2Icon } from '@radix-ui/react-icons';
+import { Pencil1Icon, PlusIcon } from '@radix-ui/react-icons';
 
 interface ArticleCategory {
   _id: string;
@@ -21,20 +19,6 @@ interface ArticleCategory {
   };
   updatedAt?: string;
 }
-
-interface NewCategoryForm {
-  name: string;
-  slug: string;
-}
-
-const toSlug = (str: string) =>
-  str
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-');
 
 const CategoryThumb = ({ src, alt }: { src?: string; alt: string }) => {
   const [error, setError] = useState(false);
@@ -62,14 +46,8 @@ const CategoryThumb = ({ src, alt }: { src?: string; alt: string }) => {
 };
 
 export default function CategoriasPage() {
-  const { data: session } = useSession();
-  const router = useRouter();
   const [categories, setCategories] = useState<ArticleCategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [slugEdited, setSlugEdited] = useState(false);
-  const [newForm, setNewForm] = useState<NewCategoryForm>({ name: '', slug: '' });
 
   useEffect(() => {
     fetchCategories();
@@ -87,46 +65,6 @@ export default function CategoriasPage() {
     }
   };
 
-  const handleNameChange = (name: string) => {
-    setNewForm((prev) => ({
-      ...prev,
-      name,
-      slug: slugEdited ? prev.slug : toSlug(name),
-    }));
-  };
-
-  const handleSlugChange = (slug: string) => {
-    setSlugEdited(true);
-    setNewForm((prev) => ({ ...prev, slug: slug.toLowerCase().replace(/[^a-z0-9-]/g, '') }));
-  };
-
-  const handleOpenModal = () => {
-    setNewForm({ name: '', slug: '' });
-    setSlugEdited(false);
-    setShowModal(true);
-  };
-
-  const handleCreate = async () => {
-    if (!newForm.name.trim()) { toast.error('El nombre es requerido'); return; }
-    if (!newForm.slug.trim()) { toast.error('El slug es requerido'); return; }
-
-    try {
-      setCreating(true);
-      const token = (session as any)?.accessToken;
-      await apiClient.post('/article-categories', {
-        name: newForm.name.trim(),
-        slug: newForm.slug.trim(),
-      }, token);
-      toast.success('Categoría creada');
-      setShowModal(false);
-      router.push(`/dashboard/categorias/${newForm.slug.trim()}`);
-    } catch (error: any) {
-      toast.error(error.message || 'Error al crear la categoría');
-    } finally {
-      setCreating(false);
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -136,13 +74,13 @@ export default function CategoriasPage() {
             Gestiona el SEO de cada categoría del blog
           </p>
         </div>
-        <button
-          onClick={handleOpenModal}
+        <Link
+          href="/dashboard/categorias/nueva"
           className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
         >
           <PlusIcon className="w-4 h-4" />
           Nueva categoría
-        </button>
+        </Link>
       </div>
 
       {loading ? (
@@ -217,82 +155,6 @@ export default function CategoriasPage() {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
-
-      {/* Modal nueva categoría */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md">
-            {/* Modal header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Nueva categoría</h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-              >
-                <Cross2Icon className="w-4 h-4 text-gray-500" />
-              </button>
-            </div>
-
-            {/* Modal body */}
-            <div className="px-6 py-5 space-y-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Ingresa un nombre para la nueva categoría. Podrás completar el resto de la información en la página de edición.
-              </p>
-
-              {/* Name */}
-              <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Nombre <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={newForm.name}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                  placeholder="ej: Desarrollo Web"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                  autoFocus
-                />
-              </div>
-
-              {/* Slug preview */}
-              <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Slug <span className="text-xs text-gray-400 font-normal ml-1">— se genera automáticamente</span>
-                </label>
-                <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
-                  <span className="px-3 py-2 text-sm text-gray-400 bg-gray-50 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 shrink-0">
-                    /categoria/
-                  </span>
-                  <input
-                    type="text"
-                    value={newForm.slug}
-                    onChange={(e) => handleSlugChange(e.target.value)}
-                    placeholder="desarrollo-web"
-                    className="flex-1 px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Modal footer */}
-            <div className="flex justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-gray-700">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-lg transition"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleCreate}
-                disabled={creating || !newForm.name.trim() || !newForm.slug.trim()}
-                className="px-4 py-2 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {creating ? 'Creando...' : 'Crear y editar'}
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>

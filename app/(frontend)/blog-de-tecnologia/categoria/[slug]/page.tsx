@@ -27,7 +27,7 @@ interface Category {
 
 async function getCategory(slug: string): Promise<Category | null> {
   try {
-    const res = await fetch(`${API_BASE}/article-categories/${slug}`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_BASE}/article-categories/slug/${slug}`, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
     return data.category || null;

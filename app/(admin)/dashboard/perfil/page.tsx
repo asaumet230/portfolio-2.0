@@ -176,6 +176,7 @@ export default function PerfilPage() {
             title="Cambiar foto"
           >
             {image ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={image} alt="Foto de perfil" className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md" />
             ) : (
               <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 border-4 border-white shadow-md flex items-center justify-center">

@@ -19,6 +19,7 @@ export const FilesPreviewList = ({ filesPreviewList, handleRemoveFile, isLoading
 
                     <div key={index} className="flex items-center justify-between bg-gray-50 border border-gray-300 dark:border-2 dark:border-gray-400 p-2 rounded-lg shadow-md">
 
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={item.url} alt={item.file.name} className="w-12 h-12 object-cover rounded-lg mr-2 sm:mr-4 border border-gray-300" />
 
                         <div className="flex-1 text-left space-y-1">

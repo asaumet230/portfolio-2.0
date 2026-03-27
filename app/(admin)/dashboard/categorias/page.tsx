@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
-import { Pencil1Icon, PlusIcon } from '@radix-ui/react-icons';
+import { Pencil1Icon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
+import Swal from 'sweetalert2';
 
 interface ArticleCategory {
   _id: string;
@@ -47,8 +49,10 @@ const CategoryThumb = ({ src, alt }: { src?: string; alt: string }) => {
 };
 
 export default function CategoriasPage() {
+  const { data: session } = useSession();
   const [categories, setCategories] = useState<ArticleCategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCategories();
@@ -63,6 +67,44 @@ export default function CategoriasPage() {
       toast.error('Error al cargar las categorías');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (cat: ArticleCategory) => {
+    if ((cat.articleCount ?? 0) > 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No se puede eliminar',
+        html: `La categoría <strong>${cat.name}</strong> tiene <strong>${cat.articleCount}</strong> artículo${cat.articleCount === 1 ? '' : 's'} asignado${cat.articleCount === 1 ? '' : 's'}.<br/><br/>Reasigna o elimina los artículos antes de borrar esta categoría.`,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#7b7db0',
+      });
+      return;
+    }
+
+    const result = await Swal.fire({
+      icon: 'question',
+      title: '¿Eliminar categoría?',
+      html: `¿Estás seguro de que deseas eliminar <strong>${cat.name}</strong>? Esta acción no se puede deshacer.`,
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      setDeletingId(cat._id);
+      const token = (session as any)?.accessToken;
+      await apiClient.delete(`/article-categories/${cat._id}`, token);
+      toast.success('Categoría eliminada correctamente');
+      setCategories((prev) => prev.filter((c) => c._id !== cat._id));
+    } catch (error: any) {
+      toast.error(error.message || 'Error al eliminar la categoría');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -154,13 +196,24 @@ export default function CategoriasPage() {
                       : '—'}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link
-                      href={`/dashboard/categorias/${cat.slug}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded transition"
-                    >
-                      <Pencil1Icon className="w-3.5 h-3.5" />
-                      Editar
-                    </Link>
+                    <div className="inline-flex items-center gap-2">
+                      <Link
+                        href={`/dashboard/categorias/${cat.slug}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded transition"
+                      >
+                        <Pencil1Icon className="w-3.5 h-3.5" />
+                        Editar
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(cat)}
+                        disabled={deletingId === cat._id}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-red-500 hover:bg-red-600 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded transition"
+                        title="Eliminar categoría"
+                      >
+                        <TrashIcon className="w-3.5 h-3.5" />
+                        {deletingId === cat._id ? 'Eliminando...' : 'Eliminar'}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { CardPost, PostSideBar } from '@/components';
+import { CategorySortFilter, PostSideBar } from '@/components';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:8080/api';
 
@@ -83,7 +82,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     <div className="container mx-auto px-4 pt-10 pb-20">
       {/* Header */}
       <header className="mb-10 w-full mx-auto md:w-[85%]">
-        <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2 mb-4">
+        <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-4">
           <Link href="/blog-de-tecnologia" className="hover:text-[#7b7db0] transition-colors">
             Blog
           </Link>
@@ -106,9 +105,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       {/* Layout: articles + sidebar */}
       <div className="flex gap-10 max-[920px]:flex-col items-start">
         <main className="flex-1 min-w-0">
-          <Suspense fallback={<div className="animate-pulse space-y-4">{[1, 2, 3].map(i => <div key={i} className="h-48 bg-gray-100 dark:bg-gray-800 rounded-xl" />)}</div>}>
-            <CardPost categorySlug={params.slug} />
-          </Suspense>
+          <CategorySortFilter categorySlug={params.slug} />
         </main>
         <PostSideBar />
       </div>

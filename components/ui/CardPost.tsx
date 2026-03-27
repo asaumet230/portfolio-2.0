@@ -118,9 +118,10 @@ const ShareButtons = ({ slug, title }: { slug: string; title: string }) => {
 interface CardPostProps {
   categorySlug?: string;
   onTotalChange?: (total: number) => void;
+  sortOrder?: 'asc' | 'desc';
 }
 
-export const CardPost = ({ categorySlug, onTotalChange }: CardPostProps = {}) => {
+export const CardPost = ({ categorySlug, onTotalChange, sortOrder = 'desc' }: CardPostProps = {}) => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
@@ -133,11 +134,11 @@ export const CardPost = ({ categorySlug, onTotalChange }: CardPostProps = {}) =>
 
   useEffect(() => {
     setPage(1);
-  }, [categorySlug, searchQuery]);
+  }, [categorySlug, searchQuery, sortOrder]);
 
   useEffect(() => {
     fetchArticles(page);
-  }, [page, categorySlug, searchQuery]);
+  }, [page, categorySlug, searchQuery, sortOrder]);
 
   const fetchArticles = async (p: number) => {
     try {
@@ -145,6 +146,7 @@ export const CardPost = ({ categorySlug, onTotalChange }: CardPostProps = {}) =>
       const params = new URLSearchParams({ page: String(p), limit: String(limit) });
       if (categorySlug) params.append('category', categorySlug);
       if (searchQuery) params.append('q', searchQuery);
+      if (sortOrder) params.append('sort', sortOrder);
       const res = await fetch(`${API_BASE}/articles?${params}`);
       const data = await res.json();
       const fetchedTotal = data.total || 0;

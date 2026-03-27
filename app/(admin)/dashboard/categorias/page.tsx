@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
 import { Pencil1Icon, PlusIcon, Cross2Icon } from '@radix-ui/react-icons';
@@ -24,7 +25,6 @@ interface ArticleCategory {
 interface NewCategoryForm {
   name: string;
   slug: string;
-  description: string;
 }
 
 const toSlug = (str: string) =>
@@ -63,12 +63,13 @@ const CategoryThumb = ({ src, alt }: { src?: string; alt: string }) => {
 
 export default function CategoriasPage() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [categories, setCategories] = useState<ArticleCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [creating, setCreating] = useState(false);
   const [slugEdited, setSlugEdited] = useState(false);
-  const [newForm, setNewForm] = useState<NewCategoryForm>({ name: '', slug: '', description: '' });
+  const [newForm, setNewForm] = useState<NewCategoryForm>({ name: '', slug: '' });
 
   useEffect(() => {
     fetchCategories();
@@ -100,7 +101,7 @@ export default function CategoriasPage() {
   };
 
   const handleOpenModal = () => {
-    setNewForm({ name: '', slug: '', description: '' });
+    setNewForm({ name: '', slug: '' });
     setSlugEdited(false);
     setShowModal(true);
   };
@@ -115,11 +116,10 @@ export default function CategoriasPage() {
       await apiClient.post('/article-categories', {
         name: newForm.name.trim(),
         slug: newForm.slug.trim(),
-        description: newForm.description.trim() || undefined,
       }, token);
-      toast.success('Categoría creada correctamente');
+      toast.success('Categoría creada');
       setShowModal(false);
-      fetchCategories();
+      router.push(`/dashboard/categorias/${newForm.slug.trim()}`);
     } catch (error: any) {
       toast.error(error.message || 'Error al crear la categoría');
     } finally {
@@ -237,6 +237,10 @@ export default function CategoriasPage() {
 
             {/* Modal body */}
             <div className="px-6 py-5 space-y-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Ingresa un nombre para la nueva categoría. Podrás completar el resto de la información en la página de edición.
+              </p>
+
               {/* Name */}
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -252,11 +256,10 @@ export default function CategoriasPage() {
                 />
               </div>
 
-              {/* Slug */}
+              {/* Slug preview */}
               <div className="space-y-1">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Slug <span className="text-red-400">*</span>
-                  <span className="text-xs text-gray-400 font-normal ml-1">— se genera automáticamente</span>
+                  Slug <span className="text-xs text-gray-400 font-normal ml-1">— se genera automáticamente</span>
                 </label>
                 <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
                   <span className="px-3 py-2 text-sm text-gray-400 bg-gray-50 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 shrink-0">
@@ -270,20 +273,6 @@ export default function CategoriasPage() {
                     className="flex-1 px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm outline-none"
                   />
                 </div>
-              </div>
-
-              {/* Description */}
-              <div className="space-y-1">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Descripción <span className="text-xs text-gray-400 font-normal ml-1">— opcional</span>
-                </label>
-                <textarea
-                  value={newForm.description}
-                  onChange={(e) => setNewForm({ ...newForm, description: e.target.value })}
-                  rows={3}
-                  placeholder="Breve descripción de esta categoría..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
-                />
               </div>
             </div>
 
@@ -300,7 +289,7 @@ export default function CategoriasPage() {
                 disabled={creating || !newForm.name.trim() || !newForm.slug.trim()}
                 className="px-4 py-2 text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {creating ? 'Creando...' : 'Crear categoría'}
+                {creating ? 'Creando...' : 'Crear y editar'}
               </button>
             </div>
           </div>

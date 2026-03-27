@@ -19,10 +19,16 @@ interface SeoForm {
   robots: string;
 }
 
+interface ContentForm {
+  name: string;
+  description: string;
+}
+
 interface ArticleCategory {
   _id: string;
   name: string;
   slug: string;
+  description?: string;
   seoMetadata?: {
     title?: string;
     description?: string;
@@ -51,6 +57,7 @@ export default function EditCategoriaSeoPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [ogImageName, setOgImageName] = useState('');
+  const [contentForm, setContentForm] = useState<ContentForm>({ name: '', description: '' });
   const [form, setForm] = useState<SeoForm>({
     title: '',
     description: '',
@@ -80,6 +87,7 @@ export default function EditCategoriaSeoPage() {
       }
 
       setCategory(found);
+      setContentForm({ name: found.name || '', description: found.description || '' });
       const seo = found.seoMetadata || {};
       setForm({
         title: seo.title || '',
@@ -104,6 +112,10 @@ export default function EditCategoriaSeoPage() {
   };
 
   const handleSave = async () => {
+    if (!contentForm.name.trim()) {
+      toast.error('El nombre de la categoría es requerido');
+      return;
+    }
     if (!form.title) {
       toast.error('El título SEO es requerido');
       return;
@@ -116,15 +128,20 @@ export default function EditCategoriaSeoPage() {
     try {
       setSaving(true);
       const token = (session as any)?.accessToken;
-      const payload = {
+      const seoPayload = {
         ...form,
-        keywords: form.keywords
-          .split(',')
-          .map((k) => k.trim())
-          .filter(Boolean),
+        keywords: form.keywords.split(',').map((k) => k.trim()).filter(Boolean),
       };
-      await apiClient.put(`/article-categories/${category!._id}/seo`, payload, token);
-      toast.success('SEO actualizado correctamente');
+
+      await Promise.all([
+        apiClient.put(`/article-categories/${category!._id}`, {
+          name: contentForm.name.trim(),
+          description: contentForm.description.trim(),
+        }, token),
+        apiClient.put(`/article-categories/${category!._id}/seo`, seoPayload, token),
+      ]);
+
+      toast.success('Categoría actualizada correctamente');
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
     } finally {
@@ -210,6 +227,46 @@ export default function EditCategoriaSeoPage() {
             {category?.name}
           </h1>
           <p className="text-sm text-gray-400">Categoría · /{category?.slug}</p>
+        </div>
+      </div>
+
+      {/* Page Content */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-5">
+        <div className="border-b border-gray-100 dark:border-gray-700 pb-3">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Información de la página</h2>
+          <p className="text-xs text-gray-400 mt-0.5">Estos campos se muestran directamente en la página pública de la categoría</p>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Nombre <span className="text-[#7b7db0] text-xs font-normal ml-1">— H1 de la página</span>
+          </label>
+          <input
+            type="text"
+            value={contentForm.name}
+            onChange={(e) => setContentForm({ ...contentForm, name: e.target.value })}
+            placeholder="ej: Desarrollo Web"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex justify-between items-center">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Descripción <span className="text-[#7b7db0] text-xs font-normal ml-1">— párrafo debajo del H1</span>
+            </label>
+            <span className={`text-xs ${contentForm.description.length > 300 ? 'text-red-500' : 'text-gray-400'}`}>
+              {contentForm.description.length}/300
+            </span>
+          </div>
+          <textarea
+            value={contentForm.description}
+            onChange={(e) => setContentForm({ ...contentForm, description: e.target.value })}
+            rows={3}
+            placeholder="Descripción visible en la página pública de la categoría..."
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
+          />
+          <p className="text-xs text-gray-400">Este texto aparece como párrafo introductorio en la página de la categoría, no en Google (para eso usa la Descripción SEO)</p>
         </div>
       </div>
 

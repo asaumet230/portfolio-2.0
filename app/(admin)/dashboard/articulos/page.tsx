@@ -60,7 +60,7 @@ export default function ArticulosPage() {
 
   useEffect(() => {
     if (session) fetchData();
-  }, [session]);
+  }, [session]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchData = async () => {
     const token = (session as any)?.accessToken;
@@ -150,6 +150,7 @@ export default function ArticulosPage() {
     const initial = title?.[0]?.toUpperCase() || '?';
     if (src && !error) {
       return (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src}
           alt={title}

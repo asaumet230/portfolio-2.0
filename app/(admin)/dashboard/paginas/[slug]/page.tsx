@@ -323,6 +323,7 @@ export default function EditPageSeoPage() {
           <div className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden mt-2">
             {form.ogImage && (
               <div className="bg-gray-100 dark:bg-gray-700 h-40 flex items-center justify-center text-xs text-gray-400 overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={form.ogImage} alt="OG preview" className="object-cover w-full h-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               </div>
             )}

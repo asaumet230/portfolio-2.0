@@ -29,7 +29,7 @@ export const BlogCategoryFilter = () => {
   };
 
   const pillBase =
-    'px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer';
+    'px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer shrink-0';
   const pillActive = 'bg-[#7b7db0] text-white shadow-sm';
   const pillInactive =
     'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-[#7b7db0]/10 hover:text-[#7b7db0] dark:hover:text-[#9b9dd0]';
@@ -37,7 +37,7 @@ export const BlogCategoryFilter = () => {
   return (
     <div>
       {/* Category filter pills */}
-      <div className="flex flex-wrap gap-2 mb-6 px-4 md:px-8">
+      <div className="flex gap-2 mb-6 px-4 md:px-8 overflow-x-auto no-scrollbar justify-center md:justify-start flex-nowrap">
         <button
           onClick={() => setSelected(null)}
           className={`${pillBase} ${selected === null ? pillActive : pillInactive}`}

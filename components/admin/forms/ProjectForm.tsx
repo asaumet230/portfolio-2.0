@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { ImageUploader } from './ImageUploader';
 import { RichTextEditor } from './RichTextEditor';
 import toast from 'react-hot-toast';
+import {
+  FaProjectDiagram, FaLink, FaTag, FaSearch, FaHeading,
+  FaAlignLeft, FaGlobe, FaGithub, FaUser, FaImage,
+  FaChevronDown, FaChevronRight, FaShieldAlt, FaCog,
+  FaBullseye, FaCalendarAlt, FaHashtag,
+} from 'react-icons/fa';
 
 interface SEOMetadata {
   author?: string;
@@ -44,6 +50,9 @@ interface ProjectFormProps {
   onSubmit: (data: ProjectFormData) => Promise<void>;
   isLoading?: boolean;
 }
+
+const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const iconClass = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
 
 export function ProjectForm({
   initialData,
@@ -97,12 +106,10 @@ export function ProjectForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!formData.name || !formData.slug || !formData.description) {
       toast.error('Nombre, slug y descripción son requeridos');
       return;
     }
-
     try {
       await onSubmit(formData);
     } catch (error) {
@@ -154,130 +161,99 @@ export function ProjectForm({
   };
 
   const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections({
-      ...expandedSections,
-      [section]: !expandedSections[section],
-    });
+    setExpandedSections({ ...expandedSections, [section]: !expandedSections[section] });
   };
 
-  const SectionHeader = ({ title, section }: { title: string; section: keyof typeof expandedSections }) => (
+  const SectionToggle = ({ title, section, icon: Icon }: { title: string; section: keyof typeof expandedSections; icon: React.ComponentType<{ className?: string }> }) => (
     <button
       type="button"
       onClick={() => toggleSection(section)}
-      className="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+      className="w-full flex items-center justify-between py-1 text-left group"
     >
-      <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">{title}</h3>
-      <span className="text-xl">{expandedSections[section] ? '▼' : '▶'}</span>
+      <div className="flex items-center gap-2">
+        <Icon className="w-5 h-5 text-blue-500" />
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
+      </div>
+      {expandedSections[section]
+        ? <FaChevronDown className="w-3 h-3 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition" />
+        : <FaChevronRight className="w-3 h-3 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition" />
+      }
     </button>
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* SECCIÓN 1: INFORMACIÓN BÁSICA */}
-      <SectionHeader title="📝 Información Básica" section="basic" />
-      {expandedSections.basic && (
-        <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Nombre del Proyecto *
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                placeholder="Ej: Chilo E-commerce"
-              />
+    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
+      {/* Información Básica */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <SectionToggle title="Información Básica" section="basic" icon={FaProjectDiagram} />
+        {expandedSections.basic && (
+          <div className="space-y-4 pt-2">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative">
+                <FaProjectDiagram className={iconClass} />
+                <input type="text" placeholder="Nombre del proyecto *" value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })} className={inputClass} />
+              </div>
+              <div className="relative">
+                <FaLink className={iconClass} />
+                <input type="text" placeholder="Slug *" value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })} className={inputClass} />
+              </div>
+            </div>
+
+            <div className="relative">
+              <FaTag className={`${iconClass} top-[20px]`} />
+              <select value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value as 'web' | 'mobil' })}
+                className={inputClass}>
+                <option value="web">Web</option>
+                <option value="mobil">Móvil</option>
+              </select>
             </div>
 
             <div>
-              <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Slug *
-              </label>
-              <input
-                type="text"
-                value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                placeholder="ej: chilo"
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción *</label>
+              <RichTextEditor
+                value={formData.description}
+                onChange={(content) => setFormData({ ...formData, description: content })}
+                placeholder="Descripción detallada del proyecto..."
+                height="h-48"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Categoría *
-            </label>
-            <select
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value as 'web' | 'mobil' })}
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-            >
-              <option value="web">Web</option>
-              <option value="mobil">Móvil</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Descripción *
-            </label>
-            <RichTextEditor
-              value={formData.description}
-              onChange={(content) => setFormData({ ...formData, description: content })}
-              placeholder="Descripción detallada del proyecto..."
-              height="h-48"
-            />
-          </div>
-
-          {/* Tecnologías */}
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Tecnologías
-            </label>
-            <div className="flex gap-2 mb-3">
-              <input
-                type="text"
-                value={techInput}
-                onChange={(e) => setTechInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTechnology())}
-                className="flex-1 px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                placeholder="Ej: React, TypeScript..."
-              />
-              <button
-                type="button"
-                onClick={addTechnology}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t dark:border-gray-700">Tecnologías</h3>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <FaHashtag className={iconClass} />
+                <input type="text" placeholder="Ej: React, TypeScript..." value={techInput}
+                  onChange={(e) => setTechInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTechnology())}
+                  className={inputClass} />
+              </div>
+              <button type="button" onClick={addTechnology}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm font-medium">
                 Agregar
               </button>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {formData.technologies.map((tech, index) => (
-                <div
-                  key={index}
-                  className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 px-3 py-1 rounded-full text-sm flex items-center gap-2"
-                >
-                  {tech}
-                  <button type="button" onClick={() => removeTechnology(index)} className="hover:text-red-600">
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
+            {formData.technologies.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {formData.technologies.map((tech, index) => (
+                  <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm rounded border border-blue-200 dark:border-blue-700">
+                    {tech}
+                    <button type="button" onClick={() => removeTechnology(index)} className="hover:text-red-500 transition ml-1">&times;</button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* SECCIÓN 2: OBJETIVO DEL PROYECTO */}
-      <SectionHeader title="🎯 Objetivo del Proyecto" section="goal" />
-      {expandedSections.goal && (
-        <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Objetivo del Proyecto
-            </label>
+      {/* Objetivo del Proyecto */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <SectionToggle title="Objetivo del Proyecto" section="goal" icon={FaBullseye} />
+        {expandedSections.goal && (
+          <div className="pt-2">
             <RichTextEditor
               value={formData.projectGoal || ''}
               onChange={(content) => setFormData({ ...formData, projectGoal: content })}
@@ -285,371 +261,218 @@ export function ProjectForm({
               height="h-40"
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* SECCIÓN 3: SEO */}
-      <SectionHeader title="🔍 SEO y Meta Datos" section="seo" />
-      {expandedSections.seo && (
-        <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Título SEO
-            </label>
-            <input
-              type="text"
-              value={formData.seoMetadata?.title || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  seoMetadata: { ...formData.seoMetadata, title: e.target.value },
-                })
-              }
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="Ej: Chilo E-commerce - Ropa y Accesorios Online"
-              maxLength={60}
-            />
-            <p className="text-sm text-gray-500 mt-1">{formData.seoMetadata?.title?.length || 0}/60</p>
-          </div>
+      {/* SEO y Meta Datos */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <SectionToggle title="SEO y Meta Datos" section="seo" icon={FaSearch} />
+        {expandedSections.seo && (
+          <div className="space-y-4 pt-2">
+            <div className="relative">
+              <FaHeading className={iconClass} />
+              <input type="text" placeholder="Título SEO" value={formData.seoMetadata?.title || ''}
+                onChange={(e) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, title: e.target.value } })}
+                className={inputClass} maxLength={60} />
+              <p className="text-xs text-gray-400 mt-1 text-right">{formData.seoMetadata?.title?.length || 0}/60</p>
+            </div>
 
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Meta Descripción
-              <span className="text-sm text-gray-500 ml-2">{formData.seoMetadata?.description?.length || 0}/160</span>
-            </label>
-            <RichTextEditor
-              value={formData.seoMetadata?.description || ''}
-              onChange={(content) =>
-                setFormData({
-                  ...formData,
-                  seoMetadata: { ...formData.seoMetadata, description: content.substring(0, 160) },
-                })
-              }
-              placeholder="Descripción para buscadores..."
-              height="h-32"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Keywords
-            </label>
-            <div className="flex gap-2 mb-3">
-              <input
-                type="text"
-                value={keywordInput}
-                onChange={(e) => setKeywordInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())}
-                className="flex-1 px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                placeholder="Ej: ecommerce, ropa online..."
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Meta Descripción
+                <span className="text-gray-400 font-normal ml-2">{formData.seoMetadata?.description?.length || 0}/160</span>
+              </label>
+              <RichTextEditor
+                value={formData.seoMetadata?.description || ''}
+                onChange={(content) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, description: content.substring(0, 160) } })}
+                placeholder="Descripción para buscadores..."
+                height="h-32"
               />
-              <button
-                type="button"
-                onClick={addKeyword}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
+            </div>
+
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t dark:border-gray-700">Keywords</h3>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <FaTag className={iconClass} />
+                <input type="text" placeholder="Ej: ecommerce, ropa online..." value={keywordInput}
+                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addKeyword())}
+                  className={inputClass} />
+              </div>
+              <button type="button" onClick={addKeyword}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm font-medium">
                 Agregar
               </button>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {formData.seoMetadata?.keywords?.map((keyword, index) => (
-                <div
-                  key={index}
-                  className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100 px-3 py-1 rounded-full text-sm flex items-center gap-2"
-                >
-                  {keyword}
-                  <button type="button" onClick={() => removeKeyword(index)} className="hover:text-red-600">
-                    ✕
-                  </button>
+            {(formData.seoMetadata?.keywords?.length || 0) > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {formData.seoMetadata?.keywords?.map((keyword, index) => (
+                  <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-sm rounded border border-green-200 dark:border-green-700">
+                    {keyword}
+                    <button type="button" onClick={() => removeKeyword(index)} className="hover:text-red-500 transition ml-1">&times;</button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t dark:border-gray-700">Open Graph</h3>
+
+            <div className="relative">
+              <FaHeading className={iconClass} />
+              <input type="text" placeholder="OG Title (Redes Sociales)" value={formData.seoMetadata?.ogTitle || ''}
+                onChange={(e) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, ogTitle: e.target.value } })}
+                className={inputClass} maxLength={60} />
+            </div>
+
+            <div className="relative">
+              <FaAlignLeft className={iconClass} />
+              <textarea placeholder="OG Description" value={formData.seoMetadata?.ogDescription || ''}
+                onChange={(e) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, ogDescription: e.target.value } })}
+                className="w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none h-20"
+                maxLength={160} />
+            </div>
+
+            <div className="relative">
+              <FaImage className={iconClass} />
+              <input type="url" placeholder="OG Image URL (https://...)" value={formData.seoMetadata?.ogImage || ''}
+                onChange={(e) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, ogImage: e.target.value } })}
+                className={inputClass} />
+            </div>
+
+            <div className="relative">
+              <FaGlobe className={`${iconClass} text-green-500`} />
+              <input type="url" placeholder="Canonical URL" value={formData.seoMetadata?.canonical || ''}
+                onChange={(e) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, canonical: e.target.value } })}
+                className={inputClass} />
+            </div>
+
+            <div className="relative">
+              <FaUser className={iconClass} />
+              <input type="text" placeholder="Autor" value={formData.seoMetadata?.author || ''}
+                onChange={(e) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, author: e.target.value } })}
+                className={inputClass} />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* URLs del Proyecto */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <SectionToggle title="URLs del Proyecto" section="urls" icon={FaGlobe} />
+        {expandedSections.urls && (
+          <div className="space-y-4 pt-2">
+            <div className="relative">
+              <FaGlobe className={`${iconClass} text-green-500`} />
+              <input type="url" placeholder="URL en Vivo (https://...)" value={formData.urlApp || ''}
+                onChange={(e) => setFormData({ ...formData, urlApp: e.target.value })} className={inputClass} />
+            </div>
+            <div className="relative">
+              <FaGithub className={`${iconClass} text-gray-800 dark:text-gray-300`} />
+              <input type="url" placeholder="URL Repositorio (GitHub)" value={formData.urlRepository || ''}
+                onChange={(e) => setFormData({ ...formData, urlRepository: e.target.value })} className={inputClass} />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Imágenes */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <SectionToggle title="Imágenes" section="images" icon={FaImage} />
+        {expandedSections.images && (
+          <div className="pt-2">
+            <ImageUploader
+              images={formData.images}
+              onChange={(images) => setFormData({ ...formData, images })}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Políticas Legales */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <SectionToggle title="Políticas Legales" section="policies" icon={FaShieldAlt} />
+        {expandedSections.policies && (
+          <div className="space-y-6 pt-2">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Política de Privacidad</h3>
+              <div className="space-y-4">
+                <div className="relative">
+                  <FaCalendarAlt className={iconClass} />
+                  <input type="date" value={formData.privacyPolicy?.effectiveDate || ''}
+                    onChange={(e) => setFormData({ ...formData, privacyPolicy: { ...formData.privacyPolicy, effectiveDate: e.target.value } })}
+                    className={inputClass} />
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              OG Title (Redes Sociales)
-            </label>
-            <input
-              type="text"
-              value={formData.seoMetadata?.ogTitle || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  seoMetadata: { ...formData.seoMetadata, ogTitle: e.target.value },
-                })
-              }
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="Título para compartir en redes sociales"
-              maxLength={60}
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              OG Description (Redes Sociales)
-            </label>
-            <textarea
-              value={formData.seoMetadata?.ogDescription || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  seoMetadata: { ...formData.seoMetadata, ogDescription: e.target.value },
-                })
-              }
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-20"
-              placeholder="Descripción para compartir en redes sociales"
-              maxLength={160}
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              OG Image URL (Imagen para redes sociales)
-            </label>
-            <input
-              type="url"
-              value={formData.seoMetadata?.ogImage || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  seoMetadata: { ...formData.seoMetadata, ogImage: e.target.value },
-                })
-              }
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="https://..."
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Canonical URL
-            </label>
-            <input
-              type="url"
-              value={formData.seoMetadata?.canonical || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  seoMetadata: { ...formData.seoMetadata, canonical: e.target.value },
-                })
-              }
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="https://www.example.com/proyecto"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Autor
-            </label>
-            <input
-              type="text"
-              value={formData.seoMetadata?.author || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  seoMetadata: { ...formData.seoMetadata, author: e.target.value },
-                })
-              }
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="Ej: Andres Saumet"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* SECCIÓN 4: URLs */}
-      <SectionHeader title="🔗 URLs del Proyecto" section="urls" />
-      {expandedSections.urls && (
-        <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              URL en Vivo (urlApp)
-            </label>
-            <input
-              type="url"
-              value={formData.urlApp || ''}
-              onChange={(e) => setFormData({ ...formData, urlApp: e.target.value })}
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="https://www.ejemplo.com"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-              URL Repositorio (GitHub)
-            </label>
-            <input
-              type="url"
-              value={formData.urlRepository || ''}
-              onChange={(e) => setFormData({ ...formData, urlRepository: e.target.value })}
-              className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-              placeholder="https://github.com/usuario/repo"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* SECCIÓN 5: IMÁGENES */}
-      <SectionHeader title="🖼️ Imágenes" section="images" />
-      {expandedSections.images && (
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <ImageUploader
-            images={formData.images}
-            onChange={(images) => setFormData({ ...formData, images })}
-          />
-        </div>
-      )}
-
-      {/* SECCIÓN 6: POLÍTICAS LEGALES */}
-      <SectionHeader title="📋 Políticas Legales" section="policies" />
-      {expandedSections.policies && (
-        <div className="space-y-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          {/* Política de Privacidad */}
-          <div className="border-b pb-6">
-            <h4 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">🔐 Política de Privacidad</h4>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Fecha Efectiva
-                </label>
-                <input
-                  type="date"
-                  value={formData.privacyPolicy?.effectiveDate || ''}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      privacyPolicy: {
-                        ...formData.privacyPolicy,
-                        effectiveDate: e.target.value,
-                      },
-                    })
-                  }
-                  className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contenido</label>
+                  <RichTextEditor
+                    value={formData.privacyPolicy?.content || ''}
+                    onChange={(content) => setFormData({ ...formData, privacyPolicy: { ...formData.privacyPolicy, content } })}
+                    placeholder="Contenido completo de la política de privacidad..."
+                    height="h-48"
+                  />
+                </div>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Contenido
-                </label>
-                <RichTextEditor
-                  value={formData.privacyPolicy?.content || ''}
-                  onChange={(content) =>
-                    setFormData({
-                      ...formData,
-                      privacyPolicy: {
-                        ...formData.privacyPolicy,
-                        content,
-                      },
-                    })
-                  }
-                  placeholder="Contenido completo de la política de privacidad..."
-                  height="h-48"
-                />
+            <div className="pt-4 border-t dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Términos y Condiciones</h3>
+              <div className="space-y-4">
+                <div className="relative">
+                  <FaCalendarAlt className={iconClass} />
+                  <input type="date" value={formData.termsOfService?.effectiveDate || ''}
+                    onChange={(e) => setFormData({ ...formData, termsOfService: { ...formData.termsOfService, effectiveDate: e.target.value } })}
+                    className={inputClass} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contenido</label>
+                  <RichTextEditor
+                    value={formData.termsOfService?.content || ''}
+                    onChange={(content) => setFormData({ ...formData, termsOfService: { ...formData.termsOfService, content } })}
+                    placeholder="Contenido completo de términos y condiciones..."
+                    height="h-48"
+                  />
+                </div>
               </div>
             </div>
           </div>
+        )}
+      </div>
 
-          {/* Términos de Servicio */}
-          <div>
-            <h4 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">⚖️ Términos y Condiciones</h4>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Fecha Efectiva
-                </label>
-                <input
-                  type="date"
-                  value={formData.termsOfService?.effectiveDate || ''}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      termsOfService: {
-                        ...formData.termsOfService,
-                        effectiveDate: e.target.value,
-                      },
-                    })
-                  }
-                  className="w-full px-4 py-2 border rounded dark:bg-gray-700 dark:border-gray-600"
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Contenido
-                </label>
-                <RichTextEditor
-                  value={formData.termsOfService?.content || ''}
-                  onChange={(content) =>
-                    setFormData({
-                      ...formData,
-                      termsOfService: {
-                        ...formData.termsOfService,
-                        content,
-                      },
-                    })
-                  }
-                  placeholder="Contenido completo de términos y condiciones..."
-                  height="h-48"
-                />
-              </div>
-            </div>
+      {/* Configuración Avanzada */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
+        <SectionToggle title="Configuración Avanzada" section="advanced" icon={FaCog} />
+        {expandedSections.advanced && (
+          <div className="space-y-3 pt-2">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={formData.hasPrivacyPolicy || false}
+                onChange={(e) => setFormData({ ...formData, hasPrivacyPolicy: e.target.checked })}
+                className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-500 focus:ring-blue-500" />
+              <span className="text-gray-700 dark:text-gray-300 text-sm">Tiene Política de Privacidad</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={formData.hasTermsOfService || false}
+                onChange={(e) => setFormData({ ...formData, hasTermsOfService: e.target.checked })}
+                className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-500 focus:ring-blue-500" />
+              <span className="text-gray-700 dark:text-gray-300 text-sm">Tiene Términos y Condiciones</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={formData.active || false}
+                onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-500 focus:ring-blue-500" />
+              <span className="text-gray-700 dark:text-gray-300 text-sm">Proyecto Activo</span>
+            </label>
           </div>
-        </div>
-      )}
-
-      {/* SECCIÓN 7: AVANZADO */}
-      <SectionHeader title="⚙️ Configuración Avanzada" section="advanced" />
-      {expandedSections.advanced && (
-        <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formData.hasPrivacyPolicy || false}
-              onChange={(e) => setFormData({ ...formData, hasPrivacyPolicy: e.target.checked })}
-              className="rounded"
-            />
-            <span className="text-gray-700 dark:text-gray-300">Tiene Política de Privacidad</span>
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formData.hasTermsOfService || false}
-              onChange={(e) => setFormData({ ...formData, hasTermsOfService: e.target.checked })}
-              className="rounded"
-            />
-            <span className="text-gray-700 dark:text-gray-300">Tiene Términos y Condiciones</span>
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={formData.active || false}
-              onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-              className="rounded"
-            />
-            <span className="text-gray-700 dark:text-gray-300">Proyecto Activo</span>
-          </label>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Botones */}
-      <div className="flex gap-4 pt-4 border-t">
-        <button
-          type="button"
-          onClick={() => window.history.back()}
-          className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition"
-        >
+      <div className="flex gap-4">
+        <button type="button" onClick={() => window.history.back()}
+          className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition text-sm font-medium">
           Cancelar
         </button>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="flex-1 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition disabled:opacity-50"
-        >
+        <button type="submit" disabled={isLoading}
+          className="flex-1 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition disabled:opacity-50 text-sm font-medium">
           {isLoading ? 'Guardando...' : 'Guardar Proyecto'}
         </button>
       </div>

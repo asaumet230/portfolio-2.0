@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
 import { ProjectForm } from '@/components/admin/forms/ProjectForm';
 import toast from 'react-hot-toast';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
 
 interface SEOMetadata {
   author?: string;
@@ -85,16 +87,25 @@ export default function EditProjectPage({ params }: { params: { slug: string } }
   };
 
   if (loading) {
-    return <div className="p-8">Cargando...</div>;
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+      </div>
+    );
   }
 
   if (!project) {
-    return <div className="p-8">Proyecto no encontrado</div>;
+    return <div className="text-center py-20 text-gray-500 dark:text-gray-400">Proyecto no encontrado</div>;
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8">Editar Proyecto Móvil: {project.name}</h1>
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Link href="/dashboard/proyectos/projectos-moviles" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+          <ArrowLeftIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        </Link>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Editar Proyecto Móvil: {project.name}</h1>
+      </div>
       <ProjectForm
         initialData={project}
         onSubmit={handleSubmit}

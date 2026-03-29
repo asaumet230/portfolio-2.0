@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PostSideBar, AuthorBio } from '@/components';
+import { toJsonLd } from '@/helpers';
 import { FaWhatsapp, FaLinkedinIn } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { FeaturedImage } from './FeaturedImage';
@@ -100,9 +101,72 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   const articleUrl = `${SITE_URL}/blog-de-tecnologia/${article.slug}`;
   const encodedUrl = encodeURIComponent(articleUrl);
   const encodedTitle = encodeURIComponent(article.title);
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        '@id': `${articleUrl}#article`,
+        headline: article.title,
+        description: article.seoMetadata?.description || article.excerpt,
+        image: article.seoMetadata?.ogImage || article.featuredImage,
+        url: articleUrl,
+        datePublished: article.createdAt,
+        dateModified: article.createdAt,
+        inLanguage: 'es-CO',
+        articleSection: categoryName || 'Blog',
+        keywords: article.tags,
+        author: {
+          '@type': 'Person',
+          name: 'Andres Felipe Saumet',
+          url: SITE_URL,
+        },
+        publisher: {
+          '@type': 'Person',
+          name: 'Andres Felipe Saumet',
+          url: SITE_URL,
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Inicio',
+            item: SITE_URL,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Blog',
+            item: `${SITE_URL}/blog-de-tecnologia`,
+          },
+          ...(categoryName
+            ? [{
+                '@type': 'ListItem',
+                position: 3,
+                name: categoryName,
+                item: `${SITE_URL}/blog-de-tecnologia/categoria/${categorySlug}`,
+              }]
+            : []),
+          {
+            '@type': 'ListItem',
+            position: categoryName ? 4 : 3,
+            name: article.title,
+            item: articleUrl,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
     <div className="container mx-auto px-4 pt-6 md:pt-10 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(articleSchema) }}
+      />
 
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6 flex items-center gap-2 flex-wrap">

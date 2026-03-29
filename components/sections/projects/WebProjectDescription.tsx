@@ -95,12 +95,12 @@ export const WebProjectDescription = ({ project }: Props) => {
     <article className={`rounded-xl border border-slate-200 card-shadow bg-white ${styles['card-effect']} dark:bg-[#262f3a]`}>
       <Link href={`/proyectos/${project.slug}`}>
         <Image
-          priority
           className='rounded-t-xl w-full hover:opacity-90 transition-opacity cursor-pointer'
           width={350}
           height={170}
           src={project.images[0]}
-          alt={project.name} />
+          alt={project.name}
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 350px" />
       </Link>
       <div className="py-8 px-8">
         <Link href={`/proyectos/${project.slug}`}>

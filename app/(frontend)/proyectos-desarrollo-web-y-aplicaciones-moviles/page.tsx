@@ -1,8 +1,27 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
 
-import { MobilProjects, Separator, WebProjects } from "@/components";
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+
+import { Separator } from "@/components";
 import { getProjects } from "@/api";
+
+const WebProjects = dynamic(
+  () => import('@/components/sections/projects/WebProjects').then((mod) => mod.WebProjects),
+  {
+    loading: () => <section className="py-12 bg-slate-100 dark:bg-[#0d1117]"><div className="section h-72 animate-pulse rounded-2xl bg-white/70 dark:bg-[#1b2430]" /></section>,
+  }
+);
+
+const MobilProjects = dynamic(
+  () => import('@/components/sections/projects/MobilProjects').then((mod) => mod.MobilProjects),
+  {
+    loading: () => <section className="py-14"><div className="section h-72 animate-pulse rounded-2xl bg-slate-100 dark:bg-[#1b2430]" /></section>,
+  }
+);
 
 
 export const metadata: Metadata = {

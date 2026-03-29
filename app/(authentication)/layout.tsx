@@ -1,17 +1,6 @@
-'use client'
-
 import React from 'react';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import ReCaptchaProvider from '@/components/providers/ReCaptchaProvider';
 
 export default function AuthenticationLayout({ children }: { children: React.ReactNode; }) {
-
-  const recaptchaKey: string | undefined = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? 'NOT RECAPTCHA KEY';
-
-  return (
-    <>
-      <GoogleReCaptchaProvider reCaptchaKey={recaptchaKey}>
-        {children}
-      </GoogleReCaptchaProvider>
-    </>
-  );
+  return <ReCaptchaProvider>{children}</ReCaptchaProvider>;
 }

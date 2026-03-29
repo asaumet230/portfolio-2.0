@@ -19,7 +19,11 @@
 }
 
 .testimonialCard {
-    min-height: 490px ;
+    height: 100%;
+    min-height: 490px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .testimonials-major-title {

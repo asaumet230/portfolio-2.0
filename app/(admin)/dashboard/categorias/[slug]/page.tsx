@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
+import { triggerRevalidation } from '@/helpers/revalidation';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, UploadIcon, TrashIcon, ImageIcon } from '@radix-ui/react-icons';
 import { RichTextEditor } from '@/components/admin/forms/RichTextEditor';
@@ -148,6 +149,12 @@ export default function EditCategoriaSeoPage() {
         }, token),
         apiClient.put(`/article-categories/${category!._id}/seo`, seoPayload, token),
       ]);
+
+      await triggerRevalidation({
+        type: 'category',
+        slug: newSlug,
+        oldSlug: category!.slug,
+      }).catch((error) => console.error('Error revalidating category:', error));
 
       toast.success('Categoría actualizada correctamente');
 

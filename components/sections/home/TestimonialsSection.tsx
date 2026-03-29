@@ -62,15 +62,15 @@ export const TestimonialsSection = ({ testimonials = []}: Props) => {
                     className='mt-8 w-full max-[1020px]:w-10/12 max-[640px]:w-11/12'>
                     {
                         testimonials.map(({ name, major, content, image, url, instagram, linkedin, twitter, facebook }) => (
-                            <SwiperSlide key={name}>
-                                <div className={`bg-gray-100 w-auto card-shadow mx-auto cursor-grabbing rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:h-6/6 max-[400px]:py-4 dark:bg-[#2e374a] dark:border border-[#6e7681]`}>
+                            <SwiperSlide key={name} className="h-auto">
+                                <div className={`bg-gray-100 w-auto h-full card-shadow mx-auto cursor-grabbing rounded-xl py-8 px-10 border border-gray-200 ${styles.testimonialCard} max-[400px]:px-5 max-[400px]:py-4 dark:bg-[#2e374a] dark:border border-[#6e7681]`}>
                                     <Image
                                         className='rounded-full mx-auto images'
                                         width={90}
                                         height={90}
                                         src={image}
                                         alt={name}
-                                        priority />
+                                        sizes="90px" />
                                     <p className={`text-center text-xl font-normal mt-3  first-letter:uppercase ${styles['testimonials-major-title']}`}>{name}</p>
                                     <p className={`text-center text-xl font-bold mb-3 first-letter:uppercase ${styles['testimonials-major-title']}`}>{major}</p>
                                     <div className='flex justify-center mt-2'>

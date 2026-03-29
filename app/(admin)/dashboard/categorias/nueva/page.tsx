@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
+import { triggerRevalidation } from '@/helpers/revalidation';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, UploadIcon, TrashIcon, ImageIcon } from '@radix-ui/react-icons';
 import { RichTextEditor } from '@/components/admin/forms/RichTextEditor';
@@ -109,6 +110,11 @@ export default function NuevaCategoriaPage() {
         };
         await apiClient.put(`/article-categories/${categoryId}/seo`, seoPayload, token);
       }
+
+      await triggerRevalidation({
+        type: 'category',
+        slug: contentForm.slug.trim(),
+      }).catch((error) => console.error('Error revalidating category:', error));
 
       toast.success('Categoría creada correctamente');
       router.push('/dashboard/categorias');

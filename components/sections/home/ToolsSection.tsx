@@ -37,6 +37,7 @@ export const ToolsSection = ({ tools = [] }: Props) => {
                   width={70}
                   height={70} 
                   priority={ false}
+                  sizes="70px"
                   />
                 <h3 className="my-3 capitalize text-xl">{title}</h3>
                 <ProgressBar progress={progress} />

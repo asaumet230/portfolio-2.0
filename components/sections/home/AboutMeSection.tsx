@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image';
-import Swal from 'sweetalert2';
 import { FaGithub, FaLinkedin } from 'react-icons/fa6';
 
 import { Separator, SocialMediaMessage } from '@/components';
@@ -11,7 +10,8 @@ import styles from './homeSections.module.css';
 
 export const AboutMeSection = () => {
 
-  const downloadAndresCV = () => {
+  const downloadAndresCV = async () => {
+    const Swal = (await import('sweetalert2')).default;
 
     Swal.fire({
 

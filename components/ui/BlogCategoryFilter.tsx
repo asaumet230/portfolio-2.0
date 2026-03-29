@@ -11,19 +11,48 @@ interface Category {
   slug: string;
 }
 
-export const BlogCategoryFilter = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+interface Article {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  featuredImage: string;
+  category: { _id: string; name: string; slug: string } | string;
+  tags: string[];
+  published: boolean;
+  createdAt: string;
+}
+
+interface BlogCategoryFilterProps {
+  initialCategories?: Category[];
+  initialArticles?: Article[];
+  initialTotal?: number;
+  initialTotalPages?: number;
+  initialQuery?: string;
+}
+
+export const BlogCategoryFilter = ({
+  initialCategories = [],
+  initialArticles = [],
+  initialTotal = 0,
+  initialTotalPages = 1,
+  initialQuery = '',
+}: BlogCategoryFilterProps) => {
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [selected, setSelected] = useState<string>('');
-  const [loadingCats, setLoadingCats] = useState(true);
-  const [total, setTotal] = useState<number | null>(null);
+  const [loadingCats, setLoadingCats] = useState(initialCategories.length === 0);
+  const [total, setTotal] = useState<number | null>(initialTotal);
+  const shouldFetchCategories = initialCategories.length === 0;
 
   useEffect(() => {
-    fetch(`${API_BASE}/article-categories`)
-      .then((r) => r.json())
-      .then((d) => setCategories(d.categories || []))
-      .catch(() => {})
-      .finally(() => setLoadingCats(false));
-  }, []);
+    if (shouldFetchCategories) {
+      fetch(`${API_BASE}/article-categories`)
+        .then((r) => r.json())
+        .then((d) => setCategories(d.categories || []))
+        .catch(() => {})
+        .finally(() => setLoadingCats(false));
+    }
+  }, [shouldFetchCategories]);
 
   return (
     <div>
@@ -69,6 +98,10 @@ export const BlogCategoryFilter = () => {
         <CardPost
           categorySlug={selected || undefined}
           onTotalChange={setTotal}
+          initialArticles={initialArticles}
+          initialTotal={initialTotal}
+          initialTotalPages={initialTotalPages}
+          initialQuery={initialQuery}
         />
       </Suspense>
     </div>

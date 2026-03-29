@@ -1,8 +1,13 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
 import { getProjectBySlug, getProjects } from "@/api/projects";
 import { WebProjectLayout, MobileProjectLayout } from "@/components/layouts";
+import { toJsonLd } from "@/helpers";
 
 interface Props {
   params: {
@@ -86,8 +91,88 @@ export default async function ProjectDetailPage({ params }: Props) {
   }
 
   if (project.category === 'web') {
-    return <WebProjectLayout project={project} slug={slug} />;
+    const webProjectSchema = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CreativeWork',
+          '@id': `https://www.andressaumet.com/proyectos/${slug}#project`,
+          name: project.name,
+          description: project.description,
+          url: `https://www.andressaumet.com/proyectos/${slug}`,
+          image: project.images,
+          creator: {
+            '@type': 'Person',
+            name: 'Andres Felipe Saumet',
+            url: 'https://www.andressaumet.com/',
+          },
+          keywords: project.technologies,
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://www.andressaumet.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Proyectos', item: 'https://www.andressaumet.com/proyectos-desarrollo-web-y-aplicaciones-moviles' },
+            { '@type': 'ListItem', position: 3, name: project.name, item: `https://www.andressaumet.com/proyectos/${slug}` },
+          ],
+        },
+      ],
+    };
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toJsonLd(webProjectSchema) }}
+        />
+        <WebProjectLayout project={project} slug={slug} />
+      </>
+    );
   } else {
-    return <MobileProjectLayout project={project} slug={slug} />;
+    const mobileProjectSchema = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'SoftwareApplication',
+          '@id': `https://www.andressaumet.com/proyectos/${slug}#app`,
+          name: project.name,
+          description: project.description,
+          url: `https://www.andressaumet.com/proyectos/${slug}`,
+          image: project.images,
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'iOS',
+          offers: project.urlAppleStore || project.urlApp ? {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            url: project.urlAppleStore || project.urlApp,
+          } : undefined,
+          author: {
+            '@type': 'Person',
+            name: 'Andres Felipe Saumet',
+            url: 'https://www.andressaumet.com/',
+          },
+          keywords: project.technologies,
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://www.andressaumet.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Proyectos', item: 'https://www.andressaumet.com/proyectos-desarrollo-web-y-aplicaciones-moviles' },
+            { '@type': 'ListItem', position: 3, name: project.name, item: `https://www.andressaumet.com/proyectos/${slug}` },
+          ],
+        },
+      ],
+    };
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toJsonLd(mobileProjectSchema) }}
+        />
+        <MobileProjectLayout project={project} slug={slug} />
+      </>
+    );
   }
 }

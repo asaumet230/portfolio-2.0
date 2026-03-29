@@ -23,28 +23,28 @@ export const MobilProjectDescription = ({ project }: Props) => {
           project.images.length > 1 ? (
             <>
               <Image
-                priority
                 className='object-contain'
                 height="400"
                 width="225"
                 src={project.images[0]}
-                alt={project.name} />
+                alt={project.name}
+                sizes="(max-width: 750px) 100vw, 225px" />
               <Image
-                priority
                 className='object-contain max-[750px]:hidden'
                 height="400"
                 width="225"
                 src={project.images[1]}
-                alt={project.name} />
+                alt={project.name}
+                sizes="225px" />
             </>
           ) : (
             <Image
-              priority
               className='object-contain'
               height="400"
               width="225"
               src={project.images[0]}
-              alt={project.name} />
+              alt={project.name}
+              sizes="(max-width: 750px) 100vw, 225px" />
           )
         }
       </div>

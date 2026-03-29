@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { ArrowLeftIcon, FileTextIcon } from '@radix-ui/react-icons';
 import toast from 'react-hot-toast';
 import { apiClient } from '@/helpers/apiClient';
+import { triggerRevalidation } from '@/helpers/revalidation';
 
 interface RobotsPage {
   _id?: string;
@@ -51,6 +52,9 @@ export default function RobotsTxtPage() {
       setSaving(true);
       const token = (session as any)?.accessToken;
       await apiClient.put('/seo/pages/robots-txt', { robotsTxtContent: content }, token);
+      await triggerRevalidation({ type: 'robots' }).catch((error) =>
+        console.error('Error revalidating robots.txt:', error)
+      );
       toast.success('Robots.txt actualizado correctamente');
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar robots.txt');

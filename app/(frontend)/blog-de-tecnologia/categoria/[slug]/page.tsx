@@ -5,6 +5,49 @@ import { CategorySortFilter, PostSideBar } from '@/components';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:8080/api';
 
+async function getSidebarCategories() {
+  try {
+    const res = await fetch(`${API_BASE}/article-categories`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.categories || [];
+  } catch {
+    return [];
+  }
+}
+
+async function getRecentArticles() {
+  try {
+    const res = await fetch(`${API_BASE}/articles?page=1&limit=4`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.articles || [];
+  } catch {
+    return [];
+  }
+}
+
+async function getInitialCategoryArticles(slug: string) {
+  try {
+    const params = new URLSearchParams({
+      page: '1',
+      limit: '6',
+      category: slug,
+      sort: 'desc',
+    });
+    const res = await fetch(`${API_BASE}/articles?${params}`, { next: { revalidate: 3600 } });
+    if (!res.ok) return { articles: [], total: 0, totalPages: 1 };
+    const data = await res.json();
+    return {
+      articles: data.articles || [],
+      total: data.total || 0,
+      totalPages: data.totalPages || 1,
+    };
+  } catch {
+    return { articles: [], total: 0, totalPages: 1 };
+  }
+}
+
 interface SeoMetadata {
   title?: string;
   description?: string;
@@ -74,7 +117,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
-  const category = await getCategory(params.slug);
+  const [category, sidebarCategories, recentArticles, initialArticlesData] = await Promise.all([
+    getCategory(params.slug),
+    getSidebarCategories(),
+    getRecentArticles(),
+    getInitialCategoryArticles(params.slug),
+  ]);
 
   if (!category) notFound();
 
@@ -107,9 +155,14 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       {/* Layout: articles + sidebar */}
       <div className="flex gap-10 max-[920px]:flex-col items-start">
         <main className="flex-1 min-w-0">
-          <CategorySortFilter categorySlug={params.slug} />
+          <CategorySortFilter
+            categorySlug={params.slug}
+            initialArticles={initialArticlesData.articles}
+            initialTotal={initialArticlesData.total}
+            initialTotalPages={initialArticlesData.totalPages}
+          />
         </main>
-        <PostSideBar />
+        <PostSideBar initialCategories={sidebarCategories} initialRecent={recentArticles} />
       </div>
     </div>
   );

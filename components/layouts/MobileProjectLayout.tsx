@@ -2,21 +2,24 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaShieldAlt, FaApple, FaFileContract, FaUserTimes } from 'react-icons/fa';
 import { SiFlutter, SiDart, SiReact, SiNextdotjs, SiTypescript, SiJavascript, SiNodedotjs, SiAngular, SiWordpress, SiBootstrap, SiTailwindcss, SiCss3, SiGatsby } from 'react-icons/si';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { IProject } from '@/interfaces';
 
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import styles from './MobileProjectLayout.module.css';
 
 interface Props {
   project: IProject;
   slug: string;
 }
+
+const MobileProjectGallery = dynamic(
+  () => import('./MobileProjectGallery').then((mod) => mod.MobileProjectGallery),
+  {
+    loading: () => <div className="h-80 animate-pulse rounded-2xl bg-slate-100 dark:bg-[#1b2430]" />,
+  }
+);
 
 const getTechIcon = (tech: string) => {
   const iconMap: { [key: string]: JSX.Element } = {
@@ -162,43 +165,10 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
                 Capturas de Pantalla
               </h2>
 
-              <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                spaceBetween={20}
-                slidesPerView={1}
-                centeredSlides={true}
-                navigation
-                pagination={{ clickable: true }}
-                autoplay={{
-                  delay: 5000,
-                  disableOnInteraction: false,
-                }}
-                breakpoints={{
-                  640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                  },
-                  1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                  },
-                }}
-                className={`w-full pb-12 ${styles.swiperGallery}`}
-              >
-                {project.images.slice(1).map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="relative aspect-[9/16] w-full max-w-xs mx-auto rounded-2xl overflow-hidden">
-                      <Image
-                        src={image}
-                        alt={`${project.name} - captura ${index + 2}`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 400px"
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <MobileProjectGallery
+                images={project.images.slice(1)}
+                projectName={project.name}
+              />
             </section>
           )}          
           {project.hasPrivacyPolicy && (

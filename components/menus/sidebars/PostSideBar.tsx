@@ -53,9 +53,15 @@ interface SearchResult {
   featuredImage: string;
 }
 
-export const PostSideBar = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [recent, setRecent] = useState<RecentArticle[]>([]);
+export const PostSideBar = ({
+  initialCategories = [],
+  initialRecent = [],
+}: {
+  initialCategories?: Category[];
+  initialRecent?: RecentArticle[];
+}) => {
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [recent, setRecent] = useState<RecentArticle[]>(initialRecent);
   const [search, setSearch] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
@@ -63,17 +69,25 @@ export const PostSideBar = () => {
   const searchRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    fetch(`${API_BASE}/article-categories`)
-      .then((r) => r.json())
-      .then((d) => setCategories(d.categories || []))
-      .catch(() => {});
+  const shouldFetchInitialData = initialCategories.length === 0 || initialRecent.length === 0;
 
-    fetch(`${API_BASE}/articles?page=1&limit=4`)
-      .then((r) => r.json())
-      .then((d) => setRecent(d.articles || []))
-      .catch(() => {});
-  }, []);
+  useEffect(() => {
+    if (!shouldFetchInitialData) return;
+
+    if (initialCategories.length === 0) {
+      fetch(`${API_BASE}/article-categories`)
+        .then((r) => r.json())
+        .then((d) => setCategories(d.categories || []))
+        .catch(() => {});
+    }
+
+    if (initialRecent.length === 0) {
+      fetch(`${API_BASE}/articles?page=1&limit=4`)
+        .then((r) => r.json())
+        .then((d) => setRecent(d.articles || []))
+        .catch(() => {});
+    }
+  }, [initialCategories.length, initialRecent.length, shouldFetchInitialData]);
 
   // Close dropdown when clicking outside
   useEffect(() => {

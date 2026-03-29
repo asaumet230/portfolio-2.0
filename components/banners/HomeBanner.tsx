@@ -39,7 +39,8 @@ export const HomeBanner = () => {
             width={600}
             height={600}
             src={ !darkMode ? "/images/andres-saumet-light.webp" : "/images/andres-saumet-dark.webp"}
-            alt="andres-felipe-saumet" />
+            alt="andres-felipe-saumet"
+            sizes="(max-width: 920px) 100vw, 600px" />
         </div>
 
       </div>

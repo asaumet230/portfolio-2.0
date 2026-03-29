@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -32,6 +32,7 @@ const ArticleImage = ({ src, alt }: { src: string; alt: string }) => {
       width={600}
       height={300}
       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 420px"
       onError={() => setError(true)}
     />
   );
@@ -119,48 +120,73 @@ interface CardPostProps {
   categorySlug?: string;
   onTotalChange?: (total: number) => void;
   sortOrder?: 'asc' | 'desc';
+  initialArticles?: Article[];
+  initialTotal?: number;
+  initialTotalPages?: number;
+  initialQuery?: string;
+  initialSortOrder?: 'asc' | 'desc';
 }
 
-export const CardPost = ({ categorySlug, onTotalChange, sortOrder = 'desc' }: CardPostProps = {}) => {
+export const CardPost = ({
+  categorySlug,
+  onTotalChange,
+  sortOrder = 'desc',
+  initialArticles = [],
+  initialTotal = 0,
+  initialTotalPages = 1,
+  initialQuery = '',
+  initialSortOrder = 'desc',
+}: CardPostProps = {}) => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState<Article[]>(initialArticles);
+  const [loading, setLoading] = useState(initialArticles.length === 0);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  const [total, setTotal] = useState(initialTotal);
   const limit = 6;
+  const skipInitialFetchRef = useRef(initialArticles.length > 0);
 
   useEffect(() => {
     setPage(1);
   }, [categorySlug, searchQuery, sortOrder]);
 
   useEffect(() => {
-    fetchArticles(page);
-  }, [page, categorySlug, searchQuery, sortOrder]);
-
-  const fetchArticles = async (p: number) => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams({ page: String(p), limit: String(limit) });
-      if (categorySlug) params.append('category', categorySlug);
-      if (searchQuery) params.append('q', searchQuery);
-      if (sortOrder) params.append('sort', sortOrder);
-      const res = await fetch(`${API_BASE}/articles?${params}`);
-      const data = await res.json();
-      const fetchedTotal = data.total || 0;
-      setArticles(data.articles || []);
-      setTotalPages(data.totalPages || 1);
-      setTotal(fetchedTotal);
-      onTotalChange?.(fetchedTotal);
-    } catch {
-      setArticles([]);
-      onTotalChange?.(0);
-    } finally {
-      setLoading(false);
+    if (
+      skipInitialFetchRef.current &&
+      page === 1 &&
+      searchQuery === initialQuery &&
+      sortOrder === initialSortOrder
+    ) {
+      skipInitialFetchRef.current = false;
+      onTotalChange?.(initialTotal);
+      return;
     }
-  };
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+        if (categorySlug) params.append('category', categorySlug);
+        if (searchQuery) params.append('q', searchQuery);
+        if (sortOrder) params.append('sort', sortOrder);
+        const res = await fetch(`${API_BASE}/articles?${params}`);
+        const data = await res.json();
+        const fetchedTotal = data.total || 0;
+        setArticles(data.articles || []);
+        setTotalPages(data.totalPages || 1);
+        setTotal(fetchedTotal);
+        onTotalChange?.(fetchedTotal);
+      } catch {
+        setArticles([]);
+        onTotalChange?.(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, [page, categorySlug, searchQuery, sortOrder, initialQuery, initialSortOrder, initialTotal, onTotalChange]);
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });

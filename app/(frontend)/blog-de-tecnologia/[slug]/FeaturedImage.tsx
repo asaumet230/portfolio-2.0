@@ -25,6 +25,7 @@ export function FeaturedImage({ src, alt }: { src?: string; alt: string }) {
           height={500}
           className="w-full h-full object-cover"
           priority
+          sizes="(max-width: 768px) 100vw, 900px"
           onError={() => setError(true)}
         />
       ) : (

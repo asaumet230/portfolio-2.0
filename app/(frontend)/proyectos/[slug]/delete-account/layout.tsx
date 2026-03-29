@@ -1,6 +1,5 @@
-import React from 'react';
 import ReCaptchaProvider from '@/components/providers/ReCaptchaProvider';
 
-export default function ContactameLayout({ children }: { children: React.ReactNode; }) {
+export default function DeleteAccountLayout({ children }: { children: React.ReactNode }) {
   return <ReCaptchaProvider>{children}</ReCaptchaProvider>;
 }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
+import { triggerRevalidation } from '@/helpers/revalidation';
 import { ProjectForm } from '@/components/admin/forms/ProjectForm';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
@@ -73,6 +74,17 @@ export default function EditProjectPage({ params }: { params: { slug: string } }
       const token = (session as any)?.accessToken;
       const response = await apiClient.put(`/projects/${project._id}`, formData, token);
       if (response.ok) {
+        await triggerRevalidation({
+          type: 'project',
+          slug: formData.slug,
+          oldSlug: project.slug,
+          category: formData.category,
+          oldCategory: project.category,
+          hasPrivacyPolicy: formData.hasPrivacyPolicy,
+          hadPrivacyPolicy: project.hasPrivacyPolicy,
+          hasTermsOfService: formData.hasTermsOfService,
+          hadTermsOfService: (project as any).hasTermsOfService,
+        }).catch((error) => console.error('Error revalidating project:', error));
         toast.success('Proyecto actualizado exitosamente');
         router.push('/dashboard/proyectos/projectos-moviles');
       } else {

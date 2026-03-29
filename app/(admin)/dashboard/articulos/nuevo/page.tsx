@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
+import { triggerRevalidation } from '@/helpers/revalidation';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, UploadIcon, TrashIcon } from '@radix-ui/react-icons';
 import { RichTextEditor } from '@/components/admin/forms/RichTextEditor';
@@ -79,6 +80,12 @@ export default function NuevoArticuloPage() {
           keywords: seo.keywords.split(',').map((k) => k.trim()).filter(Boolean),
         }, token).catch(() => {});
       }
+      const categorySlug = categories.find((category) => category._id === form.category)?.slug;
+      await triggerRevalidation({
+        type: 'article',
+        slug: form.slug.trim(),
+        categorySlug,
+      }).catch((error) => console.error('Error revalidating article:', error));
       toast.success('Artículo creado');
       router.push('/dashboard/articulos');
     } catch (error: any) {

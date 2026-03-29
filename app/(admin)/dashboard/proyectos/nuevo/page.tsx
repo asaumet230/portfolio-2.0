@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 
 import { apiClient } from '@/helpers/apiClient';
+import { triggerRevalidation } from '@/helpers/revalidation';
 import { ProjectForm } from '@/components/admin/forms/ProjectForm';
 
 interface SEOMetadata {
@@ -57,6 +58,13 @@ export default function NewProjectPage() {
       const response = await apiClient.post('/projects', formData, token);
 
       if (response.ok) {
+        await triggerRevalidation({
+          type: 'project',
+          slug: formData.slug,
+          category: formData.category,
+          hasPrivacyPolicy: formData.hasPrivacyPolicy,
+          hasTermsOfService: formData.hasTermsOfService,
+        }).catch((error) => console.error('Error revalidating project:', error));
         toast.success('Proyecto creado exitosamente');
         const target = formData.category === 'mobil'
           ? '/dashboard/proyectos/projectos-moviles'

@@ -5,11 +5,29 @@ import { CardPost } from '@/components';
 
 interface CategorySortFilterProps {
   categorySlug: string;
+  initialArticles?: {
+    _id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    featuredImage: string;
+    category: { _id: string; name: string; slug: string } | string;
+    tags: string[];
+    published: boolean;
+    createdAt: string;
+  }[];
+  initialTotal?: number;
+  initialTotalPages?: number;
 }
 
-export const CategorySortFilter = ({ categorySlug }: CategorySortFilterProps) => {
+export const CategorySortFilter = ({
+  categorySlug,
+  initialArticles = [],
+  initialTotal = 0,
+  initialTotalPages = 1,
+}: CategorySortFilterProps) => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [total, setTotal] = useState<number | null>(null);
+  const [total, setTotal] = useState<number | null>(initialTotal);
 
   return (
     <div>
@@ -48,6 +66,10 @@ export const CategorySortFilter = ({ categorySlug }: CategorySortFilterProps) =>
           categorySlug={categorySlug}
           sortOrder={sortOrder}
           onTotalChange={setTotal}
+          initialArticles={initialArticles}
+          initialTotal={initialTotal}
+          initialTotalPages={initialTotalPages}
+          initialSortOrder="desc"
         />
       </Suspense>
     </div>

@@ -23,14 +23,44 @@ export async function GET() {
     const projects = [
       ...(webData.projects || []),
       ...(mobilData.projects || []),
-    ] as { slug: string; updatedAt?: string }[];
+    ] as { slug: string; updatedAt?: string; category?: string }[];
 
-    entries = projects.map((p) =>
-      urlEntry(
-        `${BASE}/proyectos/${p.slug}`,
-        p.updatedAt ? new Date(p.updatedAt).toISOString() : new Date().toISOString()
-      )
+    const projectEntries = await Promise.all(
+      projects.map(async (project) => {
+        const lastmod = project.updatedAt ? new Date(project.updatedAt).toISOString() : new Date().toISOString();
+        const urls = [urlEntry(`${BASE}/proyectos/${project.slug}`, lastmod)];
+
+        try {
+          const detailRes = await fetch(`${API}/projects/${project.slug}`, { next: { revalidate: 86400 } });
+          if (!detailRes.ok) return urls;
+
+          const detailData = await detailRes.json();
+          const detailProject = detailData.project as {
+            hasPrivacyPolicy?: boolean;
+            termsOfService?: { content?: string };
+            category?: string;
+          } | undefined;
+
+          if (detailProject?.hasPrivacyPolicy) {
+            urls.push(urlEntry(`${BASE}/proyectos/${project.slug}/privacy-policy`, lastmod));
+          }
+
+          if (detailProject?.termsOfService?.content) {
+            urls.push(urlEntry(`${BASE}/proyectos/${project.slug}/terms-of-service`, lastmod));
+          }
+
+          if ((detailProject?.category || project.category) === 'mobil') {
+            urls.push(urlEntry(`${BASE}/proyectos/${project.slug}/delete-account`, lastmod));
+          }
+        } catch {
+          return urls;
+        }
+
+        return urls;
+      })
     );
+
+    entries = projectEntries.flat();
   } catch {
     entries = [];
   }

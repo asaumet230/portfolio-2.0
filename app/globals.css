@@ -14,11 +14,50 @@
 
 html {
   scroll-behavior: smooth; 
+  overflow-x: hidden;
 }
 
 body {
   font-family: var(--font-lato);
   font: 16px;
+  overflow-x: hidden;
+}
+
+.article-content,
+.article-content * {
+  max-width: 100%;
+}
+
+.article-content img,
+.article-content video,
+.article-content canvas,
+.article-content svg {
+  height: auto;
+}
+
+.article-content iframe,
+.article-content embed,
+.article-content object {
+  width: 100%;
+  max-width: 100%;
+}
+
+.article-content table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-content code {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 h1 {

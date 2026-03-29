@@ -82,12 +82,14 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     <div className="container mx-auto px-4 pt-10 pb-20">
       {/* Header */}
       <header className="mb-10 w-full mx-auto md:w-[85%]">
-        <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-4">
+        <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-4 flex-wrap">
+          <Link href="/" className="hover:text-[#7b7db0] transition-colors">
+            Inicio
+          </Link>
+          <span>/</span>
           <Link href="/blog-de-tecnologia" className="hover:text-[#7b7db0] transition-colors">
             Blog
           </Link>
-          <span>/</span>
-          <span className="text-gray-700 dark:text-gray-300">Categoría</span>
           <span>/</span>
           <span className="text-[#7b7db0] font-medium">{category.name}</span>
         </nav>

@@ -46,6 +46,13 @@ export default async function PageTrabajos() {
     <>
       <header className="section">
         <div className="mt-14 mb-14">
+          <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-4 flex-wrap">
+            <Link href="/" className="hover:text-[#7b7db0] transition-colors">
+              Inicio
+            </Link>
+            <span>/</span>
+            <span className="text-[#7b7db0] font-medium">Proyectos</span>
+          </nav>
           <h1 className="text-center">Proyectos de Desarrollo Web Full Stack y Aplicaciones Móviles</h1>
           <div className="flex justify-center">
             <Separator />

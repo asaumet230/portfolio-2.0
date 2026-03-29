@@ -38,6 +38,7 @@ const menuItems = [
   { href: '/dashboard/paginas', label: 'Páginas', icon: LayersIcon },
   { href: '/dashboard/categorias', label: 'Categorías', icon: BookmarkIcon },
   { href: '/dashboard/sitemap', label: 'Sitemap', icon: GlobeIcon },
+  { href: '/dashboard/robots-txt', label: 'Robots.txt', icon: FileTextIcon },
 ];
 
 function UserAvatar({ src }: { src: string | null }) {

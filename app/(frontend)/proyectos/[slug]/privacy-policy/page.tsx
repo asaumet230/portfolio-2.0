@@ -72,6 +72,21 @@ export default async function PrivacyPolicyPage({ params }: Props) {
     <>
       <header className="section">
         <div className="mt-14 mb-14">
+          <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-4 flex-wrap">
+            <Link href="/" className="hover:text-[#7b7db0] transition-colors">
+              Inicio
+            </Link>
+            <span>/</span>
+            <Link href="/proyectos-desarrollo-web-y-aplicaciones-moviles" className="hover:text-[#7b7db0] transition-colors">
+              Proyectos
+            </Link>
+            <span>/</span>
+            <Link href={`/proyectos/${slug}`} className="hover:text-[#7b7db0] transition-colors capitalize">
+              {project.name}
+            </Link>
+            <span>/</span>
+            <span className="text-[#7b7db0] font-medium">Privacy Policy</span>
+          </nav>
           <h1 className="text-center">Privacy Policy</h1>
           <div className="flex justify-center">
             <Separator />

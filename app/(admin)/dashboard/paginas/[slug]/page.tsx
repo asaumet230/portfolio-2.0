@@ -17,6 +17,7 @@ interface PageSeoForm {
   ogImage: string;
   canonical: string;
   robots: string;
+  robotsTxtContent: string;
 }
 
 interface PageSeo extends PageSeoForm {
@@ -51,6 +52,7 @@ export default function EditPageSeoPage() {
     ogImage: '',
     canonical: '',
     robots: 'index, follow',
+    robotsTxtContent: '',
   });
 
   useEffect(() => {
@@ -72,6 +74,7 @@ export default function EditPageSeoPage() {
         ogImage: p.ogImage || '',
         canonical: p.canonical || '',
         robots: p.robots || 'index, follow',
+        robotsTxtContent: (p as any).robotsTxtContent || '',
       });
       // Extract image name from existing Cloudinary URL if present
       if (p.ogImage) {
@@ -88,12 +91,18 @@ export default function EditPageSeoPage() {
   };
 
   const handleSave = async () => {
-    if (!form.title) {
+    const isRobotsPage = slug === 'robots-txt';
+
+    if (!isRobotsPage && !form.title) {
       toast.error('El título SEO es requerido');
       return;
     }
-    if (!form.description) {
+    if (!isRobotsPage && !form.description) {
       toast.error('La descripción SEO es requerida');
+      return;
+    }
+    if (isRobotsPage && !form.robotsTxtContent.trim()) {
+      toast.error('El contenido de robots.txt es requerido');
       return;
     }
 
@@ -186,6 +195,8 @@ export default function EditPageSeoPage() {
     return <div className="text-center py-12 text-gray-500">Cargando...</div>;
   }
 
+  const isRobotsPage = slug === 'robots-txt';
+
   return (
     <div className="max-w-3xl space-y-6">
       {/* Header */}
@@ -212,129 +223,152 @@ export default function EditPageSeoPage() {
       </div>
 
       {/* Basic SEO */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">
-          SEO Básico
-        </h2>
-        {textarea('Título', 'title', 70, 'Máximo 70 caracteres — se muestra en Google y pestañas del navegador')}
-        {textarea('Descripción', 'description', 165, 'Máximo 165 caracteres — se muestra en los resultados de búsqueda')}
-        {field('Keywords', 'keywords', 'Separadas por comas: next.js developer, desarrollador web colombia, ...')}
-        {field('URL Canónica', 'canonical', 'Evita contenido duplicado, ej: https://www.andressaumet.com/proyectos')}
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Robots</label>
-          <select
-            value={form.robots}
-            onChange={(e) => setForm({ ...form, robots: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-          >
-            {ROBOTS_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Open Graph */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">
-          Open Graph (Redes Sociales)
-        </h2>
-        {field('OG Título', 'ogTitle', 'Título al compartir en redes sociales')}
-        {textarea('OG Descripción', 'ogDescription', 165, 'Descripción al compartir en redes sociales')}
-
-        {/* OG Image field con upload */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">OG Imagen</label>
-          <p className="text-xs text-gray-400">1200×630px recomendado — se recorta automáticamente al subir</p>
-
-          {/* Preview / placeholder */}
-          <div className="relative rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 h-40 bg-gray-100 dark:bg-gray-700">
-            {form.ogImage ? (
-              <>
-                <img
-                  src={form.ogImage}
-                  alt="OG preview"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.style.display = 'none';
-                    const parent = img.parentElement;
-                    if (parent && !parent.querySelector('.img-error-placeholder')) {
-                      const div = document.createElement('div');
-                      div.className = 'img-error-placeholder flex flex-col items-center justify-center h-full gap-2 text-gray-400 absolute inset-0';
-                      div.innerHTML = `<svg width="48" height="48" viewBox="0 0 15 15" fill="currentColor"><path d="M2.5 1C1.67 1 1 1.67 1 2.5v10c0 .83.67 1.5 1.5 1.5h10c.83 0 1.5-.67 1.5-1.5v-10C14 1.67 13.33 1 12.5 1h-10zm0 1h10c.28 0 .5.22.5.5v7.09l-2.15-2.14a.5.5 0 00-.7 0L7 11.09l-1.65-1.64a.5.5 0 00-.7 0L2 12V2.5c0-.28.22-.5.5-.5zm7 2a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></svg><span style="font-size:12px">Imagen no disponible</span>`;
-                      parent.appendChild(div);
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setForm((prev) => ({ ...prev, ogImage: '' }))}
-                  className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
-                  title="Eliminar imagen"
-                >
-                  <TrashIcon className="w-4 h-4" />
-                </button>
-              </>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full gap-2 text-gray-400 dark:text-gray-500">
-                <ImageIcon className="w-12 h-12" />
-                <span className="text-sm font-medium">Imagen OG</span>
-                <span className="text-xs">1200 × 630 px</span>
-              </div>
-            )}
+      {!isRobotsPage ? (
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-5">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">
+            SEO Básico
+          </h2>
+          {textarea('Título', 'title', 70, 'Máximo 70 caracteres — se muestra en Google y pestañas del navegador')}
+          {textarea('Descripción', 'description', 165, 'Máximo 165 caracteres — se muestra en los resultados de búsqueda')}
+          {field('Keywords', 'keywords', 'Separadas por comas: next.js developer, desarrollador web colombia, ...')}
+          {field('URL Canónica', 'canonical', 'Evita contenido duplicado, ej: https://www.andressaumet.com/proyectos')}
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Robots</label>
+            <select
+              value={form.robots}
+              onChange={(e) => setForm({ ...form, robots: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            >
+              {ROBOTS_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
           </div>
-
-          {/* Nombre de imagen + upload */}
-          <div className="flex gap-2">
-            <label className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition cursor-pointer shrink-0 ${
-              uploadingImage
-                ? 'opacity-60 cursor-not-allowed bg-blue-400 text-white'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
-            }`}>
-              <UploadIcon className="w-4 h-4" />
-              {uploadingImage ? 'Subiendo...' : 'Subir imagen'}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploadingImage}
-                className="hidden"
-              />
-            </label>
-
-            <input
-              type="text"
-              placeholder="nombre-de-la-imagen (para SEO)"
-              value={ogImageName}
-              onChange={(e) => setOgImageName(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))}
-              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+        </div>
+      ) : (
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-5">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">
+            Robots.txt
+          </h2>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Contenido
+              </label>
+              <span className="text-xs text-gray-400">{form.robotsTxtContent.length}/5000</span>
+            </div>
+            <p className="text-xs text-gray-400">
+              Edita el contenido exacto que se servirá en <code>/robots.txt</code>.
+            </p>
+            <textarea
+              value={form.robotsTxtContent}
+              onChange={(e) => setForm({ ...form, robotsTxtContent: e.target.value })}
+              rows={12}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-y"
             />
           </div>
-          {form.ogImage && (
-            <p className="text-xs text-gray-400 truncate">
-              URL: <a href={form.ogImage} target="_blank" rel="noopener noreferrer" className="hover:underline">{form.ogImage}</a>
-            </p>
+        </div>
+      )}
+
+      {/* Open Graph */}
+      {!isRobotsPage ? (
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-5">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-gray-700 pb-3">
+            Open Graph (Redes Sociales)
+          </h2>
+          {field('OG Título', 'ogTitle', 'Título al compartir en redes sociales')}
+          {textarea('OG Descripción', 'ogDescription', 165, 'Descripción al compartir en redes sociales')}
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">OG Imagen</label>
+            <p className="text-xs text-gray-400">1200×630px recomendado — se recorta automáticamente al subir</p>
+
+            <div className="relative rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 h-40 bg-gray-100 dark:bg-gray-700">
+              {form.ogImage ? (
+                <>
+                  <img
+                    src={form.ogImage}
+                    alt="OG preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      img.style.display = 'none';
+                      const parent = img.parentElement;
+                      if (parent && !parent.querySelector('.img-error-placeholder')) {
+                        const div = document.createElement('div');
+                        div.className = 'img-error-placeholder flex flex-col items-center justify-center h-full gap-2 text-gray-400 absolute inset-0';
+                        div.innerHTML = `<svg width="48" height="48" viewBox="0 0 15 15" fill="currentColor"><path d="M2.5 1C1.67 1 1 1.67 1 2.5v10c0 .83.67 1.5 1.5 1.5h10c.83 0 1.5-.67 1.5-1.5v-10C14 1.67 13.33 1 12.5 1h-10zm0 1h10c.28 0 .5.22.5.5v7.09l-2.15-2.14a.5.5 0 00-.7 0L7 11.09l-1.65-1.64a.5.5 0 00-.7 0L2 12V2.5c0-.28.22-.5.5-.5zm7 2a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></svg><span style="font-size:12px">Imagen no disponible</span>`;
+                        parent.appendChild(div);
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setForm((prev) => ({ ...prev, ogImage: '' }))}
+                    className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition"
+                    title="Eliminar imagen"
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                  </button>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full gap-2 text-gray-400 dark:text-gray-500">
+                  <ImageIcon className="w-12 h-12" />
+                  <span className="text-sm font-medium">Imagen OG</span>
+                  <span className="text-xs">1200 × 630 px</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2">
+              <label className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition cursor-pointer shrink-0 ${
+                uploadingImage
+                  ? 'opacity-60 cursor-not-allowed bg-blue-400 text-white'
+                  : 'bg-blue-500 hover:bg-blue-600 text-white'
+              }`}>
+                <UploadIcon className="w-4 h-4" />
+                {uploadingImage ? 'Subiendo...' : 'Subir imagen'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={uploadingImage}
+                  className="hidden"
+                />
+              </label>
+
+              <input
+                type="text"
+                placeholder="nombre-de-la-imagen (para SEO)"
+                value={ogImageName}
+                onChange={(e) => setOgImageName(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))}
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              />
+            </div>
+            {form.ogImage && (
+              <p className="text-xs text-gray-400 truncate">
+                URL: <a href={form.ogImage} target="_blank" rel="noopener noreferrer" className="hover:underline">{form.ogImage}</a>
+              </p>
+            )}
+          </div>
+
+          {(form.ogTitle || form.ogDescription) && (
+            <div className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden mt-2">
+              {form.ogImage && (
+                <div className="bg-gray-100 dark:bg-gray-700 h-40 flex items-center justify-center text-xs text-gray-400 overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={form.ogImage} alt="OG preview" className="object-cover w-full h-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                </div>
+              )}
+              <div className="p-3 bg-gray-50 dark:bg-gray-750">
+                <p className="text-xs text-gray-400 uppercase tracking-wide">{page?.url?.replace('https://', '')}</p>
+                <p className="font-semibold text-sm text-gray-900 dark:text-gray-100 mt-0.5">{form.ogTitle || form.title}</p>
+                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{form.ogDescription || form.description}</p>
+              </div>
+            </div>
           )}
         </div>
-
-        {/* OG Preview */}
-        {(form.ogTitle || form.ogDescription) && (
-          <div className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden mt-2">
-            {form.ogImage && (
-              <div className="bg-gray-100 dark:bg-gray-700 h-40 flex items-center justify-center text-xs text-gray-400 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={form.ogImage} alt="OG preview" className="object-cover w-full h-full" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-              </div>
-            )}
-            <div className="p-3 bg-gray-50 dark:bg-gray-750">
-              <p className="text-xs text-gray-400 uppercase tracking-wide">{page?.url?.replace('https://', '')}</p>
-              <p className="font-semibold text-sm text-gray-900 dark:text-gray-100 mt-0.5">{form.ogTitle || form.title}</p>
-              <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{form.ogDescription || form.description}</p>
-            </div>
-          </div>
-        )}
-      </div>
+      ) : null}
 
       {/* Actions */}
       <div className="flex justify-end gap-3">

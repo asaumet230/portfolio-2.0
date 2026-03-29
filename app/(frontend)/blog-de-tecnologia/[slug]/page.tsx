@@ -174,7 +174,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
               {/* Content */}
               <div
-                className="prose prose-sm sm:prose-base md:prose-lg dark:prose-invert max-w-none mt-8 prose-headings:font-bold prose-a:text-[#7b7db0] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl"
+                className="article-content prose prose-sm sm:prose-base md:prose-lg dark:prose-invert max-w-none mt-8 prose-headings:font-bold prose-a:text-[#7b7db0] prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
 

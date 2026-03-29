@@ -34,26 +34,21 @@ export const WebProjectLayout = ({ project, slug }: Props) => {
   return (
     <>
       {/* Breadcrumbs */}
-      <nav className="section pt-8 pb-4">
-        <div className="flex items-center gap-2 text-sm flex-wrap">
-          <Link
-            href="/"
-            className="text-gray-600 dark:text-gray-400 hover:text-secondary-color dark:hover:text-indigo-400 transition-colors"
-          >
-            Inicio
-          </Link>
-          <span className="text-gray-400 dark:text-gray-600">/</span>
-          <Link
-            href="/proyectos-desarrollo-web-y-aplicaciones-moviles"
-            className="text-gray-600 dark:text-gray-400 hover:text-secondary-color dark:hover:text-indigo-400 transition-colors"
-          >
-            Proyectos
-          </Link>
-          <span className="text-gray-400 dark:text-gray-600">/</span>
-          <span className="text-gray-900 dark:text-gray-100 font-semibold capitalize">
-            {project.name}
-          </span>
-        </div>
+      <nav className="section pt-8 pb-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 flex-wrap">
+        <Link href="/" className="hover:text-[#7b7db0] transition-colors">
+          Inicio
+        </Link>
+        <span>/</span>
+        <Link
+          href="/proyectos-desarrollo-web-y-aplicaciones-moviles"
+          className="hover:text-[#7b7db0] transition-colors"
+        >
+          Proyectos
+        </Link>
+        <span>/</span>
+        <span className="text-[#7b7db0] font-medium capitalize">
+          {project.name}
+        </span>
       </nav>
 
       <header className="relative w-full h-[60vh] min-h-[450px] max-h-[600px] overflow-hidden">

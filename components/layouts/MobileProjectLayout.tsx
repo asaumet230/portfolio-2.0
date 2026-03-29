@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaShieldAlt, FaApple, FaGooglePlay, FaFileContract, FaUserTimes } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaShieldAlt, FaApple, FaFileContract, FaUserTimes } from 'react-icons/fa';
 import { SiFlutter, SiDart, SiReact, SiNextdotjs, SiTypescript, SiJavascript, SiNodedotjs, SiAngular, SiWordpress, SiBootstrap, SiTailwindcss, SiCss3, SiGatsby } from 'react-icons/si';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -46,22 +46,22 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
         <div className="section">
 
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-sm mb-8 flex-wrap">
+          <nav className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-8 flex-wrap">
             <Link
               href="/"
-              className="text-gray-600 dark:text-gray-400 hover:text-secondary-color dark:hover:text-indigo-400 transition-colors"
+              className="hover:text-[#7b7db0] transition-colors"
             >
               Inicio
             </Link>
-            <span className="text-gray-400 dark:text-gray-600">/</span>
+            <span>/</span>
             <Link
               href="/proyectos-desarrollo-web-y-aplicaciones-moviles"
-              className="text-gray-600 dark:text-gray-400 hover:text-secondary-color dark:hover:text-indigo-400 transition-colors"
+              className="hover:text-[#7b7db0] transition-colors"
             >
               Proyectos
             </Link>
-            <span className="text-gray-400 dark:text-gray-600">/</span>
-            <span className="text-gray-900 dark:text-gray-100 font-semibold capitalize">
+            <span>/</span>
+            <span className="text-[#7b7db0] font-medium capitalize">
               {project.name}
             </span>
           </nav>
@@ -132,33 +132,18 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
 
      
           <section className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 ">
-            <h3 className="text-xl font-bold mb-4">Enlaces</h3>
+            <h3 className="text-xl font-bold mb-4">Enlace</h3>
 
-            <div className="grid grid-cols-2 gap-6">
-              {
-                <Link
-                  href={project.urlPlayStore || project.urlApp }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 dark:bg-green-700 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-800 hover:shadow-lg transition-all duration-300 text-sm font-semibold"
-                >
-                  <FaGooglePlay size={16} />
-                  <span className="hidden sm:inline">Play Store</span>
-                </Link>
-              }
-
-              {
-                <Link
-                  href={project.urlAppleStore || project.urlApp }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-black dark:hover:bg-gray-600 hover:shadow-lg transition-all duration-300 text-sm font-semibold"
-                >
-                  <FaApple size={16} />
-                  <span className="hidden sm:inline">App Store</span>
-                </Link>
-              }
-
+            <div className="flex justify-center">
+              <Link
+                href={project.urlAppleStore || project.urlApp }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full max-w-sm items-center justify-center gap-2 px-4 py-3 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-black dark:hover:bg-gray-600 hover:shadow-lg transition-all duration-300 text-sm font-semibold"
+              >
+                <FaApple size={16} />
+                <span>App Store</span>
+              </Link>
             </div>
           </section>
 

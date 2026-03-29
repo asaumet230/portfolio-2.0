@@ -38,7 +38,6 @@ export const Navbar = () => {
           <TiThMenu size={20} />
         </div>
 
-
         <div className={`ml-12 px-4 py-2 cursor-pointer ${styles['display-search-link']}`} onClick={()=> dispatch( toggleModal(true) )}>
           <FaSearch className="text-[16px]" />
           <p className="capitalize ml-2 text-[16px] font-bold search-link">buscar</p>

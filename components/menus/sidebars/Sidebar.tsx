@@ -35,7 +35,7 @@ export const Sidebar = () => {
 
   return (
 
-    <div className={`${isSidebarOpen ? 'left-0' : '-left-full'} lg:hidden bg-white w-full h-full fixed z-10 transition-all duration-300 ease-in-out dark:bg-gradient-to-tr to-[#262f3a] from-[#0d1117] animate__animated animate__faster animate__slideInLeft`}>
+    <div className={`${isSidebarOpen ? 'left-0' : '-left-full'} hidden max-[1145px]:block bg-white w-full h-full fixed z-10 transition-all duration-300 ease-in-out dark:bg-gradient-to-tr to-[#262f3a] from-[#0d1117] animate__animated animate__faster animate__slideInLeft`}>
       <div className='p-8 h-full flex flex-col justify-between'>
 
         <div className='flex justify-between items-center'>

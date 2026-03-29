@@ -25,13 +25,70 @@ async function fetchProjects(): Promise<SitemapEntry[]> {
       fetch(`${API}/projects/category/mobil`, { next: { revalidate: 86400 } }),
     ]);
     const [webData, mobilData] = await Promise.all([webRes.json(), mobilRes.json()]);
-    const projects = [...(webData.projects || []), ...(mobilData.projects || [])] as { slug: string; updatedAt?: string }[];
-    return projects.map((p) => ({
-      url: `${BASE_URL}/proyectos/${p.slug}`,
-      lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    }));
+    const projects = [...(webData.projects || []), ...(mobilData.projects || [])] as {
+      slug: string;
+      updatedAt?: string;
+      category?: string;
+    }[];
+
+    const projectEntries = await Promise.all(
+      projects.map(async (project) => {
+        const lastModified = project.updatedAt ? new Date(project.updatedAt) : new Date();
+        const entries: SitemapEntry[] = [
+          {
+            url: `${BASE_URL}/proyectos/${project.slug}`,
+            lastModified,
+            changeFrequency: 'monthly',
+            priority: 0.8,
+          },
+        ];
+
+        try {
+          const detailRes = await fetch(`${API}/projects/${project.slug}`, { next: { revalidate: 86400 } });
+          if (!detailRes.ok) return entries;
+
+          const detailData = await detailRes.json();
+          const detailProject = detailData.project as {
+            hasPrivacyPolicy?: boolean;
+            termsOfService?: { content?: string };
+            category?: string;
+          } | undefined;
+
+          if (detailProject?.hasPrivacyPolicy) {
+            entries.push({
+              url: `${BASE_URL}/proyectos/${project.slug}/privacy-policy`,
+              lastModified,
+              changeFrequency: 'monthly',
+              priority: 0.7,
+            });
+          }
+
+          if (detailProject?.termsOfService?.content) {
+            entries.push({
+              url: `${BASE_URL}/proyectos/${project.slug}/terms-of-service`,
+              lastModified,
+              changeFrequency: 'monthly',
+              priority: 0.7,
+            });
+          }
+
+          if ((detailProject?.category || project.category) === 'mobil') {
+            entries.push({
+              url: `${BASE_URL}/proyectos/${project.slug}/delete-account`,
+              lastModified,
+              changeFrequency: 'monthly',
+              priority: 0.7,
+            });
+          }
+        } catch {
+          return entries;
+        }
+
+        return entries;
+      })
+    );
+
+    return projectEntries.flat();
   } catch {
     return [];
   }
@@ -98,9 +155,20 @@ export default async function SitemapPage() {
     fetchCategories(),
   ]);
 
+  const baseProjectEntries = projects.filter((entry) => {
+    const path = entry.url.replace(BASE_URL, '');
+    return !path.endsWith('/privacy-policy') && !path.endsWith('/terms-of-service') && !path.endsWith('/delete-account');
+  });
+
+  const legalProjectEntries = projects.filter((entry) => {
+    const path = entry.url.replace(BASE_URL, '');
+    return path.endsWith('/privacy-policy') || path.endsWith('/terms-of-service') || path.endsWith('/delete-account');
+  });
+
   const sections = [
     { label: 'Páginas estáticas', entries: STATIC_PAGES },
-    { label: 'Proyectos',         entries: projects },
+    { label: 'Proyectos',         entries: baseProjectEntries },
+    { label: 'Legal / Funcional', entries: legalProjectEntries },
     { label: 'Artículos',         entries: articles },
     { label: 'Categorías',        entries: categories },
   ];

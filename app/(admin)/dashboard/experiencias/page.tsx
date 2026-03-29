@@ -7,6 +7,7 @@ import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
+import { FaBuilding, FaBriefcase, FaMapMarkerAlt, FaCalendarAlt, FaLink } from 'react-icons/fa';
 
 interface Experience {
   _id: string;
@@ -18,12 +19,18 @@ interface Experience {
   createdAt: string;
 }
 
+const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const iconClass  = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+
+const thisYear = new Date().getFullYear();
+const YEARS = Array.from({ length: thisYear - 1989 + 1 }, (_, i) => thisYear + 1 - i);
+
 const EMPTY_FORM = {
-  company: '',
-  city: '',
+  company:  '',
+  city:     '',
   position: '',
-  year: new Date().getFullYear(),
-  url: '',
+  year:     thisYear,
+  url:      '',
 };
 
 export default function ExperienciasPage() {
@@ -35,16 +42,14 @@ export default function ExperienciasPage() {
   const [selectedExperience, setSelectedExperience] = useState<Experience | null>(null);
   const [formData, setFormData] = useState(EMPTY_FORM);
 
-  useEffect(() => {
-    fetchExperiences();
-  }, []);
+  useEffect(() => { fetchExperiences(); }, []);
 
   const fetchExperiences = async () => {
     try {
       setLoading(true);
       const response = await apiClient.get('/experiences');
       setExperiences(response.experiences || []);
-    } catch (error) {
+    } catch {
       toast.error('Error al cargar experiencias');
     } finally {
       setLoading(false);
@@ -54,11 +59,11 @@ export default function ExperienciasPage() {
   const handleEdit = (experience: Experience) => {
     setSelectedExperience(experience);
     setFormData({
-      company: experience.company,
-      city: experience.city,
+      company:  experience.company,
+      city:     experience.city,
       position: experience.position,
-      year: experience.year,
-      url: experience.url,
+      year:     experience.year,
+      url:      experience.url,
     });
     setIsModalOpen(true);
   };
@@ -75,11 +80,18 @@ export default function ExperienciasPage() {
     }
     try {
       const token = (session as any)?.accessToken;
+      const payload = {
+        company:  formData.company,
+        city:     formData.city,
+        position: formData.position,
+        year:     formData.year,
+        url:      formData.url,
+      };
       if (selectedExperience) {
-        await apiClient.put(`/experiences/${selectedExperience._id}`, formData, token);
+        await apiClient.put(`/experiences/${selectedExperience._id}`, payload, token);
         toast.success('Experiencia actualizada');
       } else {
-        await apiClient.post('/experiences', formData, token);
+        await apiClient.post('/experiences', payload, token);
         toast.success('Experiencia creada');
       }
       setIsModalOpen(false);
@@ -117,9 +129,7 @@ export default function ExperienciasPage() {
     {
       key: 'city',
       label: 'Ciudad',
-      render: (value: string) => (
-        <span className="capitalize">{value}</span>
-      ),
+      render: (value: string) => <span className="capitalize">{value}</span>,
     },
     {
       key: 'year',
@@ -158,12 +168,8 @@ export default function ExperienciasPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Experiencias Laborales</h1>
         <button
-          onClick={() => {
-            setSelectedExperience(null);
-            setFormData(EMPTY_FORM);
-            setIsModalOpen(true);
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          onClick={() => { setSelectedExperience(null); setFormData(EMPTY_FORM); setIsModalOpen(true); }}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm font-medium"
         >
           + Nueva Experiencia
         </button>
@@ -175,6 +181,7 @@ export default function ExperienciasPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={selectedExperience ? 'Editar Experiencia' : 'Nueva Experiencia'}
+        size="xl"
         footer={
           <>
             <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition">
@@ -186,16 +193,75 @@ export default function ExperienciasPage() {
           </>
         }
       >
-        <div className="space-y-4">
-          <input type="text" placeholder="Empresa" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="text" placeholder="Cargo / Puesto" value={formData.position} onChange={(e) => setFormData({ ...formData, position: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="text" placeholder="Ciudad" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="number" placeholder="Año" value={formData.year} onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="url" placeholder="URL (https://...)" value={formData.url} onChange={(e) => setFormData({ ...formData, url: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+        <div className="space-y-3">
+
+          <div className="relative">
+            <FaBuilding className={iconClass} />
+            <input
+              type="text"
+              placeholder="Empresa *"
+              value={formData.company}
+              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+
+          <div className="relative">
+            <FaBriefcase className={iconClass} />
+            <input
+              type="text"
+              placeholder="Cargo / Puesto *"
+              value={formData.position}
+              onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+
+          <div className="relative">
+            <FaMapMarkerAlt className={iconClass} />
+            <input
+              type="text"
+              placeholder="Ciudad *"
+              value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+
+          <div className="relative">
+            <FaCalendarAlt className={iconClass} />
+            <select
+              value={formData.year}
+              onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+              className={inputClass}
+            >
+              {YEARS.map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="relative">
+            <FaLink className={iconClass} />
+            <input
+              type="url"
+              placeholder="URL (https://...)"
+              value={formData.url}
+              onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+
         </div>
       </Modal>
 
-      <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleConfirmDelete} title="Eliminar Experiencia" message={`¿Estás seguro que deseas eliminar la experiencia en "${selectedExperience?.company}"?`} />
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar Experiencia"
+        message={`¿Estás seguro que deseas eliminar la experiencia en "${selectedExperience?.company}"?`}
+      />
     </div>
   );
 }

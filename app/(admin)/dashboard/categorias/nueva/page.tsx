@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, UploadIcon, TrashIcon, ImageIcon } from '@radix-ui/react-icons';
+import { RichTextEditor } from '@/components/admin/forms/RichTextEditor';
 
 interface SeoForm {
   title: string;
@@ -96,7 +97,7 @@ export default function NuevaCategoriaPage() {
       const created = await apiClient.post('/article-categories', {
         name: contentForm.name.trim(),
         slug: contentForm.slug.trim(),
-        description: contentForm.description.trim() || undefined,
+        description: contentForm.description || undefined,
       }, token);
 
       const categoryId = created?.category?._id;
@@ -242,20 +243,14 @@ export default function NuevaCategoriaPage() {
 
         {/* Description */}
         <div className="space-y-1">
-          <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Descripción <span className="text-[#7b7db0] text-xs font-normal ml-1">— párrafo debajo del H1</span>
-            </label>
-            <span className={`text-xs ${contentForm.description.length > 300 ? 'text-red-500' : 'text-gray-400'}`}>
-              {contentForm.description.length}/300
-            </span>
-          </div>
-          <textarea
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Descripción <span className="text-[#7b7db0] text-xs font-normal ml-1">— párrafo debajo del H1</span>
+          </label>
+          <RichTextEditor
             value={contentForm.description}
-            onChange={(e) => setContentForm({ ...contentForm, description: e.target.value })}
-            rows={3}
+            onChange={(html) => setContentForm({ ...contentForm, description: html })}
             placeholder="Descripción visible en la página pública de la categoría..."
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
+            height="h-44"
           />
           <p className="text-xs text-gray-400">Este texto aparece como párrafo introductorio en la página de la categoría, no en Google (para eso usa la Descripción SEO)</p>
         </div>

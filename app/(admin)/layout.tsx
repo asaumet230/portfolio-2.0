@@ -34,7 +34,7 @@ const menuItems = [
   { href: '/dashboard/testimonios', label: 'Testimonios', icon: ChatBubbleIcon },
   { href: '/dashboard/articulos', label: 'Artículos', icon: FileTextIcon },
   { href: '/dashboard/experiencias', label: 'Trabajos', icon: BackpackIcon },
-  { href: '/dashboard/usuarios', label: 'Usuarios', icon: PersonIcon },
+  { href: '/dashboard/usuarios', label: 'Usuarios', icon: PersonIcon, adminOnly: true },
   { href: '/dashboard/paginas', label: 'Páginas', icon: LayersIcon },
   { href: '/dashboard/categorias', label: 'Categorías', icon: BookmarkIcon },
   { href: '/dashboard/sitemap', label: 'Sitemap', icon: GlobeIcon },
@@ -135,27 +135,29 @@ export default function AdminLayout({
 
         {/* Menu */}
         <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = item.href === '/dashboard'
-              ? pathname === '/dashboard'
-              : pathname.startsWith(item.href);
+          {menuItems
+            .filter((item) => !item.adminOnly || (session?.user as any)?.role === 'admin_role')
+            .map((item) => {
+              const Icon = item.icon;
+              const isActive = item.href === '/dashboard'
+                ? pathname === '/dashboard'
+                : pathname.startsWith(item.href);
 
-            return (
-              <Link key={item.href} href={item.href} onClick={closeSidebar}>
-                <div
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-                    isActive
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 shrink-0" />
-                  <span>{item.label}</span>
-                </div>
-              </Link>
-            );
-          })}
+              return (
+                <Link key={item.href} href={item.href} onClick={closeSidebar}>
+                  <div
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+                      isActive
+                        ? 'bg-blue-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 shrink-0" />
+                    <span>{item.label}</span>
+                  </div>
+                </Link>
+              );
+            })}
         </nav>
 
         {/* Logout */}

@@ -31,6 +31,10 @@ const withDeduplication = async <T>(
   return promise;
 };
 
+export const clearApiCache = (method: string, endpoint: string) => {
+  requestCache.delete(getCacheKey(method, endpoint));
+};
+
 export const apiClient = {
   async post(endpoint: string, data: any, token?: string) {
     const cacheKey = getCacheKey('POST', endpoint, data);
@@ -126,11 +130,21 @@ export const apiClient = {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Request failed');
+        let message = 'Request failed';
+        try {
+          const error = await response.json();
+          message = error.message || message;
+        } catch {}
+        throw new Error(message);
       }
 
-      return response.json();
+      // 204 No Content o respuesta vacía — DELETE exitoso sin body
+      if (response.status === 204) return {};
+      try {
+        return await response.json();
+      } catch {
+        return {};
+      }
     });
   },
 };

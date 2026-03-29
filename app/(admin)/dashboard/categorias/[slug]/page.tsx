@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, UploadIcon, TrashIcon, ImageIcon } from '@radix-ui/react-icons';
+import { RichTextEditor } from '@/components/admin/forms/RichTextEditor';
 
 interface SeoForm {
   title: string;
@@ -21,6 +22,7 @@ interface SeoForm {
 
 interface ContentForm {
   name: string;
+  slug: string;
   description: string;
 }
 
@@ -57,7 +59,7 @@ export default function EditCategoriaSeoPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [ogImageName, setOgImageName] = useState('');
-  const [contentForm, setContentForm] = useState<ContentForm>({ name: '', description: '' });
+  const [contentForm, setContentForm] = useState<ContentForm>({ name: '', slug: '', description: '' });
   const [form, setForm] = useState<SeoForm>({
     title: '',
     description: '',
@@ -87,7 +89,7 @@ export default function EditCategoriaSeoPage() {
       }
 
       setCategory(found);
-      setContentForm({ name: found.name || '', description: found.description || '' });
+      setContentForm({ name: found.name || '', slug: found.slug || '', description: found.description || '' });
       const seo = found.seoMetadata || {};
       setForm({
         title: seo.title || '',
@@ -116,6 +118,10 @@ export default function EditCategoriaSeoPage() {
       toast.error('El nombre de la categoría es requerido');
       return;
     }
+    if (!contentForm.slug.trim()) {
+      toast.error('El slug es requerido');
+      return;
+    }
     if (!form.title) {
       toast.error('El título SEO es requerido');
       return;
@@ -128,6 +134,7 @@ export default function EditCategoriaSeoPage() {
     try {
       setSaving(true);
       const token = (session as any)?.accessToken;
+      const newSlug = contentForm.slug.trim();
       const seoPayload = {
         ...form,
         keywords: form.keywords.split(',').map((k) => k.trim()).filter(Boolean),
@@ -136,12 +143,17 @@ export default function EditCategoriaSeoPage() {
       await Promise.all([
         apiClient.put(`/article-categories/${category!._id}`, {
           name: contentForm.name.trim(),
-          description: contentForm.description.trim(),
+          slug: newSlug,
+          description: contentForm.description,
         }, token),
         apiClient.put(`/article-categories/${category!._id}/seo`, seoPayload, token),
       ]);
 
       toast.success('Categoría actualizada correctamente');
+
+      if (newSlug !== category!.slug) {
+        router.replace(`/dashboard/categorias/${newSlug}`);
+      }
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
     } finally {
@@ -251,20 +263,38 @@ export default function EditCategoriaSeoPage() {
         </div>
 
         <div className="space-y-1">
-          <div className="flex justify-between items-center">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Descripción <span className="text-[#7b7db0] text-xs font-normal ml-1">— párrafo debajo del H1</span>
-            </label>
-            <span className={`text-xs ${contentForm.description.length > 300 ? 'text-red-500' : 'text-gray-400'}`}>
-              {contentForm.description.length}/300
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Slug <span className="text-[#7b7db0] text-xs font-normal ml-1">— URL de la categoría</span>
+          </label>
+          <div className="flex items-center gap-0 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
+            <span className="px-3 py-2 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400 text-sm border-r border-gray-300 dark:border-gray-600 shrink-0 select-none">
+              /categoria/
             </span>
+            <input
+              type="text"
+              value={contentForm.slug}
+              onChange={(e) =>
+                setContentForm({
+                  ...contentForm,
+                  slug: e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+                })
+              }
+              placeholder="ej: desarrollo-web"
+              className="flex-1 px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:outline-none"
+            />
           </div>
-          <textarea
+          <p className="text-xs text-gray-400">Solo letras minúsculas, números y guiones. Cambiar el slug afecta la URL pública.</p>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Descripción <span className="text-[#7b7db0] text-xs font-normal ml-1">— párrafo debajo del H1</span>
+          </label>
+          <RichTextEditor
             value={contentForm.description}
-            onChange={(e) => setContentForm({ ...contentForm, description: e.target.value })}
-            rows={3}
+            onChange={(html) => setContentForm({ ...contentForm, description: html })}
             placeholder="Descripción visible en la página pública de la categoría..."
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition resize-none"
+            height="h-44"
           />
           <p className="text-xs text-gray-400">Este texto aparece como párrafo introductorio en la página de la categoría, no en Google (para eso usa la Descripción SEO)</p>
         </div>

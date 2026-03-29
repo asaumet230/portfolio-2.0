@@ -39,7 +39,7 @@ export function Modal({
 
       {/* Modal */}
       <div
-        className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl ${sizeClasses[size]} max-h-[90vh] overflow-y-auto`}
+        className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto`}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b dark:border-gray-700">

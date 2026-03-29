@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
-import { Pencil1Icon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
+import { Pencil2Icon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import Swal from 'sweetalert2';
 
 interface ArticleCategory {
@@ -196,22 +196,21 @@ export default function CategoriasPage() {
                       : '—'}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="inline-flex items-center gap-2">
+                    <div className="inline-flex items-center gap-1">
                       <Link
                         href={`/dashboard/categorias/${cat.slug}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded transition"
+                        className="p-2 hover:bg-yellow-100 dark:hover:bg-yellow-900 rounded transition"
+                        title="Editar"
                       >
-                        <Pencil1Icon className="w-3.5 h-3.5" />
-                        Editar
+                        <Pencil2Icon className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
                       </Link>
                       <button
                         onClick={() => handleDelete(cat)}
                         disabled={deletingId === cat._id}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-red-500 hover:bg-red-600 disabled:opacity-60 disabled:cursor-not-allowed text-white rounded transition"
+                        className="p-2 hover:bg-red-100 dark:hover:bg-red-900 disabled:opacity-60 disabled:cursor-not-allowed rounded transition"
                         title="Eliminar categoría"
                       >
-                        <TrashIcon className="w-3.5 h-3.5" />
-                        {deletingId === cat._id ? 'Eliminando...' : 'Eliminar'}
+                        <TrashIcon className="w-4 h-4 text-red-600 dark:text-red-400" />
                       </button>
                     </div>
                   </td>

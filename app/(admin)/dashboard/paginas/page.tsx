@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
-import { Pencil1Icon, GlobeIcon } from '@radix-ui/react-icons';
+import { Pencil2Icon, GlobeIcon } from '@radix-ui/react-icons';
 
 interface PageSeo {
   _id: string;
@@ -111,10 +111,10 @@ export default function PaginasPage() {
                   <td className="px-6 py-4 text-right">
                     <Link
                       href={`/dashboard/paginas/${page.slug}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded transition"
+                      className="p-2 hover:bg-yellow-100 dark:hover:bg-yellow-900 rounded transition inline-flex"
+                      title="Editar"
                     >
-                      <Pencil1Icon className="w-3.5 h-3.5" />
-                      Editar
+                      <Pencil2Icon className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
                     </Link>
                   </td>
                 </tr>

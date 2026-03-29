@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { DataTable } from '@/components/admin/tables/DataTable';
-import { Modal } from '@/components/admin/modals/Modal';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
 import { apiClient } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
+import { FaImage } from 'react-icons/fa';
 
 interface Article {
   _id: string;
@@ -30,13 +32,12 @@ interface ArticleCategory {
 
 export default function ArticulosPage() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [articles, setArticles] = useState<Article[]>([]);
   const [categories, setCategories] = useState<ArticleCategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [formData, setFormData] = useState({ title: '', slug: '', content: '', category: '', published: false, author: '' });
   const [expandedTags, setExpandedTags] = useState<Set<string>>(new Set());
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,43 +86,12 @@ export default function ArticulosPage() {
   };
 
   const handleEdit = (article: Article) => {
-    setSelectedArticle(article);
-    setFormData({
-      title: article.title,
-      slug: article.slug,
-      content: article.content,
-      category: article.category,
-      published: article.published,
-      author: article.author || '',
-    });
-    setIsModalOpen(true);
+    router.push(`/dashboard/articulos/${article.slug}`);
   };
 
   const handleDelete = (article: Article) => {
     setSelectedArticle(article);
     setIsDeleteModalOpen(true);
-  };
-
-  const handleSave = async () => {
-    if (!formData.title || !formData.content) {
-      toast.error('Título y contenido son requeridos');
-      return;
-    }
-    try {
-      const token = (session as any)?.accessToken;
-      if (selectedArticle) {
-        await apiClient.put(`/articles/${selectedArticle._id}`, formData, token);
-        toast.success('Artículo actualizado');
-      } else {
-        await apiClient.post('/articles', formData, token);
-        toast.success('Artículo creado');
-      }
-      setIsModalOpen(false);
-      setFormData({ title: '', slug: '', content: '', category: '', published: false, author: '' });
-      fetchData();
-    } catch (error: any) {
-      toast.error(error.message || 'Error al guardar');
-    }
   };
 
   const handleConfirmDelete = async () => {
@@ -147,7 +117,6 @@ export default function ArticulosPage() {
 
   const ArticleImage = ({ src, title }: { src?: string; title: string }) => {
     const [error, setError] = useState(false);
-    const initial = title?.[0]?.toUpperCase() || '?';
     if (src && !error) {
       return (
         // eslint-disable-next-line @next/next/no-img-element
@@ -155,13 +124,13 @@ export default function ArticulosPage() {
           src={src}
           alt={title}
           onError={() => setError(true)}
-          className="w-14 h-14 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+          className="w-20 h-14 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
         />
       );
     }
     return (
-      <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 text-xl font-semibold">
-        {initial}
+      <div className="w-20 h-14 rounded-lg bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 flex items-center justify-center">
+        <FaImage className="w-5 h-5 text-gray-400 dark:text-gray-500" />
       </div>
     );
   };
@@ -251,16 +220,12 @@ export default function ArticulosPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Artículos</h1>
-        <button
-          onClick={() => {
-            setSelectedArticle(null);
-            setFormData({ title: '', slug: '', content: '', category: '', published: false, author: '' });
-            setIsModalOpen(true);
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        <Link
+          href="/dashboard/articulos/nuevo"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm font-medium"
         >
           + Nuevo Artículo
-        </button>
+        </Link>
       </div>
 
       <div className="flex justify-between items-center">
@@ -322,35 +287,6 @@ export default function ArticulosPage() {
           </button>
         </div>
       )}
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={selectedArticle ? 'Editar Artículo' : 'Nuevo Artículo'}
-        size="xl"
-        footer={
-          <>
-            <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition">
-              Cancelar
-            </button>
-            <button onClick={handleSave} className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition">
-              Guardar
-            </button>
-          </>
-        }
-      >
-        <div className="space-y-4">
-          <input type="text" placeholder="Título" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="text" placeholder="Slug" value={formData.slug} onChange={(e) => setFormData({ ...formData, slug: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="text" placeholder="Categoría" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <input type="text" placeholder="Autor" value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-          <textarea placeholder="Contenido del artículo" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-32" />
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} className="rounded" />
-            <span className="text-gray-700 dark:text-gray-300">Publicado</span>
-          </label>
-        </div>
-      </Modal>
 
       <DeleteConfirmModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} onConfirm={handleConfirmDelete} title="Eliminar Artículo" message={`¿Estás seguro que deseas eliminar "${selectedArticle?.title}"?`} />
     </div>

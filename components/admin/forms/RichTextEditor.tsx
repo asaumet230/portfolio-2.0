@@ -2,7 +2,7 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface RichTextEditorProps {
   value?: string;
@@ -18,6 +18,9 @@ export function RichTextEditor({
   height = 'h-40',
 }: RichTextEditorProps) {
   const [showCode, setShowCode] = useState(false);
+  const [htmlCode, setHtmlCode] = useState('');
+  const [hasPendingHtmlChanges, setHasPendingHtmlChanges] = useState(false);
+  const isInternalUpdate = useRef(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -30,6 +33,7 @@ export function RichTextEditor({
     ],
     content: value,
     onUpdate: ({ editor }) => {
+      isInternalUpdate.current = true;
       onChange(editor.getHTML());
     },
     editorProps: {
@@ -40,11 +44,15 @@ export function RichTextEditor({
     },
   });
 
+  // Only sync external value changes (not internal edits from the user)
   useEffect(() => {
-    if (!editor || !value) return;
-    const current = editor.getHTML();
-    if (current !== value) {
-      editor.commands.setContent(value);
+    if (!editor) return;
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      return;
+    }
+    if (value && editor.getHTML() !== value) {
+      editor.commands.setContent(value, { emitUpdate: false });
     }
   }, [value, editor]);
 
@@ -80,6 +88,7 @@ export function RichTextEditor({
       <div className="bg-gray-100 dark:bg-gray-800 border-b dark:border-gray-600 p-2 flex flex-wrap gap-1">
         {/* Formato Básico */}
         <button
+          type="button"
           onClick={toggleBold}
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('bold')
@@ -92,6 +101,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleItalic}
           className={`px-3 py-1 rounded text-sm italic transition ${
             editor.isActive('italic')
@@ -104,6 +114,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleStrike}
           className={`px-3 py-1 rounded text-sm line-through transition ${
             editor.isActive('strike')
@@ -116,6 +127,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleCode}
           className={`px-3 py-1 rounded text-sm font-mono transition ${
             editor.isActive('code')
@@ -132,6 +144,7 @@ export function RichTextEditor({
 
         {/* Títulos */}
         <button
+          type="button"
           onClick={toggleH1}
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 1 })
@@ -144,6 +157,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleH2}
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 2 })
@@ -156,6 +170,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleH3}
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 3 })
@@ -168,6 +183,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleH4}
           className={`px-3 py-1 rounded text-sm font-bold transition ${
             editor.isActive('heading', { level: 4 })
@@ -184,6 +200,7 @@ export function RichTextEditor({
 
         {/* Listas */}
         <button
+          type="button"
           onClick={toggleBulletList}
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('bulletList')
@@ -196,6 +213,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleOrderedList}
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('orderedList')
@@ -212,6 +230,7 @@ export function RichTextEditor({
 
         {/* Blockquote y Código */}
         <button
+          type="button"
           onClick={toggleBlockquote}
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('blockquote')
@@ -224,6 +243,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={toggleCodeBlock}
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('codeBlock')
@@ -240,6 +260,7 @@ export function RichTextEditor({
 
         {/* Enlaces */}
         <button
+          type="button"
           onClick={setLink}
           className={`px-3 py-1 rounded text-sm transition ${
             editor.isActive('link')
@@ -252,6 +273,7 @@ export function RichTextEditor({
         </button>
 
         <button
+          type="button"
           onClick={unsetLink}
           className="px-3 py-1 rounded text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           title="Remover enlace"
@@ -264,7 +286,19 @@ export function RichTextEditor({
 
         {/* Ver Código */}
         <button
-          onClick={() => setShowCode(!showCode)}
+          type="button"
+          onClick={() => {
+            if (!showCode) {
+              setHtmlCode(editor.getHTML());
+              setHasPendingHtmlChanges(false);
+              setShowCode(true);
+            } else {
+              editor.commands.setContent(htmlCode, { emitUpdate: false });
+              onChange(htmlCode);
+              setHasPendingHtmlChanges(false);
+              setShowCode(false);
+            }
+          }}
           className={`px-3 py-1 rounded text-sm transition ${
             showCode
               ? 'bg-blue-500 text-white'
@@ -274,6 +308,7 @@ export function RichTextEditor({
         >
           {'</>'} HTML
         </button>
+
       </div>
 
       {/* Editor */}
@@ -286,19 +321,25 @@ export function RichTextEditor({
         </div>
       ) : (
         <textarea
-          value={editor.getHTML()}
+          value={htmlCode}
           onChange={(e) => {
-            editor.commands.setContent(e.target.value);
+            const nextHtml = e.target.value;
+            setHtmlCode(nextHtml);
+            onChange(nextHtml);
+            setHasPendingHtmlChanges(true);
           }}
           className={`w-full ${height} p-3 font-mono text-sm border-t dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none`}
           style={{ resize: 'vertical', minHeight: '8rem' }}
           placeholder="HTML code..."
+          spellCheck={false}
         />
       )}
 
       {/* Info */}
       <div className="bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-600 px-3 py-2 text-xs text-gray-500 dark:text-gray-400">
-        Formato: HTML | Puedes pegar código directamente
+        {showCode && hasPendingHtmlChanges
+          ? 'Tienes cambios HTML sin aplicar'
+          : 'Formato: HTML | Puedes pegar código directamente'}
       </div>
     </div>
   );

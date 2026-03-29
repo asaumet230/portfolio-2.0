@@ -117,9 +117,11 @@ const ShareButtons = ({ slug, title }: { slug: string; title: string }) => {
 
 interface CardPostProps {
   categorySlug?: string;
+  onTotalChange?: (total: number) => void;
+  sortOrder?: 'asc' | 'desc';
 }
 
-export const CardPost = ({ categorySlug }: CardPostProps = {}) => {
+export const CardPost = ({ categorySlug, onTotalChange, sortOrder = 'desc' }: CardPostProps = {}) => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
 
@@ -132,11 +134,11 @@ export const CardPost = ({ categorySlug }: CardPostProps = {}) => {
 
   useEffect(() => {
     setPage(1);
-  }, [categorySlug, searchQuery]);
+  }, [categorySlug, searchQuery, sortOrder]);
 
   useEffect(() => {
     fetchArticles(page);
-  }, [page, categorySlug, searchQuery]);
+  }, [page, categorySlug, searchQuery, sortOrder]);
 
   const fetchArticles = async (p: number) => {
     try {
@@ -144,13 +146,17 @@ export const CardPost = ({ categorySlug }: CardPostProps = {}) => {
       const params = new URLSearchParams({ page: String(p), limit: String(limit) });
       if (categorySlug) params.append('category', categorySlug);
       if (searchQuery) params.append('q', searchQuery);
+      if (sortOrder) params.append('sort', sortOrder);
       const res = await fetch(`${API_BASE}/articles?${params}`);
       const data = await res.json();
+      const fetchedTotal = data.total || 0;
       setArticles(data.articles || []);
       setTotalPages(data.totalPages || 1);
-      setTotal(data.total || 0);
+      setTotal(fetchedTotal);
+      onTotalChange?.(fetchedTotal);
     } catch {
       setArticles([]);
+      onTotalChange?.(0);
     } finally {
       setLoading(false);
     }
@@ -192,18 +198,20 @@ export const CardPost = ({ categorySlug }: CardPostProps = {}) => {
 
   return (
     <div className="px-4 md:px-8">
-      <div className="flex items-center justify-between mb-5">
-        {searchQuery && (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {total} resultado{total !== 1 ? 's' : ''} para <strong className="text-gray-700 dark:text-gray-300">&ldquo;{searchQuery}&rdquo;</strong>
-          </p>
-        )}
-        {!searchQuery && total > 0 && (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {total} artículo{total !== 1 ? 's' : ''}
-          </p>
-        )}
-      </div>
+      {!onTotalChange && (
+        <div className="flex items-center justify-between mb-5">
+          {searchQuery && (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {total} resultado{total !== 1 ? 's' : ''} para <strong className="text-gray-700 dark:text-gray-300">&ldquo;{searchQuery}&rdquo;</strong>
+            </p>
+          )}
+          {!searchQuery && total > 0 && (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {total} artículo{total !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6">
         {articles.map((article) => {

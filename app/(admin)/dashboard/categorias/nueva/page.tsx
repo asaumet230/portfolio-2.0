@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { apiClient } from '@/helpers/apiClient';
@@ -21,24 +21,8 @@ interface SeoForm {
 
 interface ContentForm {
   name: string;
-  description: string;
-}
-
-interface ArticleCategory {
-  _id: string;
-  name: string;
   slug: string;
-  description?: string;
-  seoMetadata?: {
-    title?: string;
-    description?: string;
-    keywords?: string[];
-    ogTitle?: string;
-    ogDescription?: string;
-    ogImage?: string;
-    canonical?: string;
-    robots?: string;
-  };
+  description: string;
 }
 
 const ROBOTS_OPTIONS = [
@@ -48,16 +32,29 @@ const ROBOTS_OPTIONS = [
   'noindex, nofollow',
 ];
 
-export default function EditCategoriaSeoPage() {
-  const { slug } = useParams<{ slug: string }>();
+const toSlug = (str: string) =>
+  str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+
+export default function NuevaCategoriaPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const [category, setCategory] = useState<ArticleCategory | null>(null);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [ogImageName, setOgImageName] = useState('');
-  const [contentForm, setContentForm] = useState<ContentForm>({ name: '', description: '' });
+  const [slugEdited, setSlugEdited] = useState(false);
+
+  const [contentForm, setContentForm] = useState<ContentForm>({
+    name: '',
+    slug: '',
+    description: '',
+  });
+
   const [form, setForm] = useState<SeoForm>({
     title: '',
     description: '',
@@ -69,46 +66,17 @@ export default function EditCategoriaSeoPage() {
     robots: 'index, follow',
   });
 
-  useEffect(() => {
-    fetchCategory();
-  }, [slug]);
+  const handleNameChange = (name: string) => {
+    setContentForm((prev) => ({
+      ...prev,
+      name,
+      slug: slugEdited ? prev.slug : toSlug(name),
+    }));
+  };
 
-  const fetchCategory = async () => {
-    try {
-      setLoading(true);
-      const response = await apiClient.get('/article-categories');
-      const cats: ArticleCategory[] = response.categories || [];
-      const found = cats.find((c) => c.slug === slug);
-
-      if (!found) {
-        toast.error('Categoría no encontrada');
-        router.push('/dashboard/categorias');
-        return;
-      }
-
-      setCategory(found);
-      setContentForm({ name: found.name || '', description: found.description || '' });
-      const seo = found.seoMetadata || {};
-      setForm({
-        title: seo.title || '',
-        description: seo.description || '',
-        keywords: Array.isArray(seo.keywords) ? seo.keywords.join(', ') : '',
-        ogTitle: seo.ogTitle || '',
-        ogDescription: seo.ogDescription || '',
-        ogImage: seo.ogImage || '',
-        canonical: seo.canonical || '',
-        robots: seo.robots || 'index, follow',
-      });
-      if (seo.ogImage) {
-        const parts = seo.ogImage.split('/');
-        setOgImageName(parts[parts.length - 1].split('.')[0]);
-      }
-    } catch {
-      toast.error('Error al cargar la categoría');
-      router.push('/dashboard/categorias');
-    } finally {
-      setLoading(false);
-    }
+  const handleSlugChange = (slug: string) => {
+    setSlugEdited(true);
+    setContentForm((prev) => ({ ...prev, slug: slug.toLowerCase().replace(/[^a-z0-9-]/g, '') }));
   };
 
   const handleSave = async () => {
@@ -116,34 +84,35 @@ export default function EditCategoriaSeoPage() {
       toast.error('El nombre de la categoría es requerido');
       return;
     }
-    if (!form.title) {
-      toast.error('El título SEO es requerido');
-      return;
-    }
-    if (!form.description) {
-      toast.error('La descripción SEO es requerida');
+    if (!contentForm.slug.trim()) {
+      toast.error('El slug es requerido');
       return;
     }
 
     try {
       setSaving(true);
       const token = (session as any)?.accessToken;
-      const seoPayload = {
-        ...form,
-        keywords: form.keywords.split(',').map((k) => k.trim()).filter(Boolean),
-      };
 
-      await Promise.all([
-        apiClient.put(`/article-categories/${category!._id}`, {
-          name: contentForm.name.trim(),
-          description: contentForm.description.trim(),
-        }, token),
-        apiClient.put(`/article-categories/${category!._id}/seo`, seoPayload, token),
-      ]);
+      const created = await apiClient.post('/article-categories', {
+        name: contentForm.name.trim(),
+        slug: contentForm.slug.trim(),
+        description: contentForm.description.trim() || undefined,
+      }, token);
 
-      toast.success('Categoría actualizada correctamente');
+      const categoryId = created?.category?._id;
+
+      if (categoryId && (form.title || form.description || form.ogTitle || form.ogDescription || form.ogImage || form.canonical || form.keywords)) {
+        const seoPayload = {
+          ...form,
+          keywords: form.keywords.split(',').map((k) => k.trim()).filter(Boolean),
+        };
+        await apiClient.put(`/article-categories/${categoryId}/seo`, seoPayload, token);
+      }
+
+      toast.success('Categoría creada correctamente');
+      router.push('/dashboard/categorias');
     } catch (error: any) {
-      toast.error(error.message || 'Error al guardar');
+      toast.error(error.message || 'Error al crear la categoría');
     } finally {
       setSaving(false);
     }
@@ -208,10 +177,6 @@ export default function EditCategoriaSeoPage() {
     </div>
   );
 
-  if (loading) {
-    return <div className="text-center py-12 text-gray-500">Cargando...</div>;
-  }
-
   return (
     <div className="max-w-3xl space-y-6">
       {/* Header */}
@@ -223,10 +188,12 @@ export default function EditCategoriaSeoPage() {
           <ArrowLeftIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 capitalize">
-            {category?.name}
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            {contentForm.name || 'Nueva categoría'}
           </h1>
-          <p className="text-sm text-gray-400">Categoría · /{category?.slug}</p>
+          <p className="text-sm text-gray-400">
+            Categoría{contentForm.slug ? ` · /${contentForm.slug}` : ''}
+          </p>
         </div>
       </div>
 
@@ -237,19 +204,43 @@ export default function EditCategoriaSeoPage() {
           <p className="text-xs text-gray-400 mt-0.5">Estos campos se muestran directamente en la página pública de la categoría</p>
         </div>
 
+        {/* Name */}
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Nombre <span className="text-[#7b7db0] text-xs font-normal ml-1">— H1 de la página</span>
+            Nombre <span className="text-red-400">*</span>
+            <span className="text-[#7b7db0] text-xs font-normal ml-1">— H1 de la página</span>
           </label>
           <input
             type="text"
             value={contentForm.name}
-            onChange={(e) => setContentForm({ ...contentForm, name: e.target.value })}
+            onChange={(e) => handleNameChange(e.target.value)}
             placeholder="ej: Desarrollo Web"
+            autoFocus
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
           />
         </div>
 
+        {/* Slug */}
+        <div className="space-y-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Slug <span className="text-red-400">*</span>
+            <span className="text-xs text-gray-400 font-normal ml-1">— se genera automáticamente</span>
+          </label>
+          <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
+            <span className="px-3 py-2 text-sm text-gray-400 bg-gray-50 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 shrink-0">
+              /categoria/
+            </span>
+            <input
+              type="text"
+              value={contentForm.slug}
+              onChange={(e) => handleSlugChange(e.target.value)}
+              placeholder="desarrollo-web"
+              className="flex-1 px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Description */}
         <div className="space-y-1">
           <div className="flex justify-between items-center">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -278,7 +269,7 @@ export default function EditCategoriaSeoPage() {
         {textarea('Título', 'title', 70, 'Máximo 70 caracteres — se muestra en Google y pestañas del navegador')}
         {textarea('Descripción', 'description', 165, 'Máximo 165 caracteres — se muestra en los resultados de búsqueda')}
         {field('Keywords', 'keywords', 'Separadas por comas: javascript, react, next.js, ...')}
-        {field('URL Canónica', 'canonical', 'Evita contenido duplicado, ej: https://www.andressaumet.com/blog-de-tecnologia/categoria/' + (category?.slug || ''))}
+        {field('URL Canónica', 'canonical', `Evita contenido duplicado, ej: https://www.andressaumet.com/blog-de-tecnologia/categoria/${contentForm.slug || '...'}`)}
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Robots</label>
           <select
@@ -405,10 +396,10 @@ export default function EditCategoriaSeoPage() {
         </Link>
         <button
           onClick={handleSave}
-          disabled={saving}
+          disabled={saving || !contentForm.name.trim() || !contentForm.slug.trim()}
           className="px-5 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {saving ? 'Guardando...' : 'Guardar cambios'}
+          {saving ? 'Creando...' : 'Crear categoría'}
         </button>
       </div>
     </div>

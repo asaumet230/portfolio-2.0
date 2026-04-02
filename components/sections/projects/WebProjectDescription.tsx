@@ -16,6 +16,7 @@ import { GrGatsbyjs } from 'react-icons/gr';
 import { IoLogoJavascript } from 'react-icons/io';
 
 import { IProject } from '@/interfaces';
+import { stripHtml, truncatePlainText } from '@/helpers';
 import styles from './projects.module.css';
 
 const iconsGuide = [
@@ -78,6 +79,7 @@ interface Props {
 }
 
 export const WebProjectDescription = ({ project }: Props) => {
+  const hasDescription = !!stripHtml(project.description);
 
   const iconsTecnologies: any[] = [];
 
@@ -106,7 +108,11 @@ export const WebProjectDescription = ({ project }: Props) => {
         <Link href={`/proyectos/${project.slug}`}>
           <h3 className='text-xl text-center capitalize hover:text-secondary-color dark:hover:text-indigo-600 transition-colors cursor-pointer'>{project.name}</h3>
         </Link>
-        <p className='font-light text-sm mt-1 text-center leading-relaxed'>{project.description}</p>
+        {hasDescription ? (
+          <p className='font-light text-sm mt-1 text-center leading-relaxed'>{truncatePlainText(project.description, 220)}</p>
+        ) : (
+          <p className='font-light text-sm mt-1 text-center leading-relaxed text-gray-500 dark:text-gray-400'>No hay descripción disponible.</p>
+        )}
         <div>
           <h4 className='text-lg text-left mt-4 capitalize font-medium'>tecnologías usadas:</h4>
           <div className='flex justify-between items-center my-4 w-11/12 mx-auto'>

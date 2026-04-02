@@ -6,6 +6,7 @@ import { SiDart, SiFlutter } from 'react-icons/si';
 
 import styles from './projects.module.css';
 import { IProject } from '@/interfaces';
+import { stripHtml, truncatePlainText } from '@/helpers';
 
 interface Props {
   project: IProject;
@@ -13,6 +14,7 @@ interface Props {
 
 
 export const MobilProjectDescription = ({ project }: Props) => {
+  const hasDescription = !!stripHtml(project.description);
 
   return (
     <article className='grid grid-cols-2 bg-white border border-slate-300 rounded-xl justify-between max-[1305px]:grid-cols-1 dark:bg-[#262f3a]'>
@@ -53,7 +55,15 @@ export const MobilProjectDescription = ({ project }: Props) => {
         <Link href={`/proyectos/${project.slug}`}>
           <h3 className='text-xl capitalize hover:text-secondary-color dark:hover:text-indigo-600 transition-colors cursor-pointer'>{project.name}</h3>
         </Link>
-        <p className='font-light text-sm  mt-1 leading-relaxed'>{project.description}</p>
+        {hasDescription ? (
+          <p className='font-light text-sm mt-1 leading-relaxed'>
+            {truncatePlainText(project.description, 220)}
+          </p>
+        ) : (
+          <p className='font-light text-sm mt-1 leading-relaxed text-gray-500 dark:text-gray-400'>
+            No hay descripción disponible.
+          </p>
+        )}
         <h4 className='text-lg text-left mt-4 capitalize'>tecnologías usadas:</h4>
         <div className='flex justify-evenly mt-3 w-9/12 mx-auto'>
           <div>

@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { DataTable } from '@/components/admin/tables/DataTable';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
 import { apiClient, clearApiCache } from '@/helpers/apiClient';
+import { truncatePlainText } from '@/helpers';
 import toast from 'react-hot-toast';
 
 interface Project {
@@ -129,7 +130,7 @@ export default function ProjectosMovilesPage() {
     {
       key: 'description' as const,
       label: 'Descripción',
-      render: (desc: string) => desc.substring(0, 50) + '...',
+      render: (desc: string) => truncatePlainText(desc, 80) || '—',
     },
   ];
 

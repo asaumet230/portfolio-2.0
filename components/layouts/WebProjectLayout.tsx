@@ -4,6 +4,7 @@ import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaShieldAlt } from 'react-ico
 import { SiFlutter, SiDart, SiReact, SiNextdotjs, SiTypescript, SiJavascript, SiNodedotjs, SiAngular, SiWordpress, SiBootstrap, SiTailwindcss, SiCss3, SiGatsby } from 'react-icons/si';
 import { IProject } from '@/interfaces';
 import { Separator } from '@/components';
+import { stripHtml } from '@/helpers';
 
 interface Props {
   project: IProject;
@@ -31,6 +32,9 @@ const getTechIcon = (tech: string) => {
 };
 
 export const WebProjectLayout = ({ project, slug }: Props) => {
+  const hasDescription = !!stripHtml(project.description);
+  const hasProjectGoal = !!stripHtml(project.projectGoal || '');
+
   return (
     <>
       {/* Breadcrumbs */}
@@ -85,9 +89,13 @@ export const WebProjectLayout = ({ project, slug }: Props) => {
                     Acerca del Proyecto
                   </h2>
                   <div className="prose prose-lg dark:prose-invert max-w-none">
-                    <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                      {project.description}
-                    </p>
+                    {hasDescription ? (
+                      <div dangerouslySetInnerHTML={{ __html: project.description }} />
+                    ) : (
+                      <p className="text-gray-500 dark:text-gray-400">
+                        No hay descripción disponible para este proyecto.
+                      </p>
+                    )}
                   </div>
                 </section>
               
@@ -157,14 +165,18 @@ export const WebProjectLayout = ({ project, slug }: Props) => {
 
                 <Separator />
 
-                <div className="mt-6">
-                  <h3 className="text-xl font-bold mb-3">Objetivo del Proyecto</h3>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {project.projectGoal}
-                  </p>
-                </div>
-
-                <Separator />
+                {hasProjectGoal && (
+                  <>
+                    <div className="mt-6">
+                      <h3 className="text-xl font-bold mb-3">Objetivo del Proyecto</h3>
+                      <div
+                        className="prose prose-sm max-w-none text-gray-700 dark:prose-invert dark:text-gray-300"
+                        dangerouslySetInnerHTML={{ __html: project.projectGoal || '' }}
+                      />
+                    </div>
+                    <Separator />
+                  </>
+                )}
               
                 <div className="space-y-3 mt-6">
                   <h3 className="text-xl font-bold mb-4">Enlaces</h3>

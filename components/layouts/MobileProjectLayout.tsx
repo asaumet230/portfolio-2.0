@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaShieldAlt, FaApple, FaFileContract, FaUserTimes } from 'react-icons/fa';
 import { SiFlutter, SiDart, SiReact, SiNextdotjs, SiTypescript, SiJavascript, SiNodedotjs, SiAngular, SiWordpress, SiBootstrap, SiTailwindcss, SiCss3, SiGatsby } from 'react-icons/si';
 import { IProject } from '@/interfaces';
+import { stripHtml } from '@/helpers';
 
 import styles from './MobileProjectLayout.module.css';
 
@@ -42,6 +43,10 @@ const getTechIcon = (tech: string) => {
 };
 
 export const MobileProjectLayout = ({ project, slug }: Props) => {
+  const detailDescription = project.longDescription || project.description;
+  const hasDetailDescription = !!stripHtml(detailDescription);
+  const hasProjectGoal = !!stripHtml(project.projectGoal || '');
+
   return (
     <>
 
@@ -126,9 +131,16 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
 
               <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
                 <h3 className="text-xl font-bold mb-4">Descripción</h3>
-                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed text-justify whitespace-pre-line">
-                  {project.longDescription}
-                </p>
+                {hasDetailDescription ? (
+                  <div
+                    className="prose prose-sm max-w-none text-gray-700 dark:prose-invert dark:text-gray-300"
+                    dangerouslySetInnerHTML={{ __html: detailDescription }}
+                  />
+                ) : (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    No hay descripción disponible para este proyecto.
+                  </p>
+                )}
               </div>
             </div>
           </section>
@@ -150,12 +162,13 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
             </div>
           </section>
 
-          {project.projectGoal && (
+          {hasProjectGoal && (
             <section className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
               <h2 className="text-2xl font-bold mb-4">🎯 Objetivo del Proyecto</h2>
-              <p className="text-justify text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-                {project.projectGoal}
-              </p>
+              <div
+                className="prose max-w-none text-gray-700 dark:prose-invert dark:text-gray-300"
+                dangerouslySetInnerHTML={{ __html: project.projectGoal || '' }}
+              />
             </section>
           )}
 

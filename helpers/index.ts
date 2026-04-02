@@ -1,4 +1,5 @@
 export { changeThemeMode } from './changeThemeMode';
+export { stripHtml, truncatePlainText } from './html';
 export { compressImageBeforeUpload } from './compressImageBeforeUpload';
 export { menuData, cardsData } from './constants';
 export { generateZipFromConverted } from './generateZipFromConverted';

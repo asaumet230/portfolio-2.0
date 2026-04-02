@@ -2,7 +2,17 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useState, useEffect, useRef } from 'react';
+import TextAlign from '@tiptap/extension-text-align';
+import Image from '@tiptap/extension-image';
+import { HardBreak } from '@tiptap/extension-hard-break';
+import { useEffect, useRef, useState } from 'react';
+import {
+  FaBold, FaItalic, FaUnderline, FaStrikethrough,
+  FaListUl, FaListOl, FaAlignLeft, FaAlignCenter,
+  FaAlignRight, FaAlignJustify, FaLink, FaUnlink,
+  FaImage, FaCode, FaQuoteLeft,
+} from 'react-icons/fa';
+import { MdOutlineCode } from 'react-icons/md';
 
 interface RichTextEditorProps {
   value?: string;
@@ -11,23 +21,52 @@ interface RichTextEditorProps {
   height?: string;
 }
 
+// Enter = <br> excepto dentro de listas (donde crea nuevo item)
+const CustomHardBreak = HardBreak.extend({
+  addKeyboardShortcuts() {
+    return {
+      Enter: () => {
+        const { $from } = this.editor.state.selection;
+        for (let depth = $from.depth; depth > 0; depth--) {
+          const name = $from.node(depth).type.name;
+          if (name === 'listItem' || name === 'bulletList' || name === 'orderedList') {
+            return false; // deja que la lista maneje el Enter
+          }
+        }
+        return this.editor.commands.setHardBreak();
+      },
+    };
+  },
+});
+
 export function RichTextEditor({
   value = '',
   onChange,
   placeholder = 'Escribe aquí...',
-  height = 'h-40',
+  height = 'h-64',
 }: RichTextEditorProps) {
   const [showCode, setShowCode] = useState(false);
   const [htmlCode, setHtmlCode] = useState('');
-  const [hasPendingHtmlChanges, setHasPendingHtmlChanges] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const isInternalUpdate = useRef(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
-        heading: {
-          levels: [1, 2, 3, 4],
+        hardBreak: false, // lo reemplazamos con CustomHardBreak
+        heading: { levels: [1, 2, 3, 4] },
+      }),
+      CustomHardBreak,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+      Image.configure({
+        inline: false,
+        allowBase64: false,
+        HTMLAttributes: {
+          class: 'max-w-full h-auto rounded my-2',
         },
       }),
     ],
@@ -39,307 +78,216 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm dark:prose-invert max-w-none px-3 py-2 focus:outline-none text-gray-700 dark:text-gray-300',
+          'prose prose-sm dark:prose-invert max-w-none px-4 py-3 focus:outline-none min-h-full text-gray-800 dark:text-gray-200',
       },
     },
   });
 
-  // Only sync external value changes (not internal edits from the user)
   useEffect(() => {
     if (!editor) return;
     if (isInternalUpdate.current) {
       isInternalUpdate.current = false;
       return;
     }
-    if (value && editor.getHTML() !== value) {
-      editor.commands.setContent(value, { emitUpdate: false });
+    if (value !== undefined && editor.getHTML() !== value) {
+      editor.commands.setContent(value || '', { emitUpdate: false });
     }
   }, [value, editor]);
 
-  if (!editor) {
-    return null;
-  }
+  if (!editor) return null;
 
-  const toggleBold = () => editor.chain().focus().toggleBold().run();
-  const toggleItalic = () => editor.chain().focus().toggleItalic().run();
-  const toggleStrike = () => editor.chain().focus().toggleStrike().run();
-  const toggleCode = () => editor.chain().focus().toggleCode().run();
-  const toggleH1 = () => editor.chain().focus().toggleHeading({ level: 1 }).run();
-  const toggleH2 = () => editor.chain().focus().toggleHeading({ level: 2 }).run();
-  const toggleH3 = () => editor.chain().focus().toggleHeading({ level: 3 }).run();
-  const toggleH4 = () => editor.chain().focus().toggleHeading({ level: 4 }).run();
-  const toggleBulletList = () => editor.chain().focus().toggleBulletList().run();
-  const toggleOrderedList = () => editor.chain().focus().toggleOrderedList().run();
-  const toggleBlockquote = () => editor.chain().focus().toggleBlockquote().run();
-  const toggleCodeBlock = () => editor.chain().focus().toggleCodeBlock().run();
-
-  const setLink = () => {
-    const url = window.prompt('Ingresa la URL:');
-    if (url) {
-      editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+  const handleImageUpload = async (file: File) => {
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload-editor', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.url) {
+        editor.chain().focus().setImage({ src: data.url }).run();
+      }
+    } catch {
+      alert('Error subiendo la imagen');
+    } finally {
+      setUploadingImage(false);
     }
   };
 
-  const unsetLink = () => editor.chain().focus().unsetLink().run();
+  const handleImageByUrl = () => {
+    const url = window.prompt('URL de la imagen:');
+    if (url) editor.chain().focus().setImage({ src: url }).run();
+  };
+
+  const setLink = () => {
+    const url = window.prompt('URL del enlace:');
+    if (url) editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+  };
+
+  const btn = (active: boolean) =>
+    `px-2 py-1.5 rounded text-sm transition ${
+      active
+        ? 'bg-blue-500 text-white'
+        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
+    }`;
+
+  const sep = <div className="w-px bg-gray-300 dark:bg-gray-600 self-stretch mx-0.5" />;
 
   return (
-    <div className="border rounded dark:bg-gray-700 dark:border-gray-600 overflow-hidden">
-      {/* Barra de herramientas */}
-      <div className="bg-gray-100 dark:bg-gray-800 border-b dark:border-gray-600 p-2 flex flex-wrap gap-1">
-        {/* Formato Básico */}
-        <button
-          type="button"
-          onClick={toggleBold}
-          className={`px-3 py-1 rounded text-sm font-bold transition ${
-            editor.isActive('bold')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Negrilla"
-        >
-          B
+    <div className="border rounded-lg dark:bg-gray-700 dark:border-gray-600 overflow-hidden">
+      {/* Toolbar */}
+      <div className="bg-gray-100 dark:bg-gray-800 border-b dark:border-gray-600 p-2 flex flex-wrap gap-1 items-center">
+
+        {/* Formato básico */}
+        <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={btn(editor.isActive('bold'))} title="Negrilla (Ctrl+B)">
+          <FaBold />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={btn(editor.isActive('italic'))} title="Itálica (Ctrl+I)">
+          <FaItalic />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().toggleUnderline().run()} className={btn(editor.isActive('underline'))} title="Subrayado (Ctrl+U)">
+          <FaUnderline />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().toggleStrike().run()} className={btn(editor.isActive('strike'))} title="Tachado">
+          <FaStrikethrough />
         </button>
 
-        <button
-          type="button"
-          onClick={toggleItalic}
-          className={`px-3 py-1 rounded text-sm italic transition ${
-            editor.isActive('italic')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Itálica"
-        >
-          I
-        </button>
-
-        <button
-          type="button"
-          onClick={toggleStrike}
-          className={`px-3 py-1 rounded text-sm line-through transition ${
-            editor.isActive('strike')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Tachado"
-        >
-          S
-        </button>
-
-        <button
-          type="button"
-          onClick={toggleCode}
-          className={`px-3 py-1 rounded text-sm font-mono transition ${
-            editor.isActive('code')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Código"
-        >
-          {'<>'}
-        </button>
-
-        {/* Separador */}
-        <div className="w-px bg-gray-300 dark:bg-gray-600" />
+        {sep}
 
         {/* Títulos */}
-        <button
-          type="button"
-          onClick={toggleH1}
-          className={`px-3 py-1 rounded text-sm font-bold transition ${
-            editor.isActive('heading', { level: 1 })
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Título 1"
-        >
-          H1
+        {([1, 2, 3, 4] as const).map((level) => (
+          <button
+            key={level}
+            type="button"
+            onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+            className={`${btn(editor.isActive('heading', { level }))} font-bold text-xs`}
+            title={`Título ${level}`}
+          >
+            H{level}
+          </button>
+        ))}
+
+        {sep}
+
+        {/* Alineación */}
+        <button type="button" onClick={() => editor.chain().focus().setTextAlign('left').run()} className={btn(editor.isActive({ textAlign: 'left' }))} title="Alinear izquierda">
+          <FaAlignLeft />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().setTextAlign('center').run()} className={btn(editor.isActive({ textAlign: 'center' }))} title="Centrar">
+          <FaAlignCenter />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().setTextAlign('right').run()} className={btn(editor.isActive({ textAlign: 'right' }))} title="Alinear derecha">
+          <FaAlignRight />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().setTextAlign('justify').run()} className={btn(editor.isActive({ textAlign: 'justify' }))} title="Justificar">
+          <FaAlignJustify />
         </button>
 
-        <button
-          type="button"
-          onClick={toggleH2}
-          className={`px-3 py-1 rounded text-sm font-bold transition ${
-            editor.isActive('heading', { level: 2 })
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Título 2"
-        >
-          H2
-        </button>
-
-        <button
-          type="button"
-          onClick={toggleH3}
-          className={`px-3 py-1 rounded text-sm font-bold transition ${
-            editor.isActive('heading', { level: 3 })
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Título 3"
-        >
-          H3
-        </button>
-
-        <button
-          type="button"
-          onClick={toggleH4}
-          className={`px-3 py-1 rounded text-sm font-bold transition ${
-            editor.isActive('heading', { level: 4 })
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Título 4"
-        >
-          H4
-        </button>
-
-        {/* Separador */}
-        <div className="w-px bg-gray-300 dark:bg-gray-600" />
+        {sep}
 
         {/* Listas */}
-        <button
-          type="button"
-          onClick={toggleBulletList}
-          className={`px-3 py-1 rounded text-sm transition ${
-            editor.isActive('bulletList')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Lista de puntos"
-        >
-          • Lista
+        <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={btn(editor.isActive('bulletList'))} title="Lista de puntos">
+          <FaListUl />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={btn(editor.isActive('orderedList'))} title="Lista numerada">
+          <FaListOl />
         </button>
 
-        <button
-          type="button"
-          onClick={toggleOrderedList}
-          className={`px-3 py-1 rounded text-sm transition ${
-            editor.isActive('orderedList')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Lista numerada"
-        >
-          1. Lista
+        {sep}
+
+        {/* Blockquote y código */}
+        <button type="button" onClick={() => editor.chain().focus().toggleBlockquote().run()} className={btn(editor.isActive('blockquote'))} title="Cita">
+          <FaQuoteLeft />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().toggleCode().run()} className={btn(editor.isActive('code'))} title="Código inline">
+          <FaCode />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().toggleCodeBlock().run()} className={btn(editor.isActive('codeBlock'))} title="Bloque de código">
+          <MdOutlineCode size={16} />
         </button>
 
-        {/* Separador */}
-        <div className="w-px bg-gray-300 dark:bg-gray-600" />
+        {sep}
 
-        {/* Blockquote y Código */}
-        <button
-          type="button"
-          onClick={toggleBlockquote}
-          className={`px-3 py-1 rounded text-sm transition ${
-            editor.isActive('blockquote')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Cita"
-        >
-          {'"'}
+        {/* Enlace */}
+        <button type="button" onClick={setLink} className={btn(editor.isActive('link'))} title="Agregar enlace">
+          <FaLink />
+        </button>
+        <button type="button" onClick={() => editor.chain().focus().unsetLink().run()} className={btn(false)} title="Quitar enlace">
+          <FaUnlink />
         </button>
 
+        {sep}
+
+        {/* Imagen */}
         <button
           type="button"
-          onClick={toggleCodeBlock}
-          className={`px-3 py-1 rounded text-sm transition ${
-            editor.isActive('codeBlock')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Bloque de código"
+          onClick={() => fileInputRef.current?.click()}
+          className={`${btn(false)} flex items-center gap-1`}
+          title="Subir imagen"
+          disabled={uploadingImage}
         >
-          {'{}'}
+          <FaImage />
+          {uploadingImage && <span className="text-xs">Subiendo...</span>}
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleImageUpload(file);
+            e.target.value = '';
+          }}
+        />
+        <button type="button" onClick={handleImageByUrl} className={btn(false)} title="Imagen por URL">
+          URL img
         </button>
 
-        {/* Separador */}
-        <div className="w-px bg-gray-300 dark:bg-gray-600" />
-
-        {/* Enlaces */}
-        <button
-          type="button"
-          onClick={setLink}
-          className={`px-3 py-1 rounded text-sm transition ${
-            editor.isActive('link')
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Agregar enlace"
-        >
-          🔗 Link
-        </button>
-
-        <button
-          type="button"
-          onClick={unsetLink}
-          className="px-3 py-1 rounded text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-          title="Remover enlace"
-        >
-          🔗 ✕
-        </button>
-
-        {/* Separador */}
-        <div className="w-px bg-gray-300 dark:bg-gray-600 ml-auto" />
-
-        {/* Ver Código */}
+        {/* HTML */}
+        <div className="w-px bg-gray-300 dark:bg-gray-600 self-stretch ml-auto" />
         <button
           type="button"
           onClick={() => {
             if (!showCode) {
               setHtmlCode(editor.getHTML());
-              setHasPendingHtmlChanges(false);
               setShowCode(true);
             } else {
               editor.commands.setContent(htmlCode, { emitUpdate: false });
               onChange(htmlCode);
-              setHasPendingHtmlChanges(false);
               setShowCode(false);
             }
           }}
-          className={`px-3 py-1 rounded text-sm transition ${
-            showCode
-              ? 'bg-blue-500 text-white'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-          }`}
-          title="Ver código HTML"
+          className={btn(showCode)}
+          title="Ver / editar HTML"
         >
-          {'</>'} HTML
+          {'</>'}
         </button>
-
       </div>
 
-      {/* Editor */}
+      {/* Área de edición */}
       {!showCode ? (
         <div
-          className={`${height} overflow-y-auto bg-white dark:bg-gray-700 border-t dark:border-gray-600`}
-          style={{ resize: 'vertical', minHeight: '8rem' }}
+          className={`${height} overflow-y-auto bg-white dark:bg-gray-700`}
+          style={{ resize: 'vertical', minHeight: '10rem' }}
         >
-          <EditorContent editor={editor} />
+          <EditorContent editor={editor} className="h-full" />
         </div>
       ) : (
         <textarea
           value={htmlCode}
           onChange={(e) => {
-            const nextHtml = e.target.value;
-            setHtmlCode(nextHtml);
-            onChange(nextHtml);
-            setHasPendingHtmlChanges(true);
+            setHtmlCode(e.target.value);
+            onChange(e.target.value);
           }}
-          className={`w-full ${height} p-3 font-mono text-sm border-t dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none`}
-          style={{ resize: 'vertical', minHeight: '8rem' }}
-          placeholder="HTML code..."
+          className={`w-full ${height} p-3 font-mono text-sm bg-white dark:bg-gray-700 dark:text-gray-300 focus:outline-none`}
+          style={{ resize: 'vertical', minHeight: '10rem' }}
           spellCheck={false}
         />
       )}
 
-      {/* Info */}
-      <div className="bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-600 px-3 py-2 text-xs text-gray-500 dark:text-gray-400">
-        {showCode && hasPendingHtmlChanges
-          ? 'Tienes cambios HTML sin aplicar'
-          : 'Formato: HTML | Puedes pegar código directamente'}
+      {/* Footer */}
+      <div className="bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-600 px-3 py-1.5 text-xs text-gray-400">
+        Enter = salto de línea (<code>&lt;br&gt;</code>) · Shift+Enter = nuevo párrafo · Ctrl+B/I/U
       </div>
     </div>
   );

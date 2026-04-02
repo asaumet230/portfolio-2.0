@@ -19,8 +19,12 @@ interface Experience {
   createdAt: string;
 }
 
-const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
-const iconClass  = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const inputClass      = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const inputErrorClass = 'w-full pl-10 pr-3 py-2 border-2 border-red-500 rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-400';
+const iconClass       = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const FieldError = ({ msg }: { msg?: string }) =>
+  msg ? <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {msg}</p> : null;
+const isValidUrl = (url: string) => { try { new URL(url); return true; } catch { return false; } };
 
 const thisYear = new Date().getFullYear();
 const YEARS = Array.from({ length: thisYear - 1989 + 1 }, (_, i) => thisYear + 1 - i);
@@ -40,7 +44,8 @@ export default function ExperienciasPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState<Experience | null>(null);
-  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [formData, setFormData]   = useState(EMPTY_FORM);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => { fetchExperiences(); }, []);
 
@@ -74,10 +79,19 @@ export default function ExperienciasPage() {
   };
 
   const handleSave = async () => {
-    if (!formData.company || !formData.position || !formData.city) {
-      toast.error('Empresa, cargo y ciudad son requeridos');
+    const errors: Record<string, string> = {};
+    if (!formData.company.trim())  errors.company  = 'La empresa es requerida';
+    if (!formData.position.trim()) errors.position = 'El cargo es requerido';
+    if (!formData.city.trim())     errors.city     = 'La ciudad es requerida';
+    if (!formData.url.trim())      errors.url      = 'La URL es requerida';
+    else if (!isValidUrl(formData.url)) errors.url = 'Ingresa una URL válida (https://...)';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      toast.error('Completa los campos requeridos');
       return;
     }
+    setFieldErrors({});
     try {
       const token = (session as any)?.accessToken;
       const payload = {
@@ -96,6 +110,7 @@ export default function ExperienciasPage() {
       }
       setIsModalOpen(false);
       setFormData(EMPTY_FORM);
+      setFieldErrors({});
       fetchExperiences();
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
@@ -195,61 +210,51 @@ export default function ExperienciasPage() {
       >
         <div className="space-y-3">
 
-          <div className="relative">
-            <FaBuilding className={iconClass} />
-            <input
-              type="text"
-              placeholder="Empresa *"
-              value={formData.company}
-              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              className={inputClass}
-            />
+          <div>
+            <div className="relative">
+              <FaBuilding className={iconClass} />
+              <input type="text" placeholder="Empresa *" value={formData.company}
+                onChange={(e) => { setFormData({ ...formData, company: e.target.value }); setFieldErrors(p => ({ ...p, company: '' })); }}
+                className={fieldErrors.company ? inputErrorClass : inputClass} />
+            </div>
+            <FieldError msg={fieldErrors.company} />
           </div>
 
-          <div className="relative">
-            <FaBriefcase className={iconClass} />
-            <input
-              type="text"
-              placeholder="Cargo / Puesto *"
-              value={formData.position}
-              onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-              className={inputClass}
-            />
+          <div>
+            <div className="relative">
+              <FaBriefcase className={iconClass} />
+              <input type="text" placeholder="Cargo / Puesto *" value={formData.position}
+                onChange={(e) => { setFormData({ ...formData, position: e.target.value }); setFieldErrors(p => ({ ...p, position: '' })); }}
+                className={fieldErrors.position ? inputErrorClass : inputClass} />
+            </div>
+            <FieldError msg={fieldErrors.position} />
           </div>
 
-          <div className="relative">
-            <FaMapMarkerAlt className={iconClass} />
-            <input
-              type="text"
-              placeholder="Ciudad *"
-              value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className={inputClass}
-            />
+          <div>
+            <div className="relative">
+              <FaMapMarkerAlt className={iconClass} />
+              <input type="text" placeholder="Ciudad *" value={formData.city}
+                onChange={(e) => { setFormData({ ...formData, city: e.target.value }); setFieldErrors(p => ({ ...p, city: '' })); }}
+                className={fieldErrors.city ? inputErrorClass : inputClass} />
+            </div>
+            <FieldError msg={fieldErrors.city} />
           </div>
 
           <div className="relative">
             <FaCalendarAlt className={iconClass} />
-            <select
-              value={formData.year}
-              onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
-              className={inputClass}
-            >
-              {YEARS.map((y) => (
-                <option key={y} value={y}>{y}</option>
-              ))}
+            <select value={formData.year} onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })} className={inputClass}>
+              {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
             </select>
           </div>
 
-          <div className="relative">
-            <FaLink className={iconClass} />
-            <input
-              type="url"
-              placeholder="URL (https://...)"
-              value={formData.url}
-              onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-              className={inputClass}
-            />
+          <div>
+            <div className="relative">
+              <FaLink className={iconClass} />
+              <input type="url" placeholder="URL de la empresa (https://) *" value={formData.url}
+                onChange={(e) => { setFormData({ ...formData, url: e.target.value }); setFieldErrors(p => ({ ...p, url: '' })); }}
+                className={fieldErrors.url ? inputErrorClass : inputClass} />
+            </div>
+            <FieldError msg={fieldErrors.url} />
           </div>
 
         </div>

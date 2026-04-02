@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { DataTable } from '@/components/admin/tables/DataTable';
 import { DeleteConfirmModal } from '@/components/admin/modals/DeleteConfirmModal';
-import { apiClient } from '@/helpers/apiClient';
+import { apiClient, clearApiCache } from '@/helpers/apiClient';
 import toast from 'react-hot-toast';
 
 interface Project {
@@ -61,6 +61,7 @@ export default function ProjectosWebPage() {
       await apiClient.delete(`/projects/${selectedProject._id}`, token);
       toast.success('Proyecto eliminado');
       setIsDeleteModalOpen(false);
+      clearApiCache('GET', '/projects/category/web');
       fetchProjects();
     } catch (error: any) {
       toast.error(error.message || 'Error al eliminar');

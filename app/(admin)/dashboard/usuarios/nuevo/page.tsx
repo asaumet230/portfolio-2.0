@@ -32,8 +32,11 @@ const roleIdleStyle: Record<string, string> = {
   seo_role:    'hover:border-violet-400 hover:text-violet-600 dark:hover:text-violet-400',
 };
 
-const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
-const iconClass  = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const inputClass      = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const inputErrorClass = 'w-full pl-10 pr-3 py-2 border-2 border-red-500 rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-400';
+const iconClass       = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const FieldError = ({ msg }: { msg?: string }) =>
+  msg ? <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {msg}</p> : null;
 
 export default function NuevoUsuarioPage() {
   const router = useRouter();
@@ -85,11 +88,19 @@ export default function NuevoUsuarioPage() {
   };
 
   const handleSave = async () => {
-    if (!form.email.trim())     { toast.error('El email es requerido');                   return; }
-    if (!form.firstName.trim()) { toast.error('El nombre es requerido');                  return; }
-    if (!form.password)         { toast.error('La contraseña es requerida');              return; }
-    if (!passwordValid)         { toast.error('La contraseña no cumple los requisitos');  return; }
-    if (!passwordsMatch)        { toast.error('Las contraseñas no coinciden');            return; }
+    const errors: Record<string, string> = {};
+    if (!form.firstName.trim())  errors.firstName = 'El nombre es requerido';
+    if (!form.lastName.trim())   errors.lastName  = 'El apellido es requerido';
+    if (!form.email.trim())      errors.email     = 'El email es requerido';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'El email no es válido';
+    if (!form.password)          errors.password  = 'La contraseña es requerida';
+    else if (!passwordValid)     errors.password  = 'La contraseña no cumple los requisitos';
+    if (!passwordsMatch)         errors.confirm   = 'Las contraseñas no coinciden';
+
+    if (Object.keys(errors).length > 0) {
+      toast.error('Completa los campos requeridos');
+      return;
+    }
     try {
       setSaving(true);
       const token = (session as any)?.accessToken;
@@ -162,13 +173,19 @@ export default function NuevoUsuarioPage() {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Información Personal</h2>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="relative">
-            <FaUser className={iconClass} />
-            <input type="text" placeholder="Nombre *" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} autoFocus className={inputClass} />
+          <div>
+            <div className="relative">
+              <FaUser className={iconClass} />
+              <input type="text" placeholder="Nombre *" value={form.firstName}
+                onChange={(e) => setForm({ ...form, firstName: e.target.value })} autoFocus className={inputClass} />
+            </div>
           </div>
-          <div className="relative">
-            <FaUser className={iconClass} />
-            <input type="text" placeholder="Apellido" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className={inputClass} />
+          <div>
+            <div className="relative">
+              <FaUser className={iconClass} />
+              <input type="text" placeholder="Apellido *" value={form.lastName}
+                onChange={(e) => setForm({ ...form, lastName: e.target.value })} className={inputClass} />
+            </div>
           </div>
         </div>
 

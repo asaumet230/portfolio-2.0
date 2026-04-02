@@ -30,8 +30,11 @@ const EMPTY_FORM = {
   url: '', instagram: '', facebook: '', linkedin: '', twitter: '',
 };
 
-const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
-const iconClass  = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const inputClass      = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const inputErrorClass = 'w-full pl-10 pr-3 py-2 border-2 border-red-500 rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-400';
+const iconClass       = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const FieldError = ({ msg }: { msg?: string }) =>
+  msg ? <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {msg}</p> : null;
 
 export default function TestimoniosPage() {
   const { data: session } = useSession();
@@ -41,7 +44,8 @@ export default function TestimoniosPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
-  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [formData, setFormData]       = useState(EMPTY_FORM);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => { fetchTestimonials(); }, []);
@@ -80,10 +84,18 @@ export default function TestimoniosPage() {
   };
 
   const handleSave = async () => {
-    if (!formData.name || !formData.content) {
-      toast.error('Nombre y testimonio son requeridos');
+    const errors: Record<string, string> = {};
+    if (!formData.name.trim())    errors.name    = 'El nombre del cliente es requerido';
+    if (!formData.major.trim())   errors.major   = 'El cargo/empresa es requerido';
+    if (!formData.content.trim()) errors.content = 'El testimonio es requerido';
+    if (!formData.image)          errors.image   = 'La foto del cliente es requerida';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      toast.error('Completa los campos requeridos');
       return;
     }
+    setFieldErrors({});
     try {
       const token = (session as any)?.accessToken;
       if (selectedTestimonial) {
@@ -95,6 +107,7 @@ export default function TestimoniosPage() {
       }
       setIsModalOpen(false);
       setFormData(EMPTY_FORM);
+      setFieldErrors({});
       fetchTestimonials();
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
@@ -236,26 +249,38 @@ export default function TestimoniosPage() {
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
             </div>
           </div>
-          <p className="text-xs text-gray-400 text-center">Haz clic para subir la foto del cliente</p>
+          <FieldError msg={fieldErrors.image} />
+          <p className="text-xs text-gray-400 text-center">Haz clic para subir la foto del cliente <span className="text-red-500">*</span></p>
 
-          <div className="relative">
-            <FaUser className={iconClass} />
-            <input type="text" placeholder="Nombre del cliente *" value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })} className={inputClass} />
+          <div>
+            <div className="relative">
+              <FaUser className={iconClass} />
+              <input type="text" placeholder="Nombre del cliente *" value={formData.name}
+                onChange={(e) => { setFormData({ ...formData, name: e.target.value }); setFieldErrors(p => ({ ...p, name: '' })); }}
+                className={fieldErrors.name ? inputErrorClass : inputClass} />
+            </div>
+            <FieldError msg={fieldErrors.name} />
           </div>
 
-          <div className="relative">
-            <FaBriefcase className={iconClass} />
-            <input type="text" placeholder="Cargo / Empresa" value={formData.major}
-              onChange={(e) => setFormData({ ...formData, major: e.target.value })} className={inputClass} />
+          <div>
+            <div className="relative">
+              <FaBriefcase className={iconClass} />
+              <input type="text" placeholder="Cargo / Empresa *" value={formData.major}
+                onChange={(e) => { setFormData({ ...formData, major: e.target.value }); setFieldErrors(p => ({ ...p, major: '' })); }}
+                className={fieldErrors.major ? inputErrorClass : inputClass} />
+            </div>
+            <FieldError msg={fieldErrors.major} />
           </div>
 
-          <div className="relative">
-            <FaQuoteLeft className="absolute left-3 top-3 text-gray-400 dark:text-gray-500 w-4 h-4" />
-            <textarea placeholder="Testimonio del cliente *" value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              rows={4}
-              className="w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+          <div>
+            <div className="relative">
+              <FaQuoteLeft className="absolute left-3 top-3 text-gray-400 dark:text-gray-500 w-4 h-4" />
+              <textarea placeholder="Testimonio del cliente *" value={formData.content}
+                onChange={(e) => { setFormData({ ...formData, content: e.target.value }); setFieldErrors(p => ({ ...p, content: '' })); }}
+                rows={4}
+                className={`w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 resize-none ${fieldErrors.content ? 'border-2 border-red-500 focus:ring-red-400' : 'dark:border-gray-600 focus:ring-blue-500'}`} />
+            </div>
+            <FieldError msg={fieldErrors.content} />
           </div>
 
           <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 pt-2 border-t dark:border-gray-700">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ImageUploader } from './ImageUploader';
 import { RichTextEditor } from './RichTextEditor';
 import toast from 'react-hot-toast';
@@ -52,7 +52,17 @@ interface ProjectFormProps {
 }
 
 const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const inputErrorClass = 'w-full pl-10 pr-3 py-2 border-2 border-red-500 rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-400';
 const iconClass = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+
+const FieldError = ({ msg }: { msg?: string }) =>
+  msg ? <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {msg}</p> : null;
+
+const RequiredLabel = ({ children }: { children: React.ReactNode }) => (
+  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+    {children} <span className="text-red-500">*</span>
+  </label>
+);
 
 export function ProjectForm({
   initialData,
@@ -92,8 +102,18 @@ export function ProjectForm({
     active: initialData?.active !== false,
   });
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const VALID_TECHNOLOGIES = [
+    'wordpress','css','bootstrap','nextjs','typescript','nodejs',
+    'angular','gatsby','reactjs','javascript','flutter','dart','tailwind',
+  ];
+
   const [techInput, setTechInput] = useState('');
+  const [techSuggestions, setTechSuggestions] = useState<string[]>([]);
   const [keywordInput, setKeywordInput] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [expandedSections, setExpandedSections] = useState({
     basic: true,
     goal: false,
@@ -104,12 +124,47 @@ export function ProjectForm({
     advanced: false,
   });
 
+  const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '').trim();
+
+  const isValidUrl = (url: string) => {
+    try { new URL(url); return true; } catch { return false; }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.slug || !formData.description) {
-      toast.error('Nombre, slug y descripción son requeridos');
+    const errors: Record<string, string> = {};
+
+    if (!formData.name.trim()) errors.name = 'El nombre es requerido';
+    if (!formData.slug.trim()) errors.slug = 'El slug es requerido';
+    if (!stripHtml(formData.description)) errors.description = 'La descripción es requerida';
+    if (formData.description.length > 600) errors.description = `La descripción excede 600 caracteres (actualmente ${formData.description.length})`;
+    if (formData.technologies.length === 0) errors.technologies = 'Agrega al menos 1 tecnología';
+    if (formData.images.length === 0) errors.images = 'Agrega al menos 1 imagen';
+    if (!formData.urlApp?.trim()) errors.urlApp = 'La URL del proyecto en vivo es requerida';
+    else if (!isValidUrl(formData.urlApp)) errors.urlApp = 'La URL del proyecto no es válida';
+    if (!formData.urlRepository?.trim()) errors.urlRepository = 'La URL del repositorio es requerida';
+    else if (!isValidUrl(formData.urlRepository)) errors.urlRepository = 'La URL del repositorio no es válida';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      // Auto-abrir sección con errores
+      const basicErrors = ['name', 'slug', 'description', 'technologies'];
+      const urlErrors = ['urlApp', 'urlRepository'];
+      const imageErrors = ['images'];
+      const hasBasic = basicErrors.some(k => errors[k]);
+      const hasUrls = urlErrors.some(k => errors[k]);
+      const hasImages = imageErrors.some(k => errors[k]);
+      setExpandedSections(prev => ({
+        ...prev,
+        basic: prev.basic || hasBasic,
+        urls: prev.urls || hasUrls,
+        images: prev.images || hasImages,
+      }));
+      toast.error('Completa los campos requeridos marcados en rojo');
       return;
     }
+
+    setFieldErrors({});
     try {
       await onSubmit(formData);
     } catch (error) {
@@ -117,14 +172,21 @@ export function ProjectForm({
     }
   };
 
-  const addTechnology = () => {
-    if (techInput.trim()) {
-      setFormData({
-        ...formData,
-        technologies: [...formData.technologies, techInput.trim()],
-      });
-      setTechInput('');
+  const addTechnology = (value?: string) => {
+    const tech = (value || techInput).trim().toLowerCase();
+    if (!tech) return;
+    if (!VALID_TECHNOLOGIES.includes(tech)) {
+      toast.error(`"${tech}" no es válida. Selecciona una de las sugerencias.`);
+      return;
     }
+    if (formData.technologies.includes(tech)) {
+      toast.error('Ya agregaste esa tecnología');
+      return;
+    }
+    setFormData({ ...formData, technologies: [...formData.technologies, tech] });
+    setTechInput('');
+    setTechSuggestions([]);
+    setFieldErrors(p => ({ ...p, technologies: '' }));
   };
 
   const removeTechnology = (index: number) => {
@@ -181,6 +243,8 @@ export function ProjectForm({
     </button>
   );
 
+  if (!mounted) return null;
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
       {/* Información Básica */}
@@ -189,15 +253,25 @@ export function ProjectForm({
         {expandedSections.basic && (
           <div className="space-y-4 pt-2">
             <div className="grid grid-cols-2 gap-4">
-              <div className="relative">
-                <FaProjectDiagram className={iconClass} />
-                <input type="text" placeholder="Nombre del proyecto *" value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })} className={inputClass} />
+              <div>
+                <RequiredLabel>Nombre del proyecto</RequiredLabel>
+                <div className="relative">
+                  <FaProjectDiagram className={iconClass} />
+                  <input type="text" placeholder="Ej: Mi App Web" value={formData.name}
+                    onChange={(e) => { setFormData({ ...formData, name: e.target.value }); setFieldErrors(p => ({ ...p, name: '' })); }}
+                    className={fieldErrors.name ? inputErrorClass : inputClass} />
+                </div>
+                <FieldError msg={fieldErrors.name} />
               </div>
-              <div className="relative">
-                <FaLink className={iconClass} />
-                <input type="text" placeholder="Slug *" value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })} className={inputClass} />
+              <div>
+                <RequiredLabel>Slug</RequiredLabel>
+                <div className="relative">
+                  <FaLink className={iconClass} />
+                  <input type="text" placeholder="mi-app-web" value={formData.slug}
+                    onChange={(e) => { setFormData({ ...formData, slug: e.target.value }); setFieldErrors(p => ({ ...p, slug: '' })); }}
+                    className={fieldErrors.slug ? inputErrorClass : inputClass} />
+                </div>
+                <FieldError msg={fieldErrors.slug} />
               </div>
             </div>
 
@@ -212,29 +286,78 @@ export function ProjectForm({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción *</label>
+              <div className="flex items-center justify-between mb-1">
+                <RequiredLabel>Descripción</RequiredLabel>
+                <span className={`text-xs ${formData.description.length > 600 ? 'text-red-500 font-semibold' : 'text-gray-400'}`}>
+                  {formData.description.length}/600 chars HTML
+                </span>
+              </div>
               <RichTextEditor
                 value={formData.description}
-                onChange={(content) => setFormData({ ...formData, description: content })}
-                placeholder="Descripción detallada del proyecto..."
+                onChange={(content) => { setFormData({ ...formData, description: content }); setFieldErrors(p => ({ ...p, description: '' })); }}
+                placeholder="Descripción del proyecto (máx. 600 caracteres incluyendo HTML)..."
                 height="h-48"
               />
+              <FieldError msg={fieldErrors.description} />
             </div>
 
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t dark:border-gray-700">Tecnologías</h3>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <FaHashtag className={iconClass} />
-                <input type="text" placeholder="Ej: React, TypeScript..." value={techInput}
-                  onChange={(e) => setTechInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTechnology())}
-                  className={inputClass} />
-              </div>
-              <button type="button" onClick={addTechnology}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm font-medium">
-                Agregar
-              </button>
+            <div className="pt-4 border-t dark:border-gray-700">
+              <RequiredLabel>Tecnologías</RequiredLabel>
             </div>
+            <div className="relative">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <FaHashtag className={iconClass} />
+                  <input
+                    type="text"
+                    placeholder="Escribe para buscar: reactjs, nextjs, flutter..."
+                    value={techInput}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setTechInput(val);
+                      setTechSuggestions(
+                        val.trim()
+                          ? VALID_TECHNOLOGIES.filter(
+                              (t) => t.includes(val.toLowerCase()) && !formData.technologies.includes(t)
+                            )
+                          : []
+                      );
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') { e.preventDefault(); addTechnology(); }
+                      if (e.key === 'Escape') setTechSuggestions([]);
+                    }}
+                    className={fieldErrors.technologies && formData.technologies.length === 0 ? inputErrorClass : inputClass}
+                    autoComplete="off"
+                  />
+                </div>
+                <button type="button" onClick={() => addTechnology()}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm font-medium shrink-0">
+                  Agregar
+                </button>
+              </div>
+              {/* Sugerencias */}
+              {techSuggestions.length > 0 && (
+                <ul className="absolute z-10 left-0 right-16 mt-1 bg-white dark:bg-gray-700 border dark:border-gray-600 rounded shadow-lg overflow-hidden">
+                  {techSuggestions.map((tech) => (
+                    <li key={tech}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => { e.preventDefault(); addTechnology(tech); }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-600 transition"
+                      >
+                        {tech}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {/* Todas las disponibles cuando el input está vacío y en foco */}
+              <p className="text-xs text-gray-400 mt-1">
+                Disponibles: {VALID_TECHNOLOGIES.filter(t => !formData.technologies.includes(t)).join(', ')}
+              </p>
+            </div>
+            <FieldError msg={fieldErrors.technologies} />
             {formData.technologies.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {formData.technologies.map((tech, index) => (
@@ -361,15 +484,25 @@ export function ProjectForm({
         <SectionToggle title="URLs del Proyecto" section="urls" icon={FaGlobe} />
         {expandedSections.urls && (
           <div className="space-y-4 pt-2">
-            <div className="relative">
-              <FaGlobe className={`${iconClass} text-green-500`} />
-              <input type="url" placeholder="URL en Vivo (https://...)" value={formData.urlApp || ''}
-                onChange={(e) => setFormData({ ...formData, urlApp: e.target.value })} className={inputClass} />
+            <div>
+              <RequiredLabel>URL en Vivo</RequiredLabel>
+              <div className="relative">
+                <FaGlobe className={`${iconClass} text-green-500`} />
+                <input type="url" placeholder="https://mi-proyecto.com" value={formData.urlApp || ''}
+                  onChange={(e) => { setFormData({ ...formData, urlApp: e.target.value }); setFieldErrors(p => ({ ...p, urlApp: '' })); }}
+                  className={fieldErrors.urlApp ? inputErrorClass : inputClass} />
+              </div>
+              <FieldError msg={fieldErrors.urlApp} />
             </div>
-            <div className="relative">
-              <FaGithub className={`${iconClass} text-gray-800 dark:text-gray-300`} />
-              <input type="url" placeholder="URL Repositorio (GitHub)" value={formData.urlRepository || ''}
-                onChange={(e) => setFormData({ ...formData, urlRepository: e.target.value })} className={inputClass} />
+            <div>
+              <RequiredLabel>URL Repositorio</RequiredLabel>
+              <div className="relative">
+                <FaGithub className={`${iconClass} text-gray-800 dark:text-gray-300`} />
+                <input type="url" placeholder="https://github.com/usuario/repo" value={formData.urlRepository || ''}
+                  onChange={(e) => { setFormData({ ...formData, urlRepository: e.target.value }); setFieldErrors(p => ({ ...p, urlRepository: '' })); }}
+                  className={fieldErrors.urlRepository ? inputErrorClass : inputClass} />
+              </div>
+              <FieldError msg={fieldErrors.urlRepository} />
             </div>
           </div>
         )}
@@ -380,10 +513,12 @@ export function ProjectForm({
         <SectionToggle title="Imágenes" section="images" icon={FaImage} />
         {expandedSections.images && (
           <div className="pt-2">
+            <RequiredLabel>Imágenes del proyecto</RequiredLabel>
             <ImageUploader
               images={formData.images}
-              onChange={(images) => setFormData({ ...formData, images })}
+              onChange={(images) => { setFormData({ ...formData, images }); setFieldErrors(p => ({ ...p, images: '' })); }}
             />
+            <FieldError msg={fieldErrors.images} />
           </div>
         )}
       </div>

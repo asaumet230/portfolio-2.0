@@ -19,8 +19,11 @@ interface Tool {
 
 const EMPTY_FORM = { title: '', description: '', progress: 50, image: '', imageDark: '' };
 
-const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
-const iconClass  = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const inputClass      = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const inputErrorClass = 'w-full pl-10 pr-3 py-2 border-2 border-red-500 rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-400';
+const iconClass       = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const FieldError = ({ msg }: { msg?: string }) =>
+  msg ? <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {msg}</p> : null;
 
 export default function HerramientasPage() {
   const { data: session } = useSession();
@@ -31,7 +34,8 @@ export default function HerramientasPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
-  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [formData, setFormData]       = useState(EMPTY_FORM);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingDark, setUploadingDark] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,7 +78,16 @@ export default function HerramientasPage() {
   };
 
   const handleSave = async () => {
-    if (!formData.title) { toast.error('El nombre es requerido'); return; }
+    const errors: Record<string, string> = {};
+    if (!formData.title.trim()) errors.title = 'El nombre es requerido';
+    if (!formData.image && !formData.imageDark) errors.images = 'Agrega al menos un icono (light o dark)';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      toast.error('Completa los campos requeridos');
+      return;
+    }
+    setFieldErrors({});
     try {
       const token = (session as any)?.accessToken;
       const payload: any = {
@@ -93,6 +106,7 @@ export default function HerramientasPage() {
       }
       setIsModalOpen(false);
       setFormData(EMPTY_FORM);
+      setFieldErrors({});
       fetchTools();
     } catch (error: any) {
       toast.error(error.message || 'Error al guardar');
@@ -303,12 +317,17 @@ export default function HerramientasPage() {
               </div>
             </div>
           </div>
+          <FieldError msg={fieldErrors.images} />
           <p className="text-xs text-gray-400 text-center">Haz clic para subir los iconos (light y dark)</p>
 
-          <div className="relative">
-            <FaWrench className={iconClass} />
-            <input type="text" placeholder="Nombre de la herramienta *" value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })} className={inputClass} />
+          <div>
+            <div className="relative">
+              <FaWrench className={iconClass} />
+              <input type="text" placeholder="Nombre de la herramienta *" value={formData.title}
+                onChange={(e) => { setFormData({ ...formData, title: e.target.value }); setFieldErrors(p => ({ ...p, title: '' })); }}
+                className={fieldErrors.title ? inputErrorClass : inputClass} />
+            </div>
+            <FieldError msg={fieldErrors.title} />
           </div>
 
           <div className="relative">

@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <GoogleTagManagerHead gtmId={googleTagManagerId} />
       </head>
-      <body className={`${lato.variable} ${leagueOfSpartan.variable}`}>
+      <body className={`${lato.variable} ${leagueOfSpartan.variable}`} suppressHydrationWarning>
         <GoogleTagManagerBody gtmId={googleTagManagerId} />
 
         <Providers>

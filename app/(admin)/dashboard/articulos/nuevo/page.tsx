@@ -21,16 +21,21 @@ interface SeoForm {
 
 const ROBOTS_OPTIONS = ['index, follow', 'noindex, follow', 'index, nofollow', 'noindex, nofollow'];
 
-const inputClass = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
-const iconClass  = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
-const plainInput = 'w-full px-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
-const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1';
+const inputClass      = 'w-full pl-10 pr-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const inputErrorClass = 'w-full pl-10 pr-3 py-2 border-2 border-red-500 rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-400';
+const iconClass       = 'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4';
+const plainInput      = 'w-full px-3 py-2 border rounded text-gray-900 dark:text-gray-100 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500';
+const labelClass      = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1';
+const FieldError = ({ msg }: { msg?: string }) =>
+  msg ? <p className="text-red-500 text-xs mt-1 flex items-center gap-1">⚠ {msg}</p> : null;
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '').trim();
 
 export default function NuevoArticuloPage() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const [saving, setSaving]                     = useState(false);
+  const [saving, setSaving]             = useState(false);
+  const [fieldErrors, setFieldErrors]   = useState<Record<string, string>>({});
   const [uploadingFeatured, setUploadingFeatured] = useState(false);
   const [uploadingOg, setUploadingOg]           = useState(false);
   const [ogImageName, setOgImageName]           = useState('');
@@ -61,9 +66,21 @@ export default function NuevoArticuloPage() {
   }, [form.title]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSave = async () => {
-    if (!form.title.trim()) { toast.error('El título es requerido');    return; }
-    if (!form.slug.trim())  { toast.error('El slug es requerido');      return; }
-    if (!form.content)      { toast.error('El contenido es requerido'); return; }
+    const errors: Record<string, string> = {};
+    if (!form.title.trim())                   errors.title         = 'El título es requerido';
+    if (!form.slug.trim())                    errors.slug          = 'El slug es requerido';
+    if (!form.excerpt.trim())                 errors.excerpt       = 'El resumen es requerido';
+    else if (form.excerpt.length > 300)       errors.excerpt       = `Máx. 300 caracteres (actual: ${form.excerpt.length})`;
+    if (!stripHtml(form.content))             errors.content       = 'El contenido es requerido';
+    if (!form.featuredImage)                  errors.featuredImage = 'La imagen destacada es requerida';
+    if (!form.category)                       errors.category      = 'Selecciona una categoría';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      toast.error('Completa los campos requeridos marcados en rojo');
+      return;
+    }
+    setFieldErrors({});
     try {
       setSaving(true);
       const token = (session as any)?.accessToken;
@@ -172,13 +189,17 @@ export default function NuevoArticuloPage() {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Contenido</h2>
 
-        <div className="relative">
-          <FaHeading className={iconClass} />
-          <input
-            type="text" placeholder="Título del artículo *" autoFocus
-            value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
-            className={inputClass}
-          />
+        <div>
+          <div className="relative">
+            <FaHeading className={iconClass} />
+            <input
+              type="text" placeholder="Título del artículo *" autoFocus
+              value={form.title}
+              onChange={(e) => { setForm({ ...form, title: e.target.value }); setFieldErrors(p => ({ ...p, title: '' })); }}
+              className={fieldErrors.title ? inputErrorClass : inputClass}
+            />
+          </div>
+          <FieldError msg={fieldErrors.title} />
         </div>
 
         <div>
@@ -197,24 +218,37 @@ export default function NuevoArticuloPage() {
             />
           </div>
           <p className="text-xs text-gray-400 mt-1">Se genera automáticamente desde el título.</p>
+          <FieldError msg={fieldErrors.slug} />
         </div>
 
-        <div className="relative">
-          <FaAlignLeft className={iconClass} />
-          <input
-            type="text" placeholder="Resumen / Excerpt"
-            value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-            className={inputClass}
-          />
+        <div>
+          <div className="relative">
+            <FaAlignLeft className={iconClass} />
+            <input
+              type="text" placeholder="Resumen / Excerpt *"
+              value={form.excerpt}
+              onChange={(e) => { setForm({ ...form, excerpt: e.target.value }); setFieldErrors(p => ({ ...p, excerpt: '' })); }}
+              className={fieldErrors.excerpt ? inputErrorClass : inputClass}
+            />
+          </div>
+          <div className="flex justify-between mt-1">
+            <FieldError msg={fieldErrors.excerpt} />
+            <span className={`text-xs ml-auto ${form.excerpt.length > 300 ? 'text-red-500' : 'text-gray-400'}`}>{form.excerpt.length}/300</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="relative">
-            <FaList className={iconClass} />
-            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputClass}>
-              <option value="">— Sin categoría —</option>
-              {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
-            </select>
+          <div>
+            <div className="relative">
+              <FaList className={iconClass} />
+              <select value={form.category}
+                onChange={(e) => { setForm({ ...form, category: e.target.value }); setFieldErrors(p => ({ ...p, category: '' })); }}
+                className={fieldErrors.category ? inputErrorClass : inputClass}>
+                <option value="">— Sin categoría —</option>
+                {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
+              </select>
+            </div>
+            <FieldError msg={fieldErrors.category} />
           </div>
           <div className="relative">
             <FaUser className={iconClass} />
@@ -236,8 +270,9 @@ export default function NuevoArticuloPage() {
         </div>
 
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t dark:border-gray-700">
-          Imagen destacada
+          Imagen destacada <span className="text-red-500">*</span>
         </h3>
+        <FieldError msg={fieldErrors.featuredImage} />
 
         <div className="border rounded dark:border-gray-600 overflow-hidden h-44 bg-gray-50 dark:bg-gray-700 relative">
           {form.featuredImage ? (
@@ -266,14 +301,15 @@ export default function NuevoArticuloPage() {
         </label>
 
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pt-4 border-t dark:border-gray-700">
-          Contenido *
+          Contenido <span className="text-red-500">*</span>
         </h3>
         <RichTextEditor
           value={form.content}
-          onChange={(html) => setForm({ ...form, content: html })}
+          onChange={(html) => { setForm({ ...form, content: html }); setFieldErrors(p => ({ ...p, content: '' })); }}
           placeholder="Escribe el contenido del artículo..."
           height="h-96"
         />
+        <FieldError msg={fieldErrors.content} />
 
       </div>
 

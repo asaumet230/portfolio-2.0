@@ -22,6 +22,7 @@ import {
   GlobeIcon,
   LayersIcon,
   BookmarkIcon,
+  RocketIcon,
   HamburgerMenuIcon,
   Cross1Icon,
 } from '@radix-ui/react-icons';
@@ -37,6 +38,7 @@ const menuItems = [
   { href: '/dashboard/usuarios', label: 'Usuarios', icon: PersonIcon, adminOnly: true },
   { href: '/dashboard/paginas', label: 'Páginas', icon: LayersIcon },
   { href: '/dashboard/categorias', label: 'Categorías', icon: BookmarkIcon },
+  { href: '/dashboard/monetizacion', label: 'Monetización', icon: RocketIcon },
   { href: '/dashboard/sitemap', label: 'Sitemap', icon: GlobeIcon },
   { href: '/dashboard/robots-txt', label: 'Robots.txt', icon: FileTextIcon },
 ];

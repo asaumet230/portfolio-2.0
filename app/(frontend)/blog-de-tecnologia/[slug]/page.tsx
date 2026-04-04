@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PostSideBar, AuthorBio } from '@/components';
+import { getMonetizationSettings } from '@/api/monetization';
+import { AdsenseSlot } from '@/components/ads';
 import { toJsonLd } from '@/helpers';
 import { FaWhatsapp, FaLinkedinIn } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
@@ -86,6 +88,8 @@ const formatDate = (dateStr: string) =>
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const article = await getArticle(params.slug);
+  const monetization = await getMonetizationSettings();
+  const showAds = monetization.enabled && monetization.articleAdsEnabled;
 
   if (!article || !article.published) notFound();
 
@@ -219,6 +223,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 {article.excerpt}
               </p>
 
+              {showAds && monetization.articleTopSlot && (
+                <AdsenseSlot clientId={monetization.clientId} slot={monetization.articleTopSlot} />
+              )}
+
               {/* Author + Tags */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-6 border-b border-gray-100 dark:border-gray-700">
                 <div className="flex items-center gap-2">
@@ -242,8 +250,16 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
 
+              {showAds && monetization.articleInlineSlot && (
+                <AdsenseSlot clientId={monetization.clientId} slot={monetization.articleInlineSlot} />
+              )}
+
               {/* Author Bio */}
               <AuthorBio />
+
+              {showAds && monetization.articleBottomSlot && (
+                <AdsenseSlot clientId={monetization.clientId} slot={monetization.articleBottomSlot} />
+              )}
 
               {/* Share + Back */}
               <div className="mt-12 pt-6 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

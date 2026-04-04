@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import { getMonetizationSettings } from "@/api/monetization";
+import { AdsenseSlot } from "@/components/ads";
 import { CompresslyDetails, ImagesCompressor } from "@/components";
 
 
@@ -42,7 +44,10 @@ export const metadata: Metadata = {
   }
 }
 
-export default function CompresorImagenesPage() {
+export default async function CompresorImagenesPage() {
+    const monetization = await getMonetizationSettings();
+    const showAds = monetization.enabled && monetization.toolAdsEnabled;
+
     return (
         <div className="w-full mx-auto flex flex-col min-h-screen items-center justify-center bg-gray-50 dark:bg-gradient-to-tr to-[#262f3a] from-[#0d1117]">
             <main className="w-full max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -54,7 +59,13 @@ export default function CompresorImagenesPage() {
                     </header>
                     <ImagesCompressor />
                 </div>
+                {showAds && monetization.toolTopSlot && (
+                    <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolTopSlot} />
+                )}
                     <CompresslyDetails />
+                {showAds && monetization.toolBottomSlot && (
+                    <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
+                )}
             </main>
         </div>
     );

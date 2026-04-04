@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { TrashIcon, UploadIcon } from '@radix-ui/react-icons';
 import { ImageUploader } from './ImageUploader';
 import { RichTextEditor } from './RichTextEditor';
 import toast from 'react-hot-toast';
@@ -64,6 +65,18 @@ const RequiredLabel = ({ children }: { children: React.ReactNode }) => (
   </label>
 );
 
+const todayDate = () => new Date().toISOString().split('T')[0];
+
+const normalizeDateInput = (value?: string, fallback = '') => {
+  if (!value) return fallback;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return fallback;
+
+  return parsed.toISOString().split('T')[0];
+};
+
 export function ProjectForm({
   initialData,
   onSubmit,
@@ -93,11 +106,11 @@ export function ProjectForm({
     hasTermsOfService: initialData?.hasTermsOfService || false,
     privacyPolicy: {
       content: initialData?.privacyPolicy?.content || '',
-      effectiveDate: initialData?.privacyPolicy?.effectiveDate || new Date().toISOString().split('T')[0],
+      effectiveDate: normalizeDateInput(initialData?.privacyPolicy?.effectiveDate, todayDate()),
     },
     termsOfService: {
       content: initialData?.termsOfService?.content || '',
-      effectiveDate: initialData?.termsOfService?.effectiveDate || new Date().toISOString().split('T')[0],
+      effectiveDate: normalizeDateInput(initialData?.termsOfService?.effectiveDate, todayDate()),
     },
     active: initialData?.active !== false,
   });
@@ -113,6 +126,13 @@ export function ProjectForm({
   const [techInput, setTechInput] = useState('');
   const [techSuggestions, setTechSuggestions] = useState<string[]>([]);
   const [keywordInput, setKeywordInput] = useState('');
+  const [uploadingOg, setUploadingOg] = useState(false);
+  const [ogImageName, setOgImageName] = useState(() => {
+    const ogImage = initialData?.seoMetadata?.ogImage || '';
+    if (!ogImage) return '';
+    const parts = ogImage.split('/');
+    return parts[parts.length - 1]?.split('.')[0] || '';
+  });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [expandedSections, setExpandedSections] = useState({
     basic: true,
@@ -166,7 +186,21 @@ export function ProjectForm({
 
     setFieldErrors({});
     try {
-      await onSubmit(formData);
+      await onSubmit({
+        ...formData,
+        privacyPolicy: formData.privacyPolicy
+          ? {
+              ...formData.privacyPolicy,
+              effectiveDate: normalizeDateInput(formData.privacyPolicy.effectiveDate),
+            }
+          : undefined,
+        termsOfService: formData.termsOfService
+          ? {
+              ...formData.termsOfService,
+              effectiveDate: normalizeDateInput(formData.termsOfService.effectiveDate),
+            }
+          : undefined,
+      });
     } catch (error) {
       console.error('Error:', error);
     }
@@ -224,6 +258,43 @@ export function ProjectForm({
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections({ ...expandedSections, [section]: !expandedSections[section] });
+  };
+
+  const handleOgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingOg(true);
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('name', ogImageName || `${formData.slug || 'project'}-og`);
+
+      const res = await fetch('/api/upload-og', { method: 'POST', body: fd });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Error al subir imagen OG');
+
+      setFormData((prev) => ({
+        ...prev,
+        seoMetadata: {
+          ...prev.seoMetadata,
+          ogImage: data.url,
+        },
+      }));
+
+      if (!ogImageName) {
+        const parts = (data.url as string).split('/');
+        setOgImageName(parts[parts.length - 1]?.split('.')[0] || '');
+      }
+
+      toast.success('Imagen Open Graph subida');
+    } catch (error: any) {
+      toast.error(error.message || 'Error al subir imagen OG');
+    } finally {
+      setUploadingOg(false);
+      e.target.value = '';
+    }
   };
 
   const SectionToggle = ({ title, section, icon: Icon }: { title: string; section: keyof typeof expandedSections; icon: React.ComponentType<{ className?: string }> }) => (
@@ -461,6 +532,49 @@ export function ProjectForm({
                 onChange={(e) => setFormData({ ...formData, seoMetadata: { ...formData.seoMetadata, ogImage: e.target.value } })}
                 className={inputClass} />
             </div>
+
+            <div className="border rounded dark:border-gray-600 overflow-hidden h-44 bg-gray-50 dark:bg-gray-700 relative">
+              {formData.seoMetadata?.ogImage ? (
+                <>
+                  <img
+                    src={formData.seoMetadata.ogImage}
+                    alt="Open Graph"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({
+                      ...formData,
+                      seoMetadata: { ...formData.seoMetadata, ogImage: '' },
+                    })}
+                    className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded transition"
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                  </button>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full gap-2 text-gray-400 dark:text-gray-500">
+                  <FaImage className="w-10 h-10" />
+                  <span className="text-sm">Imagen Open Graph del proyecto</span>
+                  <span className="text-xs">1200 × 630 px recomendado</span>
+                </div>
+              )}
+            </div>
+
+            <label className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded transition cursor-pointer ${
+              uploadingOg ? 'opacity-60 cursor-not-allowed bg-blue-400 text-white' : 'bg-blue-500 hover:bg-blue-600 text-white'
+            }`}>
+              <UploadIcon className="w-4 h-4" />
+              {uploadingOg ? 'Subiendo...' : 'Subir imagen OG'}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleOgUpload}
+                disabled={uploadingOg}
+                className="hidden"
+              />
+            </label>
 
             <div className="relative">
               <FaGlobe className={`${iconClass} text-green-500`} />

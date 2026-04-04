@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import { getMonetizationSettings } from "@/api/monetization";
+import { AdsenseSlot } from "@/components/ads";
 import { TextCaseProDetails, TextConverterForm } from "@/components";
 
 export const metadata: Metadata = {
@@ -44,7 +46,10 @@ export const metadata: Metadata = {
   }
 }
 
-export default function MinusculaAMayusculaPage() {
+export default async function MinusculaAMayusculaPage() {
+  const monetization = await getMonetizationSettings();
+  const showAds = monetization.enabled && monetization.toolAdsEnabled;
+
   return (
     <main className="min-h-screen bg-gray-50 pt-16 dark:bg-gradient-to-tr to-[#262f3a] from-[#0d1117]">
       <div className="w-11/12 flex flex-col items-center mx-auto p-10 bg-white shadow-2xl rounded-lg  dark:bg-gray-700">
@@ -55,7 +60,17 @@ export default function MinusculaAMayusculaPage() {
         </header>
         <TextConverterForm />
       </div>
+      {showAds && monetization.toolTopSlot && (
+        <div className="w-11/12 mx-auto">
+          <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolTopSlot} />
+        </div>
+      )}
       <TextCaseProDetails />
+      {showAds && monetization.toolBottomSlot && (
+        <div className="w-11/12 mx-auto pb-12">
+          <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
+        </div>
+      )}
     </main>
   );
 }

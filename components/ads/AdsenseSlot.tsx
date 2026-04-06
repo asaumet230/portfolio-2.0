@@ -1,6 +1,7 @@
 'use client';
 
 import { CSSProperties, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 declare global {
   interface Window {
@@ -19,6 +20,39 @@ interface AdsenseSlotProps {
   label?: string;
 }
 
+interface InsElementProps {
+  clientId: string;
+  slot: string;
+  style?: CSSProperties;
+  format?: string;
+  layoutKey?: string;
+  fullWidthResponsive?: boolean;
+}
+
+// Componente interno aislado: cuando recibe un nuevo `key` React lo desmonta y
+// vuelve a montar completamente, creando un <ins> limpio sin el atributo
+// data-adsbygoogle-status="done" que bloquearía la re-inicialización del slot.
+function InsElement({ clientId, slot, style, format = 'auto', layoutKey, fullWidthResponsive = true }: InsElementProps) {
+  useEffect(() => {
+    try {
+      window.adsbygoogle = window.adsbygoogle || [];
+      window.adsbygoogle.push({});
+    } catch {}
+  }, []);
+
+  return (
+    <ins
+      className="adsbygoogle"
+      style={{ display: 'block', ...style }}
+      data-ad-client={clientId}
+      data-ad-slot={slot}
+      data-ad-format={format}
+      data-ad-layout-key={layoutKey}
+      data-full-width-responsive={fullWidthResponsive ? 'true' : 'false'}
+    />
+  );
+}
+
 export function AdsenseSlot({
   clientId,
   slot,
@@ -29,14 +63,7 @@ export function AdsenseSlot({
   fullWidthResponsive = true,
   label = 'Publicidad',
 }: AdsenseSlotProps) {
-  useEffect(() => {
-    if (!clientId || !slot) return;
-
-    try {
-      window.adsbygoogle = window.adsbygoogle || [];
-      window.adsbygoogle.push({});
-    } catch {}
-  }, [clientId, slot]);
+  const pathname = usePathname();
 
   if (!clientId || !slot) return null;
 
@@ -45,14 +72,14 @@ export function AdsenseSlot({
       <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400 dark:text-gray-500">
         {label}
       </p>
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block', ...style }}
-        data-ad-client={clientId}
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-ad-layout-key={layoutKey}
-        data-full-width-responsive={fullWidthResponsive ? 'true' : 'false'}
+      <InsElement
+        key={`${pathname}-${slot}`}
+        clientId={clientId}
+        slot={slot}
+        style={style}
+        format={format}
+        layoutKey={layoutKey}
+        fullWidthResponsive={fullWidthResponsive}
       />
     </div>
   );

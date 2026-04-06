@@ -1,5 +1,5 @@
 import { getMonetizationSettings } from '@/api/monetization';
-import { AdsenseScript } from '@/components/ads';
+import { AdsenseScript, AdsenseRouteWatcher } from '@/components/ads';
 import FrontendShell from '@/components/layouts/FrontendShell';
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
@@ -8,6 +8,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   return (
     <>
       {monetization.enabled && <AdsenseScript clientId={monetization.clientId} />}
+      {monetization.enabled && <AdsenseRouteWatcher />}
       <FrontendShell>{children}</FrontendShell>
     </>
   );

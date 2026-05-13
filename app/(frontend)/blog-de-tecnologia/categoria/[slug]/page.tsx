@@ -144,7 +144,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         <span className="block text-xs font-semibold uppercase tracking-widest text-[#7b7db0] text-center">
           Blog de Tecnología
         </span>
-        <h1 className="mt-2 text-4xl font-bold text-center">{category.name}</h1>
+        <h1 className="mt-2 text-4xl font-bold text-center capitalize">{category.name}</h1>
         {category.description && (
           <div
             className="mt-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed text-justify px-4 md:px-8 prose dark:prose-invert max-w-none"

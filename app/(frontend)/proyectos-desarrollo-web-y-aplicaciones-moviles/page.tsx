@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   description: 'Descubre cómo transformo ideas en proyectos web y móviles efectivos con tecnologías de vanguardia. Explora mis trabajos exitosos, entra ya.',
   keywords: "desarrollo web, aplicaciones móviles, desarrollo web full stack,",
   robots: "index, follow",
+  alternates: {
+    canonical: 'https://www.andressaumet.com/proyectos-desarrollo-web-y-aplicaciones-moviles',
+  },
   openGraph: {
     title: "Proyectos destacados web y móviles | Andres Felipe Saumet",
     description: "Descubre cómo transformo ideas en proyectos web y móviles efectivos con tecnologías de vanguardia. Explora mis trabajos exitosos, entra ya.",

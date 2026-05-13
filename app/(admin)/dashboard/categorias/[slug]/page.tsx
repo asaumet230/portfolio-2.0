@@ -132,23 +132,29 @@ export default function EditCategoriaSeoPage() {
       return;
     }
 
+    const accessToken = (session as any)?.accessToken;
+    if (!accessToken) {
+      toast.error('Sesión expirada. Por favor vuelve a iniciar sesión.');
+      return;
+    }
+
     try {
       setSaving(true);
-      const token = (session as any)?.accessToken;
       const newSlug = contentForm.slug.trim();
+      const categoryId = category!._id;
+
+      await apiClient.put(`/article-categories/${categoryId}`, {
+        name: contentForm.name.trim(),
+        slug: newSlug,
+        description: contentForm.description,
+      }, accessToken);
+
       const seoPayload = {
         ...form,
         keywords: form.keywords.split(',').map((k) => k.trim()).filter(Boolean),
       };
 
-      await Promise.all([
-        apiClient.put(`/article-categories/${category!._id}`, {
-          name: contentForm.name.trim(),
-          slug: newSlug,
-          description: contentForm.description,
-        }, token),
-        apiClient.put(`/article-categories/${category!._id}/seo`, seoPayload, token),
-      ]);
+      await apiClient.put(`/article-categories/${categoryId}/seo`, seoPayload, accessToken);
 
       await triggerRevalidation({
         type: 'category',
@@ -162,7 +168,8 @@ export default function EditCategoriaSeoPage() {
         router.replace(`/dashboard/categorias/${newSlug}`);
       }
     } catch (error: any) {
-      toast.error(error.message || 'Error al guardar');
+      console.error('[EditCategoria] Save error:', error);
+      toast.error(error.message || 'Error al guardar la categoría');
     } finally {
       setSaving(false);
     }

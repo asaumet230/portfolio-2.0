@@ -8,7 +8,13 @@ const nextConfig = {
       {
         source: '/blog',
         destination: '/blog-de-tecnologia',
-        permanent: true, // 301 - preserva SEO juice
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'andressaumet.com' }],
+        destination: 'https://www.andressaumet.com/:path*',
+        permanent: true,
       },
     ];
   },

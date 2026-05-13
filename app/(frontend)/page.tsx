@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   title: "Desarrollo Web y Desarrollos de Apps | Andres Felipe Saumet",
   description: "Ofrecemos servicios de desarrollo web y desarrollo de apps móviles. Especializado en tecnologías como React, Angular, Node.js, Flutter y más.",
   robots: "index, follow",
+  alternates: {
+    canonical: 'https://www.andressaumet.com/',
+  },
   keywords: [
     "desarrolladoras de software",
     "empresa desarrolladora de software",

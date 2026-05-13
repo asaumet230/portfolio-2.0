@@ -18,10 +18,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { project } = await getProjectBySlug(slug);
 
-    if (!project.hasPrivacyPolicy) {
+    if (!project.hasPrivacyPolicy || !project.privacyPolicy?.content?.replace(/<[^>]*>/g, '').trim()) {
       return {
         title: 'Política de privacidad no disponible',
-        description: 'Este proyecto no tiene una política de privacidad',
+        robots: { index: false, follow: false },
       };
     }
 

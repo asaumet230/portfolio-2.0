@@ -11,6 +11,12 @@ interface Props {
   }
 }
 
+function hasRealContent(content?: string): boolean {
+  if (!content) return false;
+  const stripped = content.replace(/<[^>]*>/g, '').trim();
+  return stripped.length > 10;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { slug } = params;
@@ -18,10 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { project } = await getProjectBySlug(slug);
 
-    if (!project.termsOfService) {
+    if (!project.termsOfService || !hasRealContent(project.termsOfService.content)) {
       return {
         title: 'Términos y Condiciones no disponibles',
-        description: 'Este proyecto no tiene términos y condiciones',
+        robots: { index: false, follow: false },
       };
     }
 
@@ -63,8 +69,7 @@ export default async function TermsOfServicePage({ params }: Props) {
     notFound();
   }
 
-  // Si el proyecto no tiene términos de servicio, mostrar 404
-  if (!project.termsOfService) {
+  if (!project.termsOfService || !hasRealContent(project.termsOfService.content)) {
     notFound();
   }
 

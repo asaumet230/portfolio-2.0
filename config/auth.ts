@@ -60,7 +60,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.firstName = (user as any).firstName;
         token.lastName = (user as any).lastName;
         token.accessToken = (user as any).token;
+        return token;
       }
+
+      // Refresh backend token before it expires
+      if (token.accessToken) {
+        try {
+          const payloadB64 = (token.accessToken as string).split('.')[1];
+          const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString());
+          const expiresInMs = payload.exp * 1000 - Date.now();
+
+          if (expiresInMs < 5 * 60 * 1000) {
+            const res = await fetch(`${API_BASE}/auth/renew`, {
+              headers: { 'x-token': token.accessToken as string },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.token) token.accessToken = data.token;
+            }
+          }
+        } catch {
+          // Keep existing token if refresh fails
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {

@@ -3,9 +3,13 @@ const SITE_URL = 'https://www.andressaumet.com';
 
 const DEFAULT_ROBOTS = `User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /registro
 
-Host: ${SITE_URL}
-Sitemap: ${SITE_URL}/sitemap.xml`;
+Sitemap: ${SITE_URL}/sitemap.xml
+Sitemap: ${SITE_URL}/sitemap-index.xml`;
 
 async function getRobotsContent(): Promise<string> {
   try {

@@ -10,6 +10,7 @@ import "./globals.css";
 const googleTagManagerId = 'GTM-WP7JP549';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.andressaumet.com'),
   icons: {
     icon: [
       { url: '/images/favicon.png', type: 'image/png' },

@@ -5,33 +5,9 @@ import { AuthBackground, LoginForm } from "@/components";
 
 export const metadata: Metadata = {
   title: "Iniciar Sesión | Andres Felipe Saumet",
-  description: "Accede a tu cuenta ingresando tus credenciales.",
-  keywords: "iniciar sesión, login, acceder, cuenta, usuario, contraseña",
-  robots: "index, follow",
-  openGraph: {
-    title: "Iniciar Sesión | Andres Felipe Saumet",
-    description: "Accede a tu cuenta ingresando tus credenciales.",
-    url: "https://www.andressaumet.com/login",
-    type: "website",
-    images: [
-      {
-        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
-        width: 800,
-        height: 600,
-        alt: "Iniciar Sesión | Andres Felipe Saumet",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Iniciar Sesión | Andres Felipe Saumet",
-    description: "Accede a tu cuenta ingresando tus credenciales.",
-    images: [
-      {
-        url: "https://www.andressaumet.com/_next/image?url=%2Fimages%2Fandres-saumet-dark.webp&w=1200&q=75",
-        alt: "Iniciar Sesión | Andres Felipe Saumet",
-      },
-    ],
+  robots: {
+    index: false,
+    follow: false,
   },
 };
 

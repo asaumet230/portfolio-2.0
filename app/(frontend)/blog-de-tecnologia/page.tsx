@@ -165,6 +165,15 @@ export default async function Blog({ searchParams }: { searchParams?: { q?: stri
         <p className="mt-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed text-justify px-4 md:px-8">
           Aprende desarrollo web con <strong className="text-gray-700 dark:text-gray-300">Next.js, React y Node.js</strong> y desarrollo móvil con <strong className="text-gray-700 dark:text-gray-300">Flutter y Dart</strong>. Tutoriales prácticos, guías de SEO técnico y herramientas gratuitas para desarrolladores. Si eres empresa o emprendedor buscando digitalizar tu negocio, aquí encuentras contenido que te guía desde la idea hasta el lanzamiento.
         </p>
+        <p className="mt-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed text-justify px-4 md:px-8">
+          Cada artículo está pensado para ser directo y aplicable: encontrarás guías paso a paso para construir
+          proyectos reales, explicaciones sobre <strong className="text-gray-700 dark:text-gray-300">arquitectura de software</strong>,{' '}
+          buenas prácticas de código limpio, optimización de rendimiento y estrategias de{' '}
+          <strong className="text-gray-700 dark:text-gray-300">posicionamiento SEO técnico</strong> para aplicaciones
+          web modernas. También publico comparativas de herramientas, flujos de trabajo con IA y recursos que uso en
+          mis proyectos profesionales. Si quieres mantenerte actualizado en el ecosistema del desarrollo web y móvil
+          en español, este es tu lugar.
+        </p>
       </header>
 
       {/* Layout: articles + sidebar */}
@@ -183,6 +192,31 @@ export default async function Blog({ searchParams }: { searchParams?: { q?: stri
         {/* Sidebar */}
         <PostSideBar initialCategories={categories} initialRecent={recentArticles} />
       </div>
+
+      {/* FAQ */}
+      <section className="mt-20 max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
+          Preguntas frecuentes sobre el blog
+        </h2>
+        <div className="space-y-6">
+          <div>
+            <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">¿Sobre qué temas escribe Andres Saumet?</h3>
+            <p className="text-gray-600 dark:text-gray-400">El blog cubre <strong className="text-gray-700 dark:text-gray-300">desarrollo web con Next.js, React y Node.js</strong>, <strong className="text-gray-700 dark:text-gray-300">desarrollo móvil con Flutter y Dart</strong>, SEO técnico para aplicaciones modernas, arquitectura de software, buenas prácticas de código limpio y herramientas para desarrolladores. Todo el contenido está en español.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">¿Con qué frecuencia se publican nuevos artículos?</h3>
+            <p className="text-gray-600 dark:text-gray-400">Se publican artículos de forma regular sobre las tecnologías y tendencias más relevantes del ecosistema web y móvil. Puedes explorar las categorías del blog para encontrar el contenido que más te interese o usar el buscador para encontrar un tema específico.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">¿Los tutoriales son para principiantes o avanzados?</h3>
+            <p className="text-gray-600 dark:text-gray-400">Hay contenido para ambos niveles. Algunos artículos introducen conceptos fundamentales de <strong className="text-gray-700 dark:text-gray-300">programación web</strong> y móvil, mientras que otros profundizan en temas avanzados como optimización de rendimiento, patrones de arquitectura y estrategias de despliegue en producción.</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-200">¿Puedo sugerir un tema para un artículo?</h3>
+            <p className="text-gray-600 dark:text-gray-400">Sí. Si tienes un tema que te gustaría ver cubierto, puedes escribirme desde la <a href="/contactame" className="text-[#7b7db0] hover:underline">página de contacto</a>. Las sugerencias de la comunidad son bienvenidas y ayudan a priorizar el contenido más útil para los lectores.</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

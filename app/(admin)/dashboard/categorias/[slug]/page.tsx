@@ -156,7 +156,7 @@ export default function EditCategoriaSeoPage() {
 
       await apiClient.put(`/article-categories/${categoryId}/seo`, seoPayload, accessToken);
 
-      await triggerRevalidation({
+      triggerRevalidation({
         type: 'category',
         slug: newSlug,
         oldSlug: category!.slug,

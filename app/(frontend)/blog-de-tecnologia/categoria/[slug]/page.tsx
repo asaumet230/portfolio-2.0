@@ -146,9 +146,10 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         </span>
         <h1 className="mt-2 text-4xl font-bold text-center">{category.name}</h1>
         {category.description && (
-          <p className="mt-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed text-justify px-4 md:px-8">
-            {category.description}
-          </p>
+          <div
+            className="mt-4 text-gray-600 dark:text-gray-400 text-base leading-relaxed text-justify px-4 md:px-8 prose dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: category.description }}
+          />
         )}
       </header>
 

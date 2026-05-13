@@ -207,7 +207,7 @@ export const MobileProjectLayout = ({ project, slug }: Props) => {
             </section>
           )}
 
-          {project.termsOfService && (
+          {project.termsOfService?.content && stripHtml(project.termsOfService.content).length > 10 && (
             <section className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 p-6 md:p-8 rounded-2xl border border-amber-100 dark:border-gray-700">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 bg-amber-500 dark:bg-orange-600 rounded-full flex items-center justify-center">

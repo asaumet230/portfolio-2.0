@@ -1,6 +1,11 @@
 const BASE_URL = 'https://www.andressaumet.com';
 const API = process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:8080/api';
 
+function hasRealContent(content?: string): boolean {
+  if (!content) return false;
+  return content.replace(/<[^>]*>/g, '').trim().length > 10;
+}
+
 interface SitemapEntry {
   url: string;
   lastModified?: Date | string;
@@ -63,7 +68,7 @@ async function fetchProjects(): Promise<SitemapEntry[]> {
             });
           }
 
-          if (detailProject?.termsOfService?.content) {
+          if (hasRealContent(detailProject?.termsOfService?.content)) {
             entries.push({
               url: `${BASE_URL}/proyectos/${project.slug}/terms-of-service`,
               lastModified,

@@ -1,6 +1,11 @@
 const BASE = 'https://www.andressaumet.com';
 const API = process.env.NEXT_PUBLIC_API_PATH || 'http://localhost:8080/api';
 
+function hasRealContent(content?: string): boolean {
+  if (!content) return false;
+  return content.replace(/<[^>]*>/g, '').trim().length > 10;
+}
+
 function urlEntry(loc: string, lastmod: string) {
   return `  <url>
     <loc>${loc}</loc>
@@ -45,7 +50,7 @@ export async function GET() {
             urls.push(urlEntry(`${BASE}/proyectos/${project.slug}/privacy-policy`, lastmod));
           }
 
-          if (detailProject?.termsOfService?.content) {
+          if (hasRealContent(detailProject?.termsOfService?.content)) {
             urls.push(urlEntry(`${BASE}/proyectos/${project.slug}/terms-of-service`, lastmod));
           }
 

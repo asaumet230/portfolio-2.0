@@ -13,9 +13,6 @@ const STATIC_PAGES: SitemapEntry[] = [
   { url: `${BASE_URL}/proyectos-desarrollo-web-y-aplicaciones-moviles`, priority: 0.8, changeFrequency: 'weekly',  lastModified: new Date() },
   { url: `${BASE_URL}/blog-de-tecnologia`,                              priority: 0.7, changeFrequency: 'weekly',  lastModified: new Date() },
   { url: `${BASE_URL}/herramientas`,                                    priority: 0.7, changeFrequency: 'weekly',  lastModified: new Date() },
-  { url: `${BASE_URL}/herramientas/convertidor-de-imagenes`,            priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
-  { url: `${BASE_URL}/herramientas/comprimir-imagenes-gratis`,          priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
-  { url: `${BASE_URL}/herramientas/minuscula-a-mayuscula`,              priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
   { url: `${BASE_URL}/contactame`,                                      priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
   { url: `${BASE_URL}/politica-privacidad-y-proteccion-datos`,          priority: 0.3, changeFrequency: 'monthly', lastModified: new Date() },
   { url: `${BASE_URL}/terminos-y-condiciones`,                          priority: 0.3, changeFrequency: 'monthly', lastModified: new Date() },
@@ -145,10 +142,18 @@ function freqLabel(freq: string) {
 }
 
 const SUB_SITEMAPS = [
-  { label: 'Páginas',    href: '/sitemap-paginas.xml' },
-  { label: 'Proyectos',  href: '/sitemap-proyectos.xml' },
-  { label: 'Artículos',  href: '/sitemap-articulos.xml' },
-  { label: 'Categorías', href: '/sitemap-categorias.xml' },
+  { label: 'Páginas',       href: '/sitemap-paginas.xml' },
+  { label: 'Proyectos',     href: '/sitemap-proyectos.xml' },
+  { label: 'Artículos',     href: '/sitemap-articulos.xml' },
+  { label: 'Categorías',    href: '/sitemap-categorias.xml' },
+  { label: 'Herramientas',  href: '/sitemap-herramientas.xml' },
+];
+
+const TOOL_PAGES: SitemapEntry[] = [
+  { url: `${BASE_URL}/herramientas`,                               priority: 0.7, changeFrequency: 'weekly',  lastModified: new Date() },
+  { url: `${BASE_URL}/herramientas/convertidor-de-imagenes`,       priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
+  { url: `${BASE_URL}/herramientas/comprimir-imagenes-gratis`,     priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
+  { url: `${BASE_URL}/herramientas/minuscula-a-mayuscula`,         priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
 ];
 
 export default async function SitemapPage() {
@@ -170,6 +175,7 @@ export default async function SitemapPage() {
 
   const sections = [
     { label: 'Páginas estáticas', entries: STATIC_PAGES },
+    { label: 'Herramientas',      entries: TOOL_PAGES },
     { label: 'Proyectos',         entries: baseProjectEntries },
     { label: 'Legal / Funcional', entries: legalProjectEntries },
     { label: 'Artículos',         entries: articles },

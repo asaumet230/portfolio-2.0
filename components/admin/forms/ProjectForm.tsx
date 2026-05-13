@@ -157,7 +157,7 @@ export function ProjectForm({
     if (!formData.name.trim()) errors.name = 'El nombre es requerido';
     if (!formData.slug.trim()) errors.slug = 'El slug es requerido';
     if (!stripHtml(formData.description)) errors.description = 'La descripción es requerida';
-    if (formData.description.length > 600) errors.description = `La descripción excede 600 caracteres (actualmente ${formData.description.length})`;
+    if (formData.description.length > 2000) errors.description = `La descripción excede 2000 caracteres (actualmente ${formData.description.length})`;
     if (formData.technologies.length === 0) errors.technologies = 'Agrega al menos 1 tecnología';
     if (formData.images.length === 0) errors.images = 'Agrega al menos 1 imagen';
     if (!formData.urlApp?.trim()) errors.urlApp = 'La URL del proyecto en vivo es requerida';
@@ -359,14 +359,14 @@ export function ProjectForm({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <RequiredLabel>Descripción</RequiredLabel>
-                <span className={`text-xs ${formData.description.length > 600 ? 'text-red-500 font-semibold' : 'text-gray-400'}`}>
-                  {formData.description.length}/600 chars HTML
+                <span className={`text-xs ${formData.description.length > 2000 ? 'text-red-500 font-semibold' : 'text-gray-400'}`}>
+                  {formData.description.length}/2000 chars HTML
                 </span>
               </div>
               <RichTextEditor
                 value={formData.description}
                 onChange={(content) => { setFormData({ ...formData, description: content }); setFieldErrors(p => ({ ...p, description: '' })); }}
-                placeholder="Descripción del proyecto (máx. 600 caracteres incluyendo HTML)..."
+                placeholder="Descripción del proyecto (máx. 2000 caracteres incluyendo HTML)..."
                 height="h-48"
               />
               <FieldError msg={fieldErrors.description} />

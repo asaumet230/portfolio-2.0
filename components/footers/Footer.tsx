@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { SocialMediaLinks } from '../ui';
+import { FaPhone } from 'react-icons/fa';
+import { FaLocationDot } from 'react-icons/fa6';
 
 export const Footer = () => {
   const { data: session } = useSession();
@@ -57,7 +59,7 @@ export const Footer = () => {
             </ul>
           </nav>
         </div>
-        
+
         <div className='text-center max-[640px]:py-1'>
           <h3 className='text-xl max-[640px]:text-lg'>Políticas</h3>
           <nav className='py-3'>
@@ -75,10 +77,37 @@ export const Footer = () => {
           <h3 className='text-xl max-[640px]:text-lg'>Sigueme en Redes</h3>
           <nav className='py-3'>
             <SocialMediaLinks
-              isNextTo={false} 
-              size={25} 
+              isNextTo={false}
+              size={25}
               marginStyle='mx-2'/>
           </nav>
+          <ul className='space-y-3 text-base mt-5'>
+            <li>
+              <h3 className='text-xl max-[640px]:text-lg'>Andres Saumet Software Developer</h3>
+            </li>
+            <li>
+              <a
+                href='tel:+573017826682'
+                className='flex items-center justify-center gap-2 hover:opacity-70 transition-opacity'
+                aria-label='Llamar a Andres Saumet'
+              >
+                <FaPhone className='shrink-0 text-black dark:text-white' size={14} />
+                <span>+57 301 782 6682</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href='https://maps.app.goo.gl/K9cTSD5XAx21f6qB7'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex items-start justify-center gap-2 hover:opacity-70 transition-opacity'
+                aria-label='Ver ubicación en Google Maps'
+              >
+                <FaLocationDot className='mt-0.5 shrink-0 text-black dark:text-white' size={15} />
+                <span>Calle 26 # 2A - 36,<br />Santa Marta - Magdalena</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
       <div className='w-11/12 mx-auto pt-5 pb-1'>

@@ -11,6 +11,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/herramientas/minuscula-a-mayuscula',
+        destination: '/herramientas/mayusculas-minusculas',
+        permanent: true,
+      },
+      {
         source: '/:path*',
         has: [{ type: 'host', value: 'andressaumet.com' }],
         destination: 'https://www.andressaumet.com/:path*',

@@ -158,7 +158,7 @@ const TOOL_PAGES: SitemapEntry[] = [
   { url: `${BASE_URL}/herramientas`,                               priority: 0.7, changeFrequency: 'weekly',  lastModified: new Date() },
   { url: `${BASE_URL}/herramientas/convertidor-de-imagenes`,       priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
   { url: `${BASE_URL}/herramientas/comprimir-imagenes-gratis`,     priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
-  { url: `${BASE_URL}/herramientas/minuscula-a-mayuscula`,         priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
+  { url: `${BASE_URL}/herramientas/mayusculas-minusculas`,         priority: 0.6, changeFrequency: 'monthly', lastModified: new Date() },
 ];
 
 export default async function SitemapPage() {

@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/herramientas`,                                                 lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
     { url: `${BASE}/herramientas/convertidor-de-imagenes`,                         lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE}/herramientas/comprimir-imagenes-gratis`,                       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE}/herramientas/minuscula-a-mayuscula`,                           lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/herramientas/mayusculas-minusculas`,                           lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE}/contactame`,                                                   lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE}/politica-privacidad-y-proteccion-datos`,                       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
     { url: `${BASE}/terminos-y-condiciones`,                                       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },

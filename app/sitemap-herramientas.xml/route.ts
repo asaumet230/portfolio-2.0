@@ -4,7 +4,7 @@ const TOOLS = [
   { loc: `${BASE}/herramientas`,                               changefreq: 'weekly',  priority: '0.7' },
   { loc: `${BASE}/herramientas/convertidor-de-imagenes`,       changefreq: 'monthly', priority: '0.6' },
   { loc: `${BASE}/herramientas/comprimir-imagenes-gratis`,     changefreq: 'monthly', priority: '0.6' },
-  { loc: `${BASE}/herramientas/minuscula-a-mayuscula`,         changefreq: 'monthly', priority: '0.6' },
+  { loc: `${BASE}/herramientas/mayusculas-minusculas`,         changefreq: 'monthly', priority: '0.6' },
 ];
 
 function urlEntry(loc: string, changefreq: string, priority: string) {

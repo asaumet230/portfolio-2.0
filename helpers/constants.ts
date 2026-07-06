@@ -24,7 +24,7 @@ export const menuData: IMenuLink[] = [
       },
       {
         name: 'Minúscula a Mayúscula',
-        url: '/herramientas/minuscula-a-mayuscula',
+        url: '/herramientas/mayusculas-minusculas',
       },
     ]
   },
@@ -69,8 +69,8 @@ export const cardsData: ICard[] = [
       light: '/images/textcasepro-light-card.webp',
       dark: '/images/textcasepro-dark-card.webp',
     },
-    url: '/herramientas/minuscula-a-mayuscula',
-    alt: 'convertir-texto-minuscula-a-mayuscula',
+    url: '/herramientas/mayusculas-minusculas',
+    alt: 'convertir-texto-mayusculas-minusculas',
   }
 
 ];

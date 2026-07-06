@@ -23,7 +23,7 @@ export const Logo = () => {
           ? '/images/compressly-dark.webp'
           : '/images/compressly-light.webp';
 
-      case pathname.startsWith('/herramientas/minuscula-a-mayuscula'):
+      case pathname.startsWith('/herramientas/mayusculas-minusculas'):
         return darkMode
           ? '/images/textcasepro-dark.webp'
           : '/images/textcasepro-light.webp'
@@ -45,7 +45,7 @@ export const Logo = () => {
       case pathname.startsWith('/herramientas/comprimir-imagenes-gratis'):
         return { width: 129, height: 129 };
 
-      case pathname.startsWith('/herramientas/minuscula-a-mayuscula'):
+      case pathname.startsWith('/herramientas/mayusculas-minusculas'):
         return { width: 125, height: 125 };
 
       default:

@@ -99,7 +99,7 @@ export const TextConverterForm = () => {
                 <button onClick={toUpper} className="cursor-pointer font-semibold w-56 px-4 py-2 rounded text-white bg-blue-700 hover:bg-blue-800 transition">TODO A MAYÚSCULAS</button>
                 <button onClick={toLower} className="cursor-pointer font-semibold w-56 px-4 py-2 rounded text-white bg-blue-700 hover:bg-blue-800 transition">todo a minúsculas</button>
                 <button onClick={capitalize} className="cursor-pointer font-semibold w-56 px-4 py-2 rounded text-white bg-blue-500 hover:bg-blue-600 transition">Capitalizar</button>
-                <button onClick={afterDot} className="cursor-pointer font-semibold w-56 px-4 py-2 rounded text-white bg-blue-500 hover:bg-blue-600 transition">Mayúsculas tras punto</button>
+                <button onClick={afterDot} className="cursor-pointer font-semibold w-56 px-4 py-2 rounded text-white bg-blue-500 hover:bg-blue-600 transition">Tipo oración</button>
                 <button onClick={clear} className="cursor-pointer w-56 font-semibold px-4 py-2 rounded text-black bg-yellow-400 hover:bg-yellow-500 transition">Limpiar texto</button>
             </div>
 

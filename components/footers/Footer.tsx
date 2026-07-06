@@ -54,7 +54,7 @@ export const Footer = () => {
                 <Link href={'/herramientas/comprimir-imagenes-gratis'}>Comprimir imágenes gratis</Link>
               </li>
               <li className='py-1'>
-                <Link href={'/herramientas/minuscula-a-mayuscula'}>Minúscula a Mayúscula</Link>
+                <Link href={'/herramientas/mayusculas-minusculas'}>Minúscula a Mayúscula</Link>
               </li>
             </ul>
           </nav>

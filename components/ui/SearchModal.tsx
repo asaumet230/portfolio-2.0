@@ -45,7 +45,7 @@ interface StaticResult {
 const TOOLS: StaticResult[] = [
   { name: 'Convertidor de imágenes', description: 'Convierte imágenes a diferentes formatos web', url: '/herramientas/convertidor-de-imagenes', icon: '🖼️' },
   { name: 'Comprimir imágenes gratis', description: 'Reduce el peso de tus imágenes sin perder calidad', url: '/herramientas/comprimir-imagenes-gratis', icon: '📦' },
-  { name: 'Minúscula a Mayúscula', description: 'Convierte texto de minúsculas a mayúsculas', url: '/herramientas/minuscula-a-mayuscula', icon: '🔡' },
+  { name: 'Minúscula a Mayúscula', description: 'Convierte texto de minúsculas a mayúsculas', url: '/herramientas/mayusculas-minusculas', icon: '🔡' },
 ];
 
 const PAGES: StaticResult[] = [

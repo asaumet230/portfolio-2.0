@@ -5,40 +5,40 @@ import { AdsenseSlot } from "@/components/ads";
 import { TextCaseProDetails, TextConverterForm } from "@/components";
 
 export const metadata: Metadata = {
-  title: "Convertir de minúscula a mayúscula online | TextCasePro",
-  description: "Convierte texto de minúscula a mayúscula de forma rápida, gratuita y online. Ideal para Excel, Word o cualquier otro editor. ¡Sin registros ni instalaciones!",
+  title: "Convertidor de Mayúsculas y Minúsculas Online Gratis | TextCasePro",
+  description: "Convierte texto a MAYÚSCULAS, minúsculas, tipo oración o capitalizado online gratis. Ideal para Word, Excel y Google Docs, sin instalar nada.",
   robots: "index, follow",
+  alternates: {
+    canonical: "https://www.andressaumet.com/herramientas/mayusculas-minusculas",
+  },
   keywords: [
+    "mayusculas y minusculas",
+    "convertidor de mayusculas y minusculas",
+    "minuscula a mayuscula",
+    "mayusculas a minusculas",
+    "mayúsculas y minúsculas",
+    "convertidor de mayúsculas y minúsculas",
+    "mayúsculas a minúsculas",
     "minúscula a mayúscula",
-    "de minúscula a mayúscula",
-    "pasar minúscula a mayúscula",
-    "convertir minúscula a mayúscula en excel",
-    "como cambiar de minúscula a mayúscula en excel",
-    "cambiar minúscula a mayúscula en excel",
-    "como pasar de minúscula a mayúscula en excel",
-    "convertir de minúscula a mayúscula",
-    "letra a minúscula y mayúscula",
-    "minúscula y mayúscula",
-    "cambiar de minúscula a mayúscula en word",
-    "minuscula a mayuscula online",
-    "como pasar letra minúscula a mayúscula en excel",
-    "formula para pasar de minúscula a mayúscula en excel",
-    "cambiar de minúscula a mayúscula con teclado"
+    "convertir mayúsculas a minúsculas",
+    "convertir minúsculas a mayúsculas",
+    "pasar texto a mayúsculas",
+    "pasar texto a minúsculas",
   ],
   openGraph: {
-    title: "Convertir de minúscula a mayúscula online | TextCasePro",
-    description: "Transforma tu texto de minúscula a mayúscula directamente desde el navegador. Compatible con Excel, Word y Google Docs. Sin instalar nada.",
+    title: "Convertidor de Mayúsculas y Minúsculas Online Gratis | TextCasePro",
+    description: "Transforma tu texto entre mayúsculas y minúsculas directamente desde el navegador. Compatible con Excel, Word y Google Docs. Sin instalar nada.",
     images: [
       "https://www.andressaumet.com/images/textcasepro-light.webp",
       "https://www.andressaumet.com/images/textcasepro-dark.webp",
     ],
-    url: "https://www.andressaumet.com/herramientas/minuscula-a-mayuscula",
+    url: "https://www.andressaumet.com/herramientas/mayusculas-minusculas",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Convertir de minúscula a mayúscula online | TextCasePro",
-    description: "Convierte tu texto fácil y rápido. De minúscula a mayúscula sin perder formato. 100% gratis y online.",
+    title: "Convertidor de Mayúsculas y Minúsculas Online Gratis | TextCasePro",
+    description: "Convierte tu texto fácil y rápido entre mayúsculas y minúsculas sin perder formato. 100% gratis y online.",
     images: [
       "https://www.andressaumet.com/images/textcasepro-light.webp",
       "https://www.andressaumet.com/images/textcasepro-dark.webp",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   }
 }
 
-export default async function MinusculaAMayusculaPage() {
+export default async function MayusculasMinusculasPage() {
   const monetization = await getMonetizationSettings();
   const showAds = monetization.enabled && monetization.toolAdsEnabled;
 
@@ -56,7 +56,10 @@ export default async function MinusculaAMayusculaPage() {
         <header className="mb-10">
           <h1
             id='conver-text-form'
-            className="text-2xl sm:text-3xl text-center font-bold">Convierte texto de minúscula a mayúscula online</h1>
+            className="text-2xl sm:text-3xl text-center font-bold">Convertidor de mayúsculas y minúsculas online</h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400 text-base text-center leading-relaxed max-w-2xl mx-auto">
+            Convierte cualquier texto a MAYÚSCULAS, minúsculas, tipo oración o capitalizado en segundos.
+          </p>
         </header>
         <TextConverterForm />
       </div>

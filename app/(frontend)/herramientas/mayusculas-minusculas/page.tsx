@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import { getMonetizationSettings } from "@/api/monetization";
-import { AdsenseSlot } from "@/components/ads";
+import { AdsenseLeaderboard } from "@/components/ads";
 import { TextCaseProDetails, TextConverterForm } from "@/components";
 import { toJsonLd } from "@/helpers";
 
@@ -116,19 +116,15 @@ export default async function MayusculasMinusculasPage() {
             Convierte cualquier texto a MAYÚSCULAS, minúsculas, tipo oración o capitalizado en segundos.
           </p>
         </header>
+        {showAds && monetization.toolTopSlot && (
+          <AdsenseLeaderboard clientId={monetization.clientId} slot={monetization.toolTopSlot} />
+        )}
         <TextConverterForm />
       </div>
-      {showAds && monetization.toolTopSlot && (
-        <div className="w-11/12 mx-auto">
-          <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolTopSlot} />
-        </div>
+      {showAds && monetization.toolBottomSlot && (
+        <AdsenseLeaderboard clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
       )}
       <TextCaseProDetails />
-      {showAds && monetization.toolBottomSlot && (
-        <div className="w-11/12 mx-auto pb-12">
-          <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
-        </div>
-      )}
     </main>
   );
 }

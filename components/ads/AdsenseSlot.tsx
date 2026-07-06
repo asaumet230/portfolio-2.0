@@ -46,9 +46,11 @@ function InsElement({ clientId, slot, style, format = 'auto', layoutKey, fullWid
       style={{ display: 'block', ...style }}
       data-ad-client={clientId}
       data-ad-slot={slot}
-      data-ad-format={format}
+      // Unidades de tamaño fijo: sin data-ad-format ni full-width-responsive,
+      // de lo contrario Google sirve responsive e ignora el width/height del style
+      data-ad-format={format || undefined}
       data-ad-layout-key={layoutKey}
-      data-full-width-responsive={fullWidthResponsive ? 'true' : 'false'}
+      data-full-width-responsive={format ? (fullWidthResponsive ? 'true' : 'false') : undefined}
     />
   );
 }

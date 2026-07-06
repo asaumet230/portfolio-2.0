@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import { getMonetizationSettings } from "@/api/monetization";
-import { AdsenseSlot } from "@/components/ads";
+import { AdsenseLeaderboard } from "@/components/ads";
 import { ImagesForm, SharpConvertDetails } from "@/components";
 
 export const metadata: Metadata = {
@@ -55,15 +55,15 @@ export default async function ConvertidorImagenPage() {
               id="converitor-images-form"
               className="text-3xl text-center mb-1 sm:mb-5 sm:text-4xl font-bold ">Convertidor de imágenes</h1>
           </header>
+          {showAds && monetization.toolTopSlot && (
+            <AdsenseLeaderboard clientId={monetization.clientId} slot={monetization.toolTopSlot} />
+          )}
           <ImagesForm />
         </div>
-        {showAds && monetization.toolTopSlot && (
-          <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolTopSlot} />
+        {showAds && monetization.toolBottomSlot && (
+          <AdsenseLeaderboard clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
         )}
         <SharpConvertDetails />
-        {showAds && monetization.toolBottomSlot && (
-          <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
-        )}
       </main>
     </div>
   );

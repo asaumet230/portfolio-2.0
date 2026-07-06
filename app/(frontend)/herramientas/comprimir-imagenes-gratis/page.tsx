@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import { getMonetizationSettings } from "@/api/monetization";
-import { AdsenseSlot } from "@/components/ads";
+import { AdsenseLeaderboard } from "@/components/ads";
 import { CompresslyDetails, ImagesCompressor } from "@/components";
 
 
@@ -57,15 +57,15 @@ export default async function CompresorImagenesPage() {
                             id="compress-images-form"
                             className="text-3xl text-center font-bold sm:text-4xl">Comprimir Imágenes Gratis</h1>
                     </header>
+                    {showAds && monetization.toolTopSlot && (
+                        <AdsenseLeaderboard clientId={monetization.clientId} slot={monetization.toolTopSlot} />
+                    )}
                     <ImagesCompressor />
                 </div>
-                {showAds && monetization.toolTopSlot && (
-                    <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolTopSlot} />
+                {showAds && monetization.toolBottomSlot && (
+                    <AdsenseLeaderboard clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
                 )}
                     <CompresslyDetails />
-                {showAds && monetization.toolBottomSlot && (
-                    <AdsenseSlot clientId={monetization.clientId} slot={monetization.toolBottomSlot} />
-                )}
             </main>
         </div>
     );

@@ -1,7 +1,7 @@
 export { CompressActions } from './CompressActions';
+export { CompressionOptions } from './CompressionOptions';
 export { CompresslyDetails } from './CompresslyDetails';
 export { CompressPreviewProgressBar } from './CompressPreviewProgressBar';
-export { CompressProgressImagesUpload } from './CompressProgressImagesUpload';
 export { CompressRemoveFileButton } from './CompressRemoveFileButton';
 export { DonwloadImage } from './DownloadImage';
 export { DownloadZipImages } from './DownloadZipImages';

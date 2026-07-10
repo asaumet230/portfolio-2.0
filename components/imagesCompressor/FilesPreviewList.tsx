@@ -28,12 +28,30 @@ export const FilesPreviewList = ({ filesPreviewList, handleRemoveFile, isLoading
                             <p className="text-sm text-gray-500">
                                 Tamaño: {item.originalSizeKB} KB
                             </p>
+
+                            {item.completed && item.convertedSizeKB !== undefined && (
+                                item.keptOriginal ? (
+                                    <p className="text-sm text-green-600 font-semibold">
+                                        Ya estaba optimizada, se conserva la original
+                                    </p>
+                                ) : (
+                                    <p className="text-sm text-green-600 font-semibold">
+                                        Comprimido: {item.convertedSizeKB} KB · Ahorro: {Math.max(0, Math.round((1 - item.convertedSizeKB / item.originalSizeKB) * 100))}%
+                                    </p>
+                                )
+                            )}
+
+                            {item.error && (
+                                <p className="text-sm text-red-500 font-semibold">
+                                    ⚠ {item.error}
+                                </p>
+                            )}
                         </div>
                          <div className={`flex flex-col items-center justify-center ${!isLoading && 'hidden'} w-7/12 sm:w-6/12 sm:flex-row`}>
                          
-                            {isLoading && (<CompressPreviewProgressBar ImageProgress={item.progress} />)}
+                            {isLoading && !item.error && (<CompressPreviewProgressBar ImageProgress={item.progress} />)}
 
-                            {isLoading && !item.completed && (
+                            {isLoading && !item.completed && !item.error && (
                                 <p className="text-sm font-semibold mx-3 mb-2 animate-pulse dark:text-black">
                                     {item.progress < 100 && 'Comprimiendo...'}
                                 </p>

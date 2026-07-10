@@ -1,3 +1,4 @@
+export { CompareSliderModal } from './CompareSliderModal';
 export { CompressActions } from './CompressActions';
 export { CompressionOptions } from './CompressionOptions';
 export { CompresslyDetails } from './CompresslyDetails';

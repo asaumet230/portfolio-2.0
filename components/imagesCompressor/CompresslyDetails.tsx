@@ -74,6 +74,8 @@ export const CompresslyDetails = () => {
                     <li>📐 Redimensionado opcional a 1920, 1280 u 800 píxeles.</li>
                     <li>🕵️ Elimina los metadatos EXIF (ubicación GPS, fecha, cámara) al comprimir.</li>
                     <li>📊 Muestra el peso original, el peso final y el porcentaje de ahorro.</li>
+                    <li>🔍 Comparador visual antes/después para verificar la calidad.</li>
+                    <li>📤 Comparte la imagen comprimida por WhatsApp o correo desde el celular.</li>
                     <li>📥 Descarga individual o todas las imágenes en ZIP.</li>
                     <li>📱 Funciona desde celular, tablet o computador.</li>
                 </ul>

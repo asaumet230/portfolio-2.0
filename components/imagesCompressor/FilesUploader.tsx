@@ -54,6 +54,8 @@ export const FilesUploader = ({ fileInputRef, handleImagesPreview }: FilesUpload
                 <FaUpload className="text-md mr-2" />
                 <p>Seleccionar imágenes</p>
             </button>
+
+            <p className="text-gray-400 mt-4 text-sm text-center px-4 dark:text-slate-300">También puedes pegarlas con Ctrl+V (Cmd+V en Mac)</p>
         </div>
     )
 }

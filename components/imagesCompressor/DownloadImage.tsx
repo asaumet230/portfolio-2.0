@@ -1,4 +1,4 @@
-import { FaDownload } from "react-icons/fa6"
+import { FaDownload, FaShareNodes } from "react-icons/fa6"
 
 import 'animate.css';
 
@@ -8,6 +8,17 @@ interface DonwloadImageProps {
 }
 
 export const DonwloadImage = ({ file, convertedSizeKB }: DonwloadImageProps) => {
+
+    const canShareFile =
+        typeof navigator !== 'undefined' &&
+        typeof navigator.canShare === 'function' &&
+        (() => {
+            try {
+                return navigator.canShare({ files: [file] });
+            } catch {
+                return false;
+            }
+        })();
 
     const handleDownloadSingleFile = (file: File) => {
 
@@ -25,6 +36,17 @@ export const DonwloadImage = ({ file, convertedSizeKB }: DonwloadImageProps) => 
         }, 100)
     }
 
+    const handleShareFile = async (file: File) => {
+        try {
+            await navigator.share({
+                files: [file],
+                title: 'Imagen comprimida',
+            });
+        } catch {
+            // El usuario canceló el diálogo de compartir
+        }
+    }
+
     return (
         <div className='flex flex-col justify-center items-center animate__animated animate__fadeIn'>
             <button
@@ -33,6 +55,16 @@ export const DonwloadImage = ({ file, convertedSizeKB }: DonwloadImageProps) => 
                 <span className='text-sm'>Descargar</span>
                 <FaDownload className="text-sm ml-1" />
             </button>
+
+            {canShareFile && (
+                <button
+                    onClick={() => handleShareFile(file)}
+                    className='flex items-center justify-center cursor-pointer text-white py-0.5 px-3 mb-0.5 border rounded-lg bg-green-600 hover:bg-green-700'>
+                    <span className='text-sm'>Compartir</span>
+                    <FaShareNodes className="text-sm ml-1" />
+                </button>
+            )}
+
             <span className="text-green-600 text-center text-sm uppercase">
                 {convertedSizeKB ?? '...'} KB
             </span>

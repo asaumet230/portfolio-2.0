@@ -4,7 +4,7 @@ export { NotFoundMessage } from './error/index';
 export { Footer } from './footers/index';
 export { ContactForm, ContactMessage, ContactSection } from './forms/index';
 export { GoogleTagManagerBody, GoogleTagManagerHead } from './google/index';
-export { CompressActions, CompressionOptions, CompresslyDetails, CompressPreviewProgressBar, CompressRemoveFileButton, DonwloadImage, DownloadZipImages, FilesPreviewList, FilesUploader, ImagesCompressor } from './imagesCompressor/index';
+export { CompareSliderModal, CompressActions, CompressionOptions, CompresslyDetails, CompressPreviewProgressBar, CompressRemoveFileButton, DonwloadImage, DownloadZipImages, FilesPreviewList, FilesUploader, ImagesCompressor } from './imagesCompressor/index';
 export { ConvertActions, ConvertedImageGallery, DownloadActions, DownloadInfo, EmptyFileNotice, FilePreviewList, FileUploader, ImagesForm, FormatSelector, RemoveFileButton, SharpConvertDetails } from './imagesCoverted/index';
 export { Navbar, NavbarDefault, NavbarMenuLink, NavbarMenuLinkDefault, PostSideBar, Sidebar, SidebarLinks } from './menus/index';
 export { AboutMeSection, ExperienceItemSection, ExperienceSection, SkillsSection, TestimonialsSection, ToolsSection, MobilProjectDescription, MobilProjects, WebProjectDescription, WebProjects, AuthBackground, LoginForm, RegisterForm } from './sections/index';
